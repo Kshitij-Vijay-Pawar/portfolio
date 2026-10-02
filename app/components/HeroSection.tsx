@@ -269,8 +269,10 @@ export default function HeroSection() {
         <div className="hero-corner-item hidden md:flex items-center gap-3">
           <span className="font-mono text-xs text-neutral-400">LOC</span>
           <span
-          onClick={()=>window.open('https://maps.app.goo.gl/jwTdQXZVXkpEJ7ju9')}
-          className="font-mono text-xs font-semibold text-neutral-800 tracking-wider cursor-pointer">
+            onClick={()=>window.open('https://maps.app.goo.gl/jwTdQXZVXkpEJ7ju9')}
+            data-cursor="interactive"
+            className="font-mono text-xs font-semibold text-neutral-800 tracking-wider cursor-pointer"
+          >
             [43.978412° N, 15.383477° E]
           </span>
         </div>
@@ -292,6 +294,7 @@ export default function HeroSection() {
         {/* Giant "DEVELOPER" TechText Typography in Top-Left Area behind Portrait */}
         <div
           ref={watermarkRef}
+          data-cursor="interactive"
           className="absolute -top-6 left-0 sm:top-0 sm:left-4 md:top-2 md:left-8 w-[550px] sm:w-[680px] md:w-[820px] h-[180px] sm:h-[220px] md:h-[260px] pointer-events-auto z-[5] overflow-visible select-none"
         >
           <TechText
@@ -338,6 +341,7 @@ export default function HeroSection() {
         {/* Giant TechText Canvas Layer ON TOP OF IMAGE in Bottom-Right Area (Draggable & Interactive) */}
         <div
           ref={techTextRef}
+          data-cursor="interactive"
           className="absolute -bottom-4 right-0 sm:bottom-0 sm:right-4 md:bottom-2 md:right-8 w-[520px] sm:w-[640px] md:w-[760px] h-[180px] sm:h-[220px] md:h-[260px] flex items-center justify-end z-30 pointer-events-auto select-none"
         >
           <TechText
@@ -370,7 +374,7 @@ export default function HeroSection() {
           className="absolute inset-0 pointer-events-none z-30 flex items-center justify-between w-full max-w-7xl mx-auto px-2 sm:px-4"
         >
           {/* Left: Scaled down, perfectly clickable OptionWheel */}
-          <div className="h-[220px] sm:h-[260px] w-[210px] sm:w-[260px] pointer-events-auto flex items-center">
+          <div data-cursor="default" className="h-[220px] sm:h-[260px] w-[210px] sm:w-[260px] pointer-events-auto flex items-center">
             <OptionWheel
               items={SKILL_CATEGORIES}
               selectedIndex={selectedIndex}
@@ -449,6 +453,7 @@ export default function HeroSection() {
         {/* Center Scroll Prompt */}
         <div
           ref={scrollIndicatorRef}
+          data-cursor="interactive"
           className="pointer-events-auto mx-auto flex flex-col items-center gap-2 text-neutral-500 hover:text-neutral-950 transition-colors cursor-pointer"
           onClick={() => {
             window.scrollTo({

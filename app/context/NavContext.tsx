@@ -3,11 +3,20 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 
+export type MascotEmotion = "normal" | "happy" | "surprise" | "angry" | "doubleBlink";
+
 interface NavContextType {
   navOpen: boolean;
   setNavOpen: React.Dispatch<React.SetStateAction<boolean>>;
   navColor: string;
   setNavColor: React.Dispatch<React.SetStateAction<string>>;
+  mascotEmotion: MascotEmotion;
+  setMascotEmotion: React.Dispatch<React.SetStateAction<MascotEmotion>>;
+  triggerDoubleBlink: () => void;
+  triggerSurprise: () => void;
+  triggerAngry: () => void;
+  triggerHappy: () => void;
+  resetMascotEmotion: () => void;
 }
 
 const NavContext = createContext<NavContextType | undefined>(undefined);
@@ -15,6 +24,13 @@ const NavContext = createContext<NavContextType | undefined>(undefined);
 export const NavProvider = ({ children }: { children: React.ReactNode }) => {
   const [navOpen, setNavOpen] = useState(false);
   const [navColor, setNavColor] = useState("black");
+  const [mascotEmotion, setMascotEmotion] = useState<MascotEmotion>("normal");
+
+  const triggerDoubleBlink = () => setMascotEmotion("doubleBlink");
+  const triggerSurprise = () => setMascotEmotion("surprise");
+  const triggerAngry = () => setMascotEmotion("angry");
+  const triggerHappy = () => setMascotEmotion("happy");
+  const resetMascotEmotion = () => setMascotEmotion("normal");
 
   const pathname = usePathname();
 
@@ -31,6 +47,7 @@ export const NavProvider = ({ children }: { children: React.ReactNode }) => {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "";
+      setMascotEmotion("normal");
     }
 
     return () => {
@@ -39,7 +56,21 @@ export const NavProvider = ({ children }: { children: React.ReactNode }) => {
   }, [navOpen]);
 
   return (
-    <NavContext.Provider value={{ navOpen, setNavOpen, navColor, setNavColor }}>
+    <NavContext.Provider
+      value={{
+        navOpen,
+        setNavOpen,
+        navColor,
+        setNavColor,
+        mascotEmotion,
+        setMascotEmotion,
+        triggerDoubleBlink,
+        triggerSurprise,
+        triggerAngry,
+        triggerHappy,
+        resetMascotEmotion,
+      }}
+    >
       {children}
     </NavContext.Provider>
   );

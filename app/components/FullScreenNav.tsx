@@ -5,6 +5,7 @@ import gsap from "gsap";
 import React, { useRef } from "react";
 import Link from "next/link";
 import { useNav } from "../context/NavContext";
+import Mascot from "./Mascot";
 
 const navLinks = [
   { title: "HOME", href: "/" },
@@ -16,7 +17,13 @@ const navLinks = [
 const FullScreenNav = () => {
   const fullScreenRef = useRef<HTMLDivElement>(null);
   const isFirstRender = useRef(true);
-  const { navOpen, setNavOpen } = useNav();
+  const {
+    navOpen,
+    setNavOpen,
+    triggerDoubleBlink,
+    triggerSurprise,
+    resetMascotEmotion,
+  } = useNav();
 
   function gsapAnimation() {
     const tl = gsap.timeline();
@@ -116,7 +123,7 @@ const FullScreenNav = () => {
   function gsapAnimationReverse() {
     const tl = gsap.timeline();
 
-    // 1. Fade out content quickly
+    // 1. Fade out content quickly and reset item shifts
     tl.to(".menu-link-item, .email-tag, .mascot-icon", {
       opacity: 0,
       y: 20,
@@ -124,6 +131,7 @@ const FullScreenNav = () => {
       stagger: 0.03,
       ease: "power2.in",
     });
+    tl.set(".menu-link-item", { y: 0 });
 
     // 2. Retract layers in cascade
     tl.to(".stair-white", {
@@ -182,6 +190,54 @@ const FullScreenNav = () => {
     { dependencies: [navOpen], scope: fullScreenRef }
   );
 
+  const navItemRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const navTextRefs = useRef<(HTMLSpanElement | null)[]>([]);
+
+  const handleLinkMouseEnter = (hoveredIndex: number) => {
+    const hoveredSpan = navTextRefs.current[hoveredIndex];
+    if (!hoveredSpan) return;
+
+    // Hover scale is 1.45. With origin-bottom-left, height expands upward by (1.45 - 1) * height
+    const baseHeight = hoveredSpan.offsetHeight;
+    const upwardShift = baseHeight * 0.45;
+
+    // All items above the hovered item move upward by upwardShift to preserve the exact visual gap
+    navItemRefs.current.forEach((itemEl, idx) => {
+      if (!itemEl) return;
+      if (idx < hoveredIndex) {
+        gsap.to(itemEl, {
+          y: -upwardShift,
+          duration: 0.3,
+          ease: "power3.out",
+          overwrite: "auto",
+        });
+      } else {
+        gsap.to(itemEl, {
+          y: 0,
+          duration: 0.3,
+          ease: "power3.out",
+          overwrite: "auto",
+        });
+      }
+    });
+  };
+
+  const handleLinkMouseLeave = () => {
+    // Return mascot to normal emotion
+    resetMascotEmotion();
+
+    // Smoothly restore all items to baseline y: 0
+    navItemRefs.current.forEach((itemEl) => {
+      if (!itemEl) return;
+      gsap.to(itemEl, {
+        y: 0,
+        duration: 0.3,
+        ease: "power3.out",
+        overwrite: "auto",
+      });
+    });
+  };
+
   return (
     <div
       ref={fullScreenRef}
@@ -212,6 +268,10 @@ const FullScreenNav = () => {
           {/* Top Right Email */}
           <a
             href="mailto:qudduslarek@gmail.com"
+            data-cursor="interactive"
+            onMouseEnter={() => triggerDoubleBlink()}
+            onMouseLeave={() => resetMascotEmotion()}
+            onClick={() => triggerDoubleBlink()}
             className="email-tag pointer-events-auto font-mono text-sm sm:text-base text-zinc-900 hover:opacity-70 transition-opacity tracking-tight opacity-0"
           >
             qudduslarek@gmail.com
@@ -220,16 +280,35 @@ const FullScreenNav = () => {
 
         {/* Bottom Area: Large Left-aligned Links & Bottom-Right Red Mascot Icon */}
         <div className="flex items-end justify-between w-full pb-4">
-          {/* Left Column: Bold Typography Menu Links */}
-          <nav className="flex flex-col space-y-1 sm:space-y-2 pointer-events-auto">
-            {navLinks.map((item) => (
-              <div key={item.title} className="menu-link-item opacity-0 overflow-hidden">
+          {/* Left Column: Bold Typography Menu Links with Responsive Stack Compensation */}
+          <nav
+            onMouseLeave={handleLinkMouseLeave}
+            className="flex flex-col space-y-1 sm:space-y-2 pointer-events-auto"
+          >
+            {navLinks.map((item, index) => (
+              <div
+                key={item.title}
+                ref={(el) => {
+                  navItemRefs.current[index] = el;
+                }}
+                className="menu-link-item opacity-0 overflow-visible py-1 will-change-transform"
+              >
                 <Link
                   href={item.href}
                   onClick={() => setNavOpen(false)}
+                  onMouseEnter={() => {
+                    handleLinkMouseEnter(index);
+                    triggerSurprise();
+                  }}
+                  data-cursor="interactive"
                   className="group inline-block"
                 >
-                  <span className="font-extrabold text-5xl sm:text-7xl md:text-8xl lg:text-[7vw] leading-[0.9] tracking-tighter text-zinc-950 uppercase transition-all duration-300 group-hover:translate-x-3 group-hover:text-zinc-600 block">
+                  <span
+                    ref={(el) => {
+                      navTextRefs.current[index] = el;
+                    }}
+                    className="font-extrabold text-3xl sm:text-4xl md:text-5xl lg:text-[4.4vw] leading-[0.95] tracking-tighter text-zinc-950 uppercase origin-bottom-left transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-145 block will-change-transform"
+                  >
                     {item.title}
                   </span>
                 </Link>
@@ -237,43 +316,8 @@ const FullScreenNav = () => {
             ))}
           </nav>
 
-          {/* Right Bottom Mascot Illustration as seen in reference */}
-          <div className="mascot-icon opacity-0 hidden sm:flex flex-col items-center justify-center pointer-events-auto">
-            <svg
-              className="w-40 h-40 md:w-56 md:h-56 lg:w-72 lg:h-72 drop-shadow-sm transition-transform duration-500 hover:scale-105"
-              viewBox="0 0 200 200"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              {/* Rounded Red App Icon Box */}
-              <rect
-                x="10"
-                y="10"
-                width="180"
-                height="180"
-                rx="56"
-                fill="#f03e2f"
-              />
-              {/* Left Eye */}
-              <rect
-                x="65"
-                y="82"
-                width="20"
-                height="38"
-                rx="10"
-                fill="white"
-              />
-              {/* Right Eye */}
-              <rect
-                x="115"
-                y="80"
-                width="20"
-                height="38"
-                rx="10"
-                fill="white"
-              />
-            </svg>
-          </div>
+          {/* Right Bottom Mascot Illustration with Eye Tracking & Emotions */}
+          <Mascot />
         </div>
       </div>
     </div>

@@ -65,3 +65,87 @@ body {
   background-image: radial-gradient(rgba(0, 0, 0, 0.12) 1px, transparent 1px);
   background-size: 16px 16px;
 }
+
+/* ==========================================================================
+   Custom Two-State Cursor System
+   ========================================================================== */
+
+/* Hide native cursor only on devices with a mouse/fine pointer */
+@media (pointer: fine) {
+  body,
+  body * {
+    cursor: none !important;
+  }
+}
+
+/* Outer follower anchor point */
+.custom-cursor-follower {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 999999;
+  mix-blend-mode: normal;
+}
+
+.custom-cursor-follower.is-interactive {
+  mix-blend-mode: difference;
+}
+
+/* Inner cursor circle */
+.custom-cursor-dot {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 10px;
+  height: 10px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background-color: #ff5500; /* Vibrant energetic orange */
+  box-shadow: 0 0 10px rgba(255, 85, 0, 0.4);
+  pointer-events: none;
+  transition: 
+    width 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    height 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+/* INTERACTIVE STATE: Large inverted difference circle */
+.custom-cursor-follower.is-interactive .custom-cursor-dot {
+  width: 58px;
+  height: 58px;
+  background-color: #ffffff;
+  box-shadow: none;
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .custom-cursor-dot {
+    transition: none !important;
+  }
+}
+
+/* ==========================================================================
+   Project Section Follower View Cursor & Ring
+   ========================================================================== */
+@keyframes ringRotate {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+.ring-circle-spin {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 140px;
+  height: 140px;
+  pointer-events: none;
+  animation: ringRotate 14s linear infinite;
+}
+

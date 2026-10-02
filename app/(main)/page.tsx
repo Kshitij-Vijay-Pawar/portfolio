@@ -1,5 +1,6 @@
 import HeroSection from "../components/HeroSection";
 import ScrollReveal from "../components/ui/ScrollReveal";
+import ProjectsShowcase from "../components/ProjectsShowcase";
 
 export default function Home() {
   return (
@@ -30,6 +31,11 @@ export default function Home() {
           <span>DR. HILULUK • ONE PIECE</span>
           <span className="w-10 h-[1px] bg-neutral-300" />
         </div>
+      </section>
+
+      {/* 3. Featured Projects Section with Glass Circle Cursor */}
+      <section id="projects" className="relative w-full max-w-none bg-[#09090b]">
+        <ProjectsShowcase />
       </section>
     </main>
   );

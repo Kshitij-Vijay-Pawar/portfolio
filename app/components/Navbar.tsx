@@ -4,7 +4,7 @@ import React from "react";
 import { useNav } from "../context/NavContext";
 
 const Navbar = () => {
-  const { navOpen, setNavOpen } = useNav();
+  const { navOpen, setNavOpen, triggerAngry, resetMascotEmotion } = useNav();
 
   return (
     <header className="z-50 fixed top-0 left-0 w-full flex items-center justify-between p-6 sm:p-10 md:p-14 lg:p-16 pointer-events-none">
@@ -12,7 +12,14 @@ const Navbar = () => {
       <button
         type="button"
         onClick={() => setNavOpen(!navOpen)}
+        onMouseEnter={() => {
+          if (navOpen) triggerAngry();
+        }}
+        onMouseLeave={() => {
+          if (navOpen) resetMascotEmotion();
+        }}
         aria-label={navOpen ? "Close menu" : "Open menu"}
+        data-cursor="interactive"
         className="pointer-events-auto w-12 h-12 flex flex-col items-center justify-center relative cursor-pointer group focus:outline-none"
       >
         {/* Line 1: transforms from top horizontal bar into 45-degree cross stroke */}
