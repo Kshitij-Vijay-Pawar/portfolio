@@ -1,86 +1,18 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { ExternalLink, X } from "lucide-react";
+import { ExternalLink } from "lucide-react";
+import FluidGlass from "@/app/components/ui/FluidGlass";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-/* =========================================================================
-   Project Data
-   ========================================================================= */
-export interface Project {
-  id: string;
-  title: string;
-  category: string;
-  year: string;
-  desc: string;
-  image: string;
-  tags: string[];
-  liveUrl?: string;
-  client?: string;
-}
-
-export const PROJECTS: Project[] = [
-  {
-    id: "codenarts",
-    title: "CODENARTS",
-    category: "CREATIVE AGENCY / 3D",
-    year: "2025",
-    desc: "A bold creative agency website featuring futuristic Golden and purple visuals, seamless animations, and immersive storytelling.",
-    image: "/assets/images/projects/cod-1.avif",
-    tags: ["Next.js", "Three.js", "GSAP", "WebGL", "Creative Dev"],
-    liveUrl: "https://www.meermohsin.me/",
-    client: "Codenarts Studio",
-  },
-  {
-    id: "az-digital",
-    title: "AZ-DIGITAL-VENTURES",
-    category: "BRANDING / WEB APP",
-    year: "2025",
-    desc: "A bold digital agency website showcasing premium branding, striking typography, and conversion-focused services with a modern editorial aesthetic.",
-    image: "/assets/images/projects/az-1.avif",
-    tags: ["React 19", "Tailwind CSS", "Motion", "Editorial"],
-    liveUrl: "https://www.meermohsin.me/",
-    client: "AZ Digital Ventures",
-  },
-  {
-    id: "amron",
-    title: "AMRON",
-    category: "MOTION & 3D DESIGN",
-    year: "2025",
-    desc: "A futuristic creative agency concept featuring bold 3D visuals, cinematic motion, and a premium digital aesthetic that emphasizes storytelling and visual impact.",
-    image: "/assets/images/projects/am-1.avif",
-    tags: ["WebGL", "Three.js", "FBO Shaders", "3D Optic"],
-    liveUrl: "https://www.meermohsin.me/",
-    client: "Amron Creative Lab",
-  },
-  {
-    id: "chatone",
-    title: "CHATONE",
-    category: "PRODUCT DESIGN / SAAS",
-    year: "2025",
-    desc: "A clean, light-themed messaging app designed for effortless conversations, real-time communication, and an intuitive user experience.",
-    image: "/assets/images/projects/chat-1.avif",
-    tags: ["Product Design", "TypeScript", "Realtime WebSocket"],
-    liveUrl: "https://www.meermohsin.me/",
-    client: "ChatOne Global",
-  },
-  {
-    id: "finance",
-    title: "FINANCE AI",
-    category: "FINTECH / DESIGN SYSTEM",
-    year: "2026",
-    desc: "A futuristic finance platform combining glowing green visuals, intuitive dashboards, and seamless banking for modern users.",
-    image: "/assets/images/projects/fi-1.avif",
-    tags: ["Fintech", "Dark Mode UI", "Data Visualization", "GSAP"],
-    liveUrl: "https://www.meermohsin.me/",
-    client: "Finance AI Technologies",
-  },
-];
+import { PROJECTS, type Project } from "@/app/data/projects";
+export { PROJECTS, type Project };
 
 /* =========================================================================
    Constants
@@ -103,101 +35,6 @@ const getPreviewOffsets = (vh: number) => ({
   // top preview: center of card is approx (active card height / 2 * scale + gap) above center
   prevY: -(vh * 0.5 + vh * 0.08), // well above center, partially clipped
   nextY: vh * 0.5 + vh * 0.08, // well below center, partially clipped
-});
-
-/* =========================================================================
-   Project Modal
-   ========================================================================= */
-interface ProjectModalProps {
-  project: Project | null;
-  onClose: () => void;
-}
-
-const ProjectModal = React.memo(function ProjectModal({
-  project,
-  onClose,
-}: ProjectModalProps) {
-  useEffect(() => {
-    if (!project) return;
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [project, onClose]);
-
-  if (!project) return null;
-
-  return (
-    <div className="fixed inset-0 z-[9999999] flex items-center justify-center p-4 bg-black/85 backdrop-blur-xl animate-in fade-in duration-200">
-      <div className="relative w-full max-w-2xl bg-zinc-950 border border-white/15 rounded-3xl p-6 sm:p-8 overflow-hidden shadow-2xl max-h-[90vh] overflow-y-auto">
-        <button
-          onClick={onClose}
-          aria-label="Close Preview"
-          className="absolute top-6 right-6 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors"
-        >
-          <X className="w-5 h-5" />
-        </button>
-
-        <div className="w-full h-52 sm:h-64 rounded-2xl overflow-hidden mb-6 border border-white/10 bg-black">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={project.image}
-            alt={project.title}
-            className="w-full h-full object-cover"
-          />
-        </div>
-
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-mono text-[#ff5500] uppercase tracking-wider">
-              {project.category} • {project.year}
-            </span>
-            {project.client && (
-              <span className="text-xs font-mono text-zinc-400">
-                Client: {project.client}
-              </span>
-            )}
-          </div>
-          <h2 className="text-2xl sm:text-3xl font-black uppercase text-white tracking-tight">
-            {project.title}
-          </h2>
-          <p className="text-sm sm:text-base text-zinc-300 leading-relaxed font-light">
-            {project.desc}
-          </p>
-          <div className="pt-2 flex flex-wrap gap-2">
-            {project.tags.map((tag) => (
-              <span
-                key={tag}
-                className="px-3 py-1 rounded-full text-xs font-mono bg-white/5 border border-white/10 text-white/80"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-          <div className="pt-6 flex items-center gap-4">
-            {project.liveUrl && (
-              <a
-                href={project.liveUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white text-black font-semibold text-xs font-mono uppercase tracking-wider hover:bg-zinc-200 transition-colors"
-              >
-                <span>Launch Live Site</span>
-                <ExternalLink className="w-3.5 h-3.5" />
-              </a>
-            )}
-            <button
-              onClick={onClose}
-              className="px-6 py-3 rounded-full border border-white/20 text-white font-mono text-xs uppercase tracking-wider hover:bg-white/10 transition-colors"
-            >
-              Close Preview
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
 });
 
 /* =========================================================================
@@ -238,11 +75,10 @@ export default function ProjectsShowcase() {
   const circleRef = useRef<SVGCircleElement>(null);
   const stepNumberRef = useRef<HTMLSpanElement>(null);
 
-  // Modal
-  const [activeModal, setActiveModal] = useState<Project | null>(null);
-
-  // Guard: only the active card should open the modal on click
+  // Guard: only the active card should open the project on click
   const currentIndexRef = useRef(0);
+  const [activeIdx, setActiveIdx] = useState(0);
+  const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -328,7 +164,7 @@ export default function ProjectsShowcase() {
       for (let i = 0; i < total; i++) {
         const el = bgRefs.current[i];
         if (!el) continue;
-        el.style.opacity = i === idx ? "0.85" : "0";
+        el.style.opacity = i === idx ? "0.95" : "0";
       }
     };
 
@@ -382,6 +218,7 @@ export default function ProjectsShowcase() {
       /* ── 2. Step number — update instantly on index change ── */
       if (currentIndex !== lastCurrentIndex) {
         lastCurrentIndex = currentIndex;
+        setActiveIdx(currentIndex);
         if (stepNumberRef.current) {
           stepNumberRef.current.textContent = String(currentIndex + 1).padStart(
             2,
@@ -530,8 +367,8 @@ export default function ProjectsShowcase() {
       /* ── 7. Background crossfade during transition ── */
       const outBg = bgRefs.current[currentIndex];
       const inBg = bgRefs.current[nextIndex];
-      if (outBg) outBg.style.opacity = `${(1 - t) * 0.85}`;
-      if (inBg) inBg.style.opacity = `${t * 0.85}`;
+      if (outBg) outBg.style.opacity = `${(1 - t) * 0.95}`;
+      if (inBg) inBg.style.opacity = `${t * 0.95}`;
       // Hide any others
       for (let i = 0; i < total; i++) {
         if (i !== currentIndex && i !== nextIndex) {
@@ -610,9 +447,11 @@ export default function ProjectsShowcase() {
     };
   }, []);
 
+  const router = useRouter();
+
   const handleCardClick = (project: Project, index: number) => {
     if (index === currentIndexRef.current) {
-      setActiveModal(project);
+      router.push(`/projects/${project.id}`);
     }
   };
 
@@ -640,42 +479,23 @@ export default function ProjectsShowcase() {
               key={`bg-${project.id}`}
               ref={(el) => { bgRefs.current[i] = el; }}
               className="absolute inset-0 w-full h-full will-change-[opacity]"
-              style={{ opacity: i === 0 ? 0.85 : 0 }}
+              style={{ opacity: i === 0 ? 0.95 : 0 }}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={project.image}
                 alt=""
                 aria-hidden="true"
-                className="w-full h-full object-cover filter blur-[28px] scale-110 transform-gpu brightness-[0.9] contrast-[1.02]"
+                className="w-full h-full object-cover filter blur-[24px] scale-110 transform-gpu brightness-[1.15] contrast-[1.05]"
               />
             </div>
           ))}
-          {/* Dark overlay + vignette */}
-          <div className="absolute inset-0 bg-black/35 pointer-events-none" />
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0)_0%,rgba(0,0,0,0.3)_60%,rgba(9,9,11,0.65)_100%)] pointer-events-none" />
+          {/* Subtle light overlay + vignette for text contrast without making it too dark */}
+          <div className="absolute inset-0 bg-black/15 pointer-events-none" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0)_0%,rgba(0,0,0,0.15)_60%,rgba(9,9,11,0.45)_100%)] pointer-events-none" />
         </div>
 
-        {/* ── Top-left emblem ── */}
-        <div className="absolute top-8 left-6 sm:left-10 md:left-14 z-30 pointer-events-none">
-          <svg
-            width="44"
-            height="44"
-            viewBox="0 0 100 100"
-            fill="none"
-            className="text-white opacity-95 drop-shadow-[0_4px_12px_rgba(0,0,0,0.6)]"
-          >
-            <path
-              d="M50 8 C48 24 38 35 24 38 C14 40 8 48 10 54 C12 60 22 56 30 64 C38 72 44 85 50 94 C56 85 62 72 70 64 C78 56 88 60 90 54 C92 48 86 40 76 38 C62 35 52 24 50 8 Z"
-              fill="currentColor"
-            />
-            <path
-              d="M50 25 C45 35 34 42 20 45 C28 50 36 50 42 58 C46 64 48 74 50 80 C52 74 54 64 58 58 C64 50 72 50 80 45 C66 42 55 35 50 25 Z"
-              fill="#09090b"
-            />
-            <circle cx="50" cy="50" r="3.5" fill="currentColor" />
-          </svg>
-        </div>
+
 
         {/* ── Left: title blocks — positioned at vertical center, left side ── */}
         {/*
@@ -721,6 +541,9 @@ export default function ProjectsShowcase() {
               ref={(el) => { cardRefs.current[index] = el; }}
               id={`project-card-${project.id}`}
               onClick={() => handleCardClick(project, index)}
+              onMouseEnter={() => setHoveredIdx(index)}
+              onMouseLeave={() => setHoveredIdx(null)}
+              data-cursor="fluid-glass"
               className="absolute left-1/2 top-1/2 will-change-[opacity,transform,filter] cursor-pointer select-none
                          w-[72vw] h-[50vh] sm:w-[60vw] sm:h-[52vh] md:w-[50vw] md:h-[56vh] lg:w-[44vw] lg:h-[58vh]
                          max-w-[820px] max-h-[540px]"
@@ -740,18 +563,41 @@ export default function ProjectsShowcase() {
                   <img
                     src={project.image}
                     alt={project.title}
-                    className="w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-[1.03] group-hover:brightness-105"
+                    className="w-full h-full object-cover object-center transition-[filter] duration-700 ease-out group-hover:brightness-105"
                     loading="eager"
                   />
-                  {/* Hover overlay */}
-                  <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center pointer-events-none">
-                    <div className="px-5 py-2.5 bg-white/20 border border-white/40 text-white font-mono text-xs uppercase tracking-wider backdrop-blur-md flex items-center gap-2 translate-y-2 group-hover:translate-y-0 transition-transform">
-                      <span>View Case Study</span>
-                      <ExternalLink className="w-3.5 h-3.5 text-white" />
+                  {/* Hover overlay for inactive cards */}
+                  {activeIdx !== index && (
+                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center pointer-events-none">
+                      <div className="px-5 py-2.5 bg-white/20 border border-white/40 text-white font-mono text-xs uppercase tracking-wider backdrop-blur-md flex items-center gap-2 translate-y-2 group-hover:translate-y-0 transition-transform">
+                        <span>View Case Study</span>
+                        <ExternalLink className="w-3.5 h-3.5 text-white" />
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </div>
               </div>
+              {/* Interactive 3D Fluid Glass Lens Cursor (active card).
+                  Contains the View Case Study button inside its Three.js scene,
+                  so the transmission lens refracts both the image AND the button
+                  seamlessly when hovering over it! */}
+              {activeIdx === index && (
+                <FluidGlass
+                  mode="lens"
+                  lensProps={{
+                    scale: 0.15,
+                    ior: 1.15,
+                    thickness: 2,
+                    chromaticAberration: 0.11,
+                    anisotropy: 0.03,
+                  }}
+                  imageSrc={project.image}
+                  backgroundColor="transparent"
+                  isHovered={hoveredIdx === index}
+                  overflowPadding={160}
+                  className="z-30"
+                />
+              )}
             </div>
           ))}
         </div>
@@ -847,14 +693,6 @@ export default function ProjectsShowcase() {
           <span className="text-white/30 font-light">✕</span>
         </div>
       </div>
-
-      {/* ── Project detail modal ── */}
-      {activeModal && (
-        <ProjectModal
-          project={activeModal}
-          onClose={() => setActiveModal(null)}
-        />
-      )}
     </div>
   );
 }

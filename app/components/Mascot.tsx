@@ -22,6 +22,7 @@ export interface MascotRef {
 
 interface MascotProps {
   className?: string;
+  sizeClassName?: string;
   emotion?: MascotEmotion;
   onClick?: () => void;
   onMouseEnter?: () => void;
@@ -31,6 +32,7 @@ interface MascotProps {
 const Mascot = forwardRef<MascotRef, MascotProps>(function Mascot(
   {
     className = "",
+    sizeClassName = "w-40 h-40 md:w-56 md:h-56 lg:w-72 lg:h-72",
     emotion: propEmotion,
     onClick,
     onMouseEnter,
@@ -304,10 +306,10 @@ const Mascot = forwardRef<MascotRef, MascotProps>(function Mascot(
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       data-cursor="interactive"
-      className={`mascot-icon opacity-0 hidden sm:flex flex-col items-center justify-center pointer-events-auto cursor-pointer select-none transition-transform duration-500 hover:scale-105 active:scale-95 ${className}`}
+      className={`mascot-icon flex flex-col items-center justify-center pointer-events-auto cursor-pointer select-none transition-transform duration-500 hover:scale-105 active:scale-95 ${className}`}
     >
       <svg
-        className={`w-40 h-40 md:w-56 md:h-56 lg:w-72 lg:h-72 drop-shadow-sm transition-transform duration-300 ${
+        className={`${sizeClassName} drop-shadow-sm transition-transform duration-300 ${
           isHappy ? "rotate-[-2deg]" : isAngry ? "scale-[1.02]" : ""
         }`}
         viewBox="0 0 200 200"

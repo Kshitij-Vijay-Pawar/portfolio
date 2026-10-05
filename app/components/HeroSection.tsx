@@ -268,13 +268,15 @@ export default function HeroSection() {
         {/* Left Sub-Header Detail */}
         <div className="hero-corner-item hidden md:flex items-center gap-3">
           <span className="font-mono text-xs text-neutral-400">LOC</span>
-          <span
-            onClick={()=>window.open('https://maps.app.goo.gl/jwTdQXZVXkpEJ7ju9')}
+          <a
+            href="https://www.google.com/maps/search/?api=1&query=43.978412,15.383477"
+            target="_blank"
+            rel="noopener noreferrer"
             data-cursor="interactive"
-            className="font-mono text-xs font-semibold text-neutral-800 tracking-wider cursor-pointer"
+            className="font-mono text-xs font-semibold text-neutral-800 tracking-wider cursor-pointer pointer-events-auto hover:opacity-75 transition-opacity"
           >
             [43.978412° N, 15.383477° E]
-          </span>
+          </a>
         </div>
 
         

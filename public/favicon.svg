@@ -1,0 +1,30 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 52 52"
+>
+  <style>
+    .letter {
+      fill: #0a0a0a;
+    }
+    @media (prefers-color-scheme: dark) {
+      .letter {
+        fill: #ffffff;
+      }
+    }
+  </style>
+  <text
+    class="letter"
+    x="0"
+    y="43"
+    font-family="Arial, Helvetica, sans-serif"
+    font-size="48"
+    font-weight="900"
+    letter-spacing="-2"
+  >K</text>
+  <circle
+    cx="45"
+    cy="40"
+    r="6"
+    fill="#ff4400"
+  />
+</svg>

@@ -267,14 +267,14 @@ const FullScreenNav = () => {
 
           {/* Top Right Email */}
           <a
-            href="mailto:qudduslarek@gmail.com"
+            href="mailto:kshitij.vijay.pawar@gmail.com"
             data-cursor="interactive"
             onMouseEnter={() => triggerDoubleBlink()}
             onMouseLeave={() => resetMascotEmotion()}
             onClick={() => triggerDoubleBlink()}
             className="email-tag pointer-events-auto font-mono text-sm sm:text-base text-zinc-900 hover:opacity-70 transition-opacity tracking-tight opacity-0"
           >
-            qudduslarek@gmail.com
+            kshitij.vijay.pawar@gmail.com
           </a>
         </div>
 
@@ -316,8 +316,16 @@ const FullScreenNav = () => {
             ))}
           </nav>
 
-          {/* Right Bottom Mascot Illustration with Eye Tracking & Emotions */}
-          <Mascot />
+          {/* Right Bottom Mascot Illustration - Clickable to AI Companion page */}
+          <Link
+            href="/ai"
+            onClick={() => setNavOpen(false)}
+            data-cursor="interactive"
+            className="pointer-events-auto block"
+            title="Talk to AI Mascot"
+          >
+            <Mascot className="opacity-0 hidden sm:flex" />
+          </Link>
         </div>
       </div>
     </div>

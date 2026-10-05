@@ -2,7 +2,7 @@
 
 /* eslint-disable react/no-unknown-property */
 import * as THREE from 'three';
-import { useRef, useState, useEffect, memo, type ReactNode } from 'react';
+import { useRef, useState, useEffect, memo, Suspense, type ReactNode } from 'react';
 import { Canvas, createPortal, useFrame, useThree, type ThreeElements } from '@react-three/fiber';
 import {
   useFBO,
@@ -13,9 +13,20 @@ import {
   Preload,
   ScrollControls,
   MeshTransmissionMaterial,
-  Text
+  Text,
+  Html
 } from '@react-three/drei';
 import { easing } from 'maath';
+
+if (typeof window !== 'undefined') {
+  try {
+    useGLTF.preload('/assets/3d/lens.glb');
+    useGLTF.preload('/assets/3d/cube.glb');
+    useGLTF.preload('/assets/3d/bar.glb');
+  } catch {
+    // Ignore preload error during build/SSR
+  }
+}
 
 const IMAGE_URLS = [
   'https://images.unsplash.com/photo-1783394327207-acf441e37dda?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwcm9maWxlLXBhZ2V8MzR8fHxlbnwwfHx8fHw%3D',
@@ -41,6 +52,74 @@ interface FluidGlassProps {
   cubeProps?: ModeProps;
   backgroundColor?: string;
   textColor?: string;
+  imageSrc?: string;
+  isHovered?: boolean;
+  /** Card mode: px the lens canvas may extend past the card on each side (so the lens is never clipped). */
+  overflowPadding?: number;
+  className?: string;
+  children?: ReactNode;
+}
+
+/**
+ * Card content rendered *behind* the React Bits lens.
+ * drei <Image> handles object-cover cropping + sRGB colour space,
+ * exactly like the images in the original React Bits demo.
+ */
+function CardImage({
+  url,
+  padding = 0,
+  isHovered = false,
+}: {
+  url: string;
+  padding?: number;
+  isHovered?: boolean;
+}) {
+  const { viewport, size } = useThree();
+  const fx = size.width > 0 ? Math.max(0, size.width - padding * 2) / size.width : 1;
+  const fy = size.height > 0 ? Math.max(0, size.height - padding * 2) / size.height : 1;
+  return (
+    <>
+      {padding > 0 && (
+        <Image url={url} scale={[viewport.width, viewport.height]} position={[0, 0, -0.01]} color="#3a3a3a" />
+      )}
+      <Image url={url} scale={[viewport.width * fx, viewport.height * fy]} position={[0, 0, 0]} />
+
+      {/* 3D "VIEW CASE STUDY" pill inside the scene so the glass lens refracts it! */}
+      <group position={[0, 0, 0.05]} visible={isHovered}>
+        {/* Pill background */}
+        <mesh position={[0, 0, 0]}>
+          <planeGeometry args={[0.54, 0.12]} />
+          <meshBasicMaterial color="#ffffff" transparent opacity={0.2} toneMapped={false} />
+        </mesh>
+        {/* Pill border */}
+        <lineSegments position={[0, 0, 0.001]}>
+          <edgesGeometry args={[new THREE.PlaneGeometry(0.54, 0.12)]} />
+          <lineBasicMaterial color="#ffffff" transparent opacity={0.5} />
+        </lineSegments>
+        {/* Text */}
+        <Text
+          position={[-0.03, 0, 0.002]}
+          fontSize={0.038}
+          letterSpacing={0.05}
+          color="#ffffff"
+          anchorX="center"
+          anchorY="middle"
+        >
+          VIEW CASE STUDY
+        </Text>
+        {/* Simple external link arrow glyph */}
+        <Text
+          position={[0.2, 0.005, 0.002]}
+          fontSize={0.045}
+          color="#ffffff"
+          anchorX="center"
+          anchorY="middle"
+        >
+          ↗
+        </Text>
+      </group>
+    </>
+  );
 }
 
 export default function FluidGlass({
@@ -49,11 +128,43 @@ export default function FluidGlass({
   barProps = {},
   cubeProps = {},
   backgroundColor = '#120F17',
-  textColor = '#ffffff'
+  textColor = '#ffffff',
+  imageSrc,
+  isHovered = true,
+  overflowPadding = 160,
+  className,
+  children
 }: FluidGlassProps) {
-  const Wrapper = mode === 'bar' ? Bar : mode === 'cube' ? Cube : Lens;
   const rawOverrides = mode === 'bar' ? barProps : mode === 'cube' ? cubeProps : lensProps;
 
+  // Single-image card mode (project showcase cards) — same React Bits Lens, image as the scene
+  if (imageSrc) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { navItems: _navItems, ...cardModeProps } = rawOverrides;
+    const pad = overflowPadding;
+    return (
+      <div
+        className={`pointer-events-none absolute ${className ?? ''}`}
+        style={{ top: -pad, left: -pad, right: -pad, bottom: -pad }}
+      >
+        <Canvas
+          camera={{ position: [0, 0, 20], fov: 15 }}
+          gl={{ alpha: true, toneMapping: THREE.NoToneMapping }}
+          style={{ width: '100%', height: '100%', background: 'transparent', pointerEvents: 'none' }}
+        >
+          <Suspense fallback={null}>
+            <Lens modeProps={cardModeProps} backgroundColor={backgroundColor} active={isHovered} padding={pad}>
+              <CardImage url={imageSrc} padding={pad} isHovered={isHovered} />
+              <Preload />
+            </Lens>
+          </Suspense>
+        </Canvas>
+      </div>
+    );
+  }
+
+  // Standalone showcase mode
+  const Wrapper = mode === 'bar' ? Bar : mode === 'cube' ? Cube : Lens;
   const {
     navItems = [
       { label: 'Home', link: '' },
@@ -64,23 +175,29 @@ export default function FluidGlass({
   } = rawOverrides;
 
   return (
-    <Canvas
-      camera={{ position: [0, 0, 20], fov: 15 }}
-      gl={{ alpha: true, toneMapping: THREE.NoToneMapping }}
-      style={{ backgroundColor }}
-    >
-      <ScrollControls damping={0.2} pages={3} distance={0.4}>
-        {mode === 'bar' && <NavItems items={navItems as NavItem[]} textColor={textColor} />}
-        <Wrapper modeProps={modeProps} backgroundColor={backgroundColor}>
-          <Scroll>
-            <Typography textColor={textColor} />
-            <Images />
-          </Scroll>
-          <Scroll html />
-          <Preload />
-        </Wrapper>
-      </ScrollControls>
-    </Canvas>
+    <div className={`w-full h-full relative ${className ?? ''}`}>
+      <Canvas
+        camera={{ position: [0, 0, 20], fov: 15 }}
+        gl={{ alpha: true, toneMapping: THREE.NoToneMapping }}
+        style={{ backgroundColor: backgroundColor || '#120F17' }}
+      >
+        <ScrollControls damping={0.2} pages={3} distance={0.4}>
+          {mode === 'bar' && <NavItems items={navItems as NavItem[]} textColor={textColor} />}
+          <Wrapper modeProps={modeProps} backgroundColor={backgroundColor}>
+            {children ? (
+              children
+            ) : (
+              <Scroll>
+                <Typography textColor={textColor} />
+                <Images />
+              </Scroll>
+            )}
+            <Scroll html />
+            <Preload />
+          </Wrapper>
+        </ScrollControls>
+      </Canvas>
+    </div>
   );
 }
 
@@ -92,6 +209,14 @@ interface ModeWrapperProps extends MeshProps {
   geometryKey: string;
   lockToBottom?: boolean;
   followPointer?: boolean;
+  /** Optional: when defined, lens scales to 0 when false (used for hover on cards). */
+  active?: boolean;
+  /**
+   * Optional (card mode): px the canvas overflows its card on each side. Enables window-level
+   * pointer tracking, keeps the lens the same on-screen size, and hides the backdrop quad so
+   * only the lens is drawn (the DOM image underneath stays visible).
+   */
+  padding?: number;
   modeProps?: ModeProps;
   backgroundColor?: string;
 }
@@ -114,6 +239,8 @@ const ModeWrapper = memo(function ModeWrapper({
   followPointer = true,
   modeProps = {},
   backgroundColor = '#120F17',
+  active,
+  padding,
   ...props
 }: ModeWrapperProps) {
   const ref = useRef<THREE.Mesh>(null!);
@@ -122,6 +249,8 @@ const ModeWrapper = memo(function ModeWrapper({
   const { viewport: vp } = useThree();
   const [scene] = useState<THREE.Scene>(() => new THREE.Scene());
   const geoWidthRef = useRef<number>(1);
+  const isCardMode = padding !== undefined;
+  const mouseRef = useRef<{ x: number; y: number } | null>(null);
 
   useEffect(() => {
     const geo = (nodes[geometryKey] as THREE.Mesh)?.geometry;
@@ -129,15 +258,42 @@ const ModeWrapper = memo(function ModeWrapper({
     geoWidthRef.current = geo.boundingBox!.max.x - geo.boundingBox!.min.x || 1;
   }, [nodes, geometryKey]);
 
+  // Card mode: canvas is click-through, so track the mouse on window instead
+  useEffect(() => {
+    if (!isCardMode) return;
+    const onMove = (e: MouseEvent) => {
+      mouseRef.current = { x: e.clientX, y: e.clientY };
+    };
+    window.addEventListener('mousemove', onMove, { passive: true });
+    return () => window.removeEventListener('mousemove', onMove);
+  }, [isCardMode]);
+
   useFrame((state, delta) => {
-    const { gl, viewport, pointer, camera } = state;
+    const { gl, viewport, pointer, camera, size } = state;
     const v = viewport.getCurrentViewport(camera, [0, 0, 15]);
 
-    const destX = followPointer ? (pointer.x * v.width) / 2 : 0;
-    const destY = lockToBottom ? -v.height / 2 + 0.2 : followPointer ? (pointer.y * v.height) / 2 : 0;
+    let px = pointer.x;
+    let py = pointer.y;
+    if (isCardMode && mouseRef.current) {
+      const rect = gl.domElement.getBoundingClientRect();
+      if (rect.width > 0 && rect.height > 0) {
+        px = ((mouseRef.current.x - rect.left) / rect.width) * 2 - 1;
+        py = -((mouseRef.current.y - rect.top) / rect.height) * 2 + 1;
+      }
+    }
+
+    const destX = followPointer ? (px * v.width) / 2 : 0;
+    const destY = lockToBottom ? -v.height / 2 + 0.2 : followPointer ? (py * v.height) / 2 : 0;
     easing.damp3(ref.current.position, [destX, destY, 15], 0.15, delta);
 
-    if ((modeProps as { scale?: number }).scale == null) {
+    if (active !== undefined) {
+      const userScale = (modeProps as { scale?: number }).scale;
+      // Keep lens the same on-screen size as if the canvas were exactly the card
+      const sizeFactor =
+        isCardMode && size.height > 0 ? Math.max(0, size.height - padding! * 2) / size.height : 1;
+      const target = active ? (userScale ?? 0.15) * sizeFactor : 0;
+      easing.damp3(ref.current.scale, [target, target, target], 0.15, delta);
+    } else if ((modeProps as { scale?: number }).scale == null) {
       const maxWorld = v.width * 0.9;
       const desired = maxWorld / geoWidthRef.current;
       ref.current.scale.setScalar(Math.min(0.15, desired));
@@ -163,21 +319,25 @@ const ModeWrapper = memo(function ModeWrapper({
     <>
       {createPortal(
         <>
-          <mesh position={[0, 0, -5]} scale={[vp.width * 2, vp.height * 2, 1]}>
-            <planeGeometry />
-            <meshBasicMaterial color={backgroundColor} toneMapped={false} />
-          </mesh>
+          {backgroundColor !== 'transparent' && (
+            <mesh position={[0, 0, -5]} scale={[vp.width * 2, vp.height * 2, 1]}>
+              <planeGeometry />
+              <meshBasicMaterial color={backgroundColor} toneMapped={false} />
+            </mesh>
+          )}
           {children}
         </>,
         scene
       )}
-      <mesh scale={[vp.width, vp.height, 1]}>
-        <planeGeometry />
-        <meshBasicMaterial map={buffer.texture} transparent toneMapped={false} />
-      </mesh>
+      {!isCardMode && (
+        <mesh scale={[vp.width, vp.height, 1]}>
+          <planeGeometry />
+          <meshBasicMaterial map={buffer.texture} transparent toneMapped={false} />
+        </mesh>
+      )}
       <mesh
         ref={ref}
-        scale={scale ?? 0.15}
+        scale={active !== undefined ? 0 : scale ?? 0.15}
         rotation-x={Math.PI / 2}
         geometry={(nodes[geometryKey] as THREE.Mesh)?.geometry}
         {...props}

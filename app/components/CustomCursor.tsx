@@ -3,21 +3,14 @@
 import React, { useEffect, useRef } from "react";
 
 /**
- * Custom Two-State Cursor System
+ * Custom Three-State Cursor System
  * 
  * State 1: DEFAULT CURSOR — Small vibrant orange dot (#ff5500) with subtle smooth easing.
  * State 2: INTERACTIVE CURSOR — Large inverted/contrast circle using `mix-blend-mode: difference`
  *          and crisp white fill, expanding outward smoothly from the cursor center.
- *
- * Features:
- * - Fluid 60fps lerp via requestAnimationFrame (no React state updates during movement).
- * - Smooth CSS / GSAP-like cubic bezier transitions for scale, mix-blend-mode, and background color.
- * - Handles interactive elements via `data-cursor="interactive"`, buttons, links, roles, and inputs.
- * - Event delegation for dynamically added/removed elements.
- * - Seamless element switching without glitch or flicker.
- * - Auto-hides on mobile / touch / pointer:coarse devices.
- * - Window mouseleave / mouseenter detection.
- * - Respects prefers-reduced-motion.
+ * State 3: FLUID GLASS CURSOR — The DOM cursor hides itself and hands off to the real 3D
+ *          FluidGlass lens (`ui/FluidGlass.tsx`, mode "lens") rendered inside elements marked
+ *          with `data-cursor="fluid-glass"` (e.g. ProjectsShowcase cards).
  */
 export default function CustomCursor() {
   const cursorRef = useRef<HTMLDivElement | null>(null);
@@ -41,10 +34,11 @@ export default function CustomCursor() {
     let currentY = -100;
 
     let isVisible = false;
-    let isInteractive = false;
+    type CursorMode = "default" | "interactive" | "fluid-glass";
+    let currentMode: CursorMode = "default";
     let animationFrameId: number;
 
-    // Linear interpolation easing factor (0.2 = responsive, smooth, non-sluggish)
+    // Linear interpolation easing factor
     const lerpFactor = prefersReducedMotion ? 1 : 0.22;
 
     const render = () => {
@@ -79,34 +73,46 @@ export default function CustomCursor() {
       }
     };
 
-    // Helper to determine if an element or its ancestor is interactive
-    const checkInteractive = (target: EventTarget | null): boolean => {
-      if (!(target instanceof Element)) return false;
+    // Helper to determine active cursor mode from target hierarchy
+    const detectCursorMode = (target: EventTarget | null): CursorMode => {
+      if (!(target instanceof Element)) return "default";
 
-      // If target or any ancestor explicitly opts out of custom interactive cursor
+      // Explicit opt-outs
       if (target.closest('[data-cursor="default"], [data-cursor="none"]')) {
-        return false;
+        return "default";
       }
 
-      // Check nearest interactive target
+      // Check for 3rd state: Fluid Glass Cursor
+      if (target.closest('[data-cursor="fluid-glass"]')) {
+        return "fluid-glass";
+      }
+
+      // Check nearest interactive target for inverted interactive cursor
       const interactiveEl = target.closest(
         'a, button, [role="button"], [role="option"], [data-cursor="interactive"], input, select, textarea, .cursor-pointer'
       );
 
-      if (!interactiveEl) return false;
+      if (interactiveEl) {
+        return "interactive";
+      }
 
-      return true;
+      return "default";
+    };
+
+    const updateCursorClass = (mode: CursorMode) => {
+      cursorEl.classList.remove("is-interactive", "is-fluid-glass");
+      if (mode === "interactive") {
+        cursorEl.classList.add("is-interactive");
+      } else if (mode === "fluid-glass") {
+        cursorEl.classList.add("is-fluid-glass");
+      }
     };
 
     const onMouseOver = (e: MouseEvent) => {
-      const match = checkInteractive(e.target);
-      if (match !== isInteractive) {
-        isInteractive = match;
-        if (isInteractive) {
-          cursorEl.classList.add("is-interactive");
-        } else {
-          cursorEl.classList.remove("is-interactive");
-        }
+      const mode = detectCursorMode(e.target);
+      if (mode !== currentMode) {
+        currentMode = mode;
+        updateCursorClass(currentMode);
       }
     };
 

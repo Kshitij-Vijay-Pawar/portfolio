@@ -1,5 +1,6 @@
 import Navbar from "@/app/components/Navbar";
 import FullScreenNav from "@/app/components/FullScreenNav";
+import Footer from "@/app/components/Footer";
 import { NavProvider } from "@/app/context/NavContext";
 
 export default function MainLayout({
@@ -13,6 +14,7 @@ export default function MainLayout({
         <Navbar />
         <FullScreenNav />
         <main className="flex-1 w-full flex flex-col">{children}</main>
+        <Footer />
       </div>
     </NavProvider>
   );

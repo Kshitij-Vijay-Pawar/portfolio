@@ -119,6 +119,12 @@ body {
   box-shadow: none;
 }
 
+/* FLUID GLASS STATE: hide DOM cursor — the real 3D FluidGlass lens (ui/FluidGlass.tsx) takes over */
+.custom-cursor-follower.is-fluid-glass .custom-cursor-dot {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0);
+}
+
 /* Reduced motion preference */
 @media (prefers-reduced-motion: reduce) {
   .custom-cursor-dot {
