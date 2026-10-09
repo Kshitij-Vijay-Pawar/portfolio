@@ -4,13 +4,14 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import React, { useRef } from "react";
 import Link from "next/link";
+import { Download } from "lucide-react";
 import { useNav } from "../context/NavContext";
 import Mascot from "./Mascot";
 
 const navLinks = [
   { title: "HOME", href: "/" },
+  { title: "ABOUT", href: "/about" },
   { title: "PROJECTS", href: "/projects" },
-  { title: "BLOGS", href: "/blogs" },
   { title: "CONTACT", href: "/contact" },
 ];
 
@@ -265,17 +266,32 @@ const FullScreenNav = () => {
           {/* Spacer so the top-left button lines up cleanly */}
           <div className="w-12 h-12" />
 
-          {/* Top Right Email */}
-          <a
-            href="mailto:kshitij.vijay.pawar@gmail.com"
-            data-cursor="interactive"
-            onMouseEnter={() => triggerDoubleBlink()}
-            onMouseLeave={() => resetMascotEmotion()}
-            onClick={() => triggerDoubleBlink()}
-            className="email-tag pointer-events-auto font-mono text-sm sm:text-base text-zinc-900 hover:opacity-70 transition-opacity tracking-tight opacity-0"
-          >
-            kshitij.vijay.pawar@gmail.com
-          </a>
+          {/* Top Right Actions: Resume Download & Email */}
+          <div className="flex items-center gap-4 sm:gap-6 pointer-events-auto">
+            <a
+              href="/resume/Kshitij_Resume.pdf"
+              download="Kshitij_Resume.pdf"
+              data-cursor="interactive"
+              onMouseEnter={() => triggerDoubleBlink()}
+              onMouseLeave={() => resetMascotEmotion()}
+              className="email-tag flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-zinc-900/15 bg-white/70 hover:bg-zinc-950 hover:text-white transition-all text-xs sm:text-sm font-mono tracking-tight text-zinc-900 shadow-xs opacity-0"
+              title="Download Resume / CV"
+            >
+              <Download className="w-3.5 h-3.5" />
+              <span>Resume</span>
+            </a>
+
+            <a
+              href="mailto:kshitij.vijay.pawar@gmail.com"
+              data-cursor="interactive"
+              onMouseEnter={() => triggerDoubleBlink()}
+              onMouseLeave={() => resetMascotEmotion()}
+              onClick={() => triggerDoubleBlink()}
+              className="email-tag font-mono text-sm sm:text-base text-zinc-900 hover:opacity-70 transition-opacity tracking-tight opacity-0"
+            >
+              kshitij.vijay.pawar@gmail.com
+            </a>
+          </div>
         </div>
 
         {/* Bottom Area: Large Left-aligned Links & Bottom-Right Red Mascot Icon */}
