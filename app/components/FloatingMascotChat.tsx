@@ -100,22 +100,22 @@ export default function FloatingMascotChat() {
       {/* ========================================================= */}
       {/* FLOATING TRIGGER (Bottom Right)                          */}
       {/* ========================================================= */}
-      <div className="fixed bottom-6 right-6 z-40 flex items-end gap-3 pointer-events-auto">
+      <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40 flex items-end gap-3 pointer-events-auto">
         {/* Mascot Floating Orb Button */}
         <button
           onClick={() => setIsOpen(!isOpen)}
           aria-label={isOpen ? "Close AI Companion" : "Open AI Companion"}
           data-cursor="interactive"
-          className="group relative w-16 h-16 sm:w-20 sm:h-20 rounded-full to-neutral-100 hover:border-neutral-900 flex items-center justify-center transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer overflow-visible"
+          className="group relative w-14 h-14 sm:w-20 sm:h-20 rounded-full bg-white/90 sm:bg-transparent border border-neutral-200/80 sm:border-transparent shadow-lg sm:shadow-none hover:border-neutral-900 flex items-center justify-center transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer overflow-visible"
         >
           {/* Subtle Ambient Pulse Ring */}
           <div className="absolute -inset-1 rounded-full animate-pulse pointer-events-none" />
 
           {/* Eye-tracking Mascot Ref */}
-          <div className="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center">
+          <div className="w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center">
             <Mascot
               ref={floatingMascotRef}
-              sizeClassName="w-12 h-12 sm:w-14 sm:h-14"
+              sizeClassName="w-10 h-10 sm:w-14 sm:h-14"
               className="drop-shadow-xs pointer-events-none hover:shadow-2xl"
             />
           </div>
@@ -128,7 +128,7 @@ export default function FloatingMascotChat() {
       {isOpen && (
         <div
           onClick={() => setIsOpen(false)}
-          className="fixed inset-0 z-40 bg-black/25 backdrop-blur-[2px] transition-opacity duration-300 pointer-events-auto"
+          className="fixed inset-0 z-40 bg-black/40 sm:bg-black/25 backdrop-blur-[2px] transition-opacity duration-300 pointer-events-auto"
           aria-hidden="true"
         />
       )}
@@ -137,7 +137,7 @@ export default function FloatingMascotChat() {
       {/* FLOATING AI CHAT MODAL DIALOG                            */}
       {/* ========================================================= */}
       {isOpen && (
-        <div className="fixed inset-0 sm:inset-auto sm:bottom-28 sm:right-6 z-50 w-full sm:w-[420px] md:w-[460px] h-full sm:h-[620px] max-h-screen sm:max-h-[85vh] flex flex-col bg-white sm:rounded-3xl border border-neutral-200/90 shadow-2xl overflow-hidden animate-in fade-in slide-in-from-bottom-6 duration-200">
+        <div className="fixed inset-x-2 bottom-2 top-14 sm:inset-auto sm:bottom-28 sm:right-6 z-50 w-auto sm:w-[420px] md:w-[460px] h-auto sm:h-[620px] max-h-[calc(100svh-4rem)] sm:max-h-[85vh] flex flex-col bg-white rounded-2xl sm:rounded-3xl border border-neutral-200/90 shadow-2xl overflow-hidden animate-in fade-in slide-in-from-bottom-6 duration-200">
           {/* Modal Header */}
           <div className="p-4 bg-neutral-950 text-white flex items-center justify-between border-b border-neutral-800 shrink-0">
             <div className="flex items-center gap-3">

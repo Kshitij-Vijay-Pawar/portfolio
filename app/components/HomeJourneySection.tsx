@@ -822,9 +822,9 @@ export default function HomeJourneySection() {
       {/* =======================================================================
           MOBILE & TABLET: Vertical Stacked Timeline (max-width: 1023px)
           ======================================================================= */}
-      <div className="block lg:hidden relative w-full py-16 px-6 sm:px-12">
+      <div className="block lg:hidden relative w-full py-12 sm:py-16 px-4 sm:px-8 md:px-12">
         {/* Continuous Left Vertical Glowing Axis Line */}
-        <div className="absolute top-16 bottom-16 left-9 sm:left-15 w-[1px] bg-white/20">
+        <div className="absolute top-12 bottom-12 left-7 sm:left-11 md:left-15 w-[1px] bg-white/20">
           {/* Glowing accent track */}
           <div
             className="w-full bg-white shadow-[0_0_10px_#ffffff]"
@@ -835,14 +835,14 @@ export default function HomeJourneySection() {
           />
         </div>
 
-        <div className="flex flex-col space-y-16 sm:space-y-20">
+        <div className="flex flex-col space-y-12 sm:space-y-16">
           {MILESTONES.map((item, idx) => {
             const isCurrent = activeMilestoneIndex === idx;
 
             return (
               <div
                 key={item.number}
-                className="mobile-milestone-node relative flex items-start gap-6 sm:gap-10 pl-2 sm:pl-8 group"
+                className="mobile-milestone-node relative flex items-start gap-4 sm:gap-8 pl-1 sm:pl-4 group"
               >
                 {/* Node circle on the vertical axis */}
                 <div className="relative z-10 mt-1 shrink-0 flex items-center justify-center">
@@ -856,9 +856,9 @@ export default function HomeJourneySection() {
                 </div>
 
                 {/* Content Group (To the right of the timeline) */}
-                <div className="flex flex-col space-y-3 w-full">
+                <div className="flex flex-col space-y-2.5 w-full">
                   {/* Meta Label */}
-                  <div className="flex items-center gap-2 text-[11px] font-mono tracking-widest uppercase text-neutral-400">
+                  <div className="flex items-center gap-2 text-[10px] sm:text-[11px] font-mono tracking-widest uppercase text-neutral-400">
                     <span className="text-white font-semibold">[{item.number}]</span>
                     <span>&middot;</span>
                     <span>{item.dateLabel}</span>
@@ -866,10 +866,10 @@ export default function HomeJourneySection() {
 
                   {/* Heading & Subtitle */}
                   <div>
-                    <h3 className="text-xl sm:text-2xl font-bold tracking-tight text-white">
+                    <h3 className="text-lg sm:text-2xl font-bold tracking-tight text-white">
                       {item.location}
                     </h3>
-                    <p className="text-xs uppercase tracking-wider text-neutral-400 mt-0.5">
+                    <p className="text-[11px] sm:text-xs uppercase tracking-wider text-neutral-400 mt-0.5">
                       {item.title}
                     </p>
                   </div>
@@ -880,7 +880,7 @@ export default function HomeJourneySection() {
                   </p>
 
                   {/* Architectural Illustration */}
-                  <div className="w-full max-w-[280px] h-[160px] pt-3 pb-1 transition-opacity duration-300">
+                  <div className="w-full max-w-[280px] h-[150px] pt-2 pb-1 transition-opacity duration-300">
                     {item.svg}
                   </div>
                 </div>

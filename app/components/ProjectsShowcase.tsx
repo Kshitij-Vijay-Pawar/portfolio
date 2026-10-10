@@ -498,11 +498,7 @@ export default function ProjectsShowcase() {
 
 
         {/* ── Left: title blocks — positioned at vertical center, left side ── */}
-        {/*
-            On desktop: `left-[5vw]` max-width ~240px — sits comfortably
-            between the viewport edge and the centered card.
-        */}
-        <div className="absolute left-[5vw] top-1/2 -translate-y-1/2 z-25 pointer-events-none w-[22vw] max-w-[260px] min-w-[160px]">
+        <div className="absolute left-[4vw] sm:left-[5vw] top-1/2 -translate-y-1/2 z-25 pointer-events-none w-[28vw] sm:w-[22vw] max-w-[260px] min-w-[140px]">
           <div className="relative w-full min-h-[10rem] flex items-center">
             {PROJECTS.map((project, i) => (
               <div
@@ -520,7 +516,7 @@ export default function ProjectsShowcase() {
                   <br />
                   <span className="text-white/40">•</span> {project.year}
                 </span>
-                <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight text-white leading-[1.08] drop-shadow-[0_8px_24px_rgba(0,0,0,0.85)]">
+                <h1 className="text-lg sm:text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight text-white leading-[1.08] drop-shadow-[0_8px_24px_rgba(0,0,0,0.85)]">
                   {project.title}
                 </h1>
               </div>
@@ -529,11 +525,6 @@ export default function ProjectsShowcase() {
         </div>
 
         {/* ── Project cards: all absolutely centered, transformed by JS ── */}
-        {/*
-            The card wrapper sits at left:50%, top:50%.
-            JS applies: translate(-50%, calc(-50% + Ypx)) scale(s)
-            This moves cards to their prev/active/next positions.
-        */}
         <div className="absolute inset-0 w-full h-full pointer-events-none z-10">
           {PROJECTS.map((project, index) => (
             <div
@@ -545,7 +536,7 @@ export default function ProjectsShowcase() {
               onMouseLeave={() => setHoveredIdx(null)}
               data-cursor="fluid-glass"
               className="absolute left-1/2 top-1/2 will-change-[opacity,transform,filter] cursor-pointer select-none
-                         w-[72vw] h-[50vh] sm:w-[60vw] sm:h-[52vh] md:w-[50vw] md:h-[56vh] lg:w-[44vw] lg:h-[58vh]
+                         w-[82vw] h-[48svh] sm:w-[62vw] sm:h-[52vh] md:w-[50vw] md:h-[56vh] lg:w-[44vw] lg:h-[58vh]
                          max-w-[820px] max-h-[540px]"
               style={{
                 opacity: index === 0 ? 1 : index === 1 ? PREVIEW_OPACITY : 0,
@@ -577,10 +568,7 @@ export default function ProjectsShowcase() {
                   )}
                 </div>
               </div>
-              {/* Interactive 3D Fluid Glass Lens Cursor (active card).
-                  Contains the View Case Study button inside its Three.js scene,
-                  so the transmission lens refracts both the image AND the button
-                  seamlessly when hovering over it! */}
+              {/* Interactive 3D Fluid Glass Lens Cursor (active card) */}
               {activeIdx === index && (
                 <FluidGlass
                   mode="lens"
@@ -603,14 +591,7 @@ export default function ProjectsShowcase() {
         </div>
 
         {/* ── Right: description blocks ── */}
-        {/*
-            Positioned so it sits in the gap between the card's right edge
-            and the viewport right edge. On a typical 1440px screen with a
-            44vw card (≈ 634px wide), the card right edge is at ~73vw.
-            We place the description starting at ~76vw, capped at a comfortable
-            max-width so it doesn't bleed to the edge.
-        */}
-        <div className="absolute top-1/2 -translate-y-1/2 z-25 pointer-events-none hidden sm:block"
+        <div className="absolute top-1/2 -translate-y-1/2 z-25 pointer-events-none hidden md:block"
           style={{ left: "calc(50% + min(22vw, 420px) + 3vw)", maxWidth: "clamp(180px, 18vw, 300px)" }}>
           <div className="relative w-full min-h-[140px] flex items-center">
             {PROJECTS.map((project, i) => (
@@ -633,13 +614,8 @@ export default function ProjectsShowcase() {
         </div>
 
         {/* ── Circular progress indicator ── */}
-        {/*
-            Sits below the center card. On desktop: centered horizontally,
-            offset downward from center to roughly where the bottom of the
-            active card sits.
-        */}
         <div className="absolute left-1/2 -translate-x-1/2 z-25 pointer-events-none flex items-center justify-center"
-          style={{ top: "calc(50% + min(29vh, 300px))" }}>
+          style={{ top: "calc(50% + min(27vh, 290px))" }}>
           <div className="relative w-14 h-14 sm:w-[60px] sm:h-[60px] flex items-center justify-center">
             <svg
               width="60"

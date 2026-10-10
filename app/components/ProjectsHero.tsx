@@ -6,6 +6,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowDown, Sparkles, Layers, ArrowUpRight } from "lucide-react";
 import Link from "next/link";
+import ArchitecturalBackground from "./ui/ArchitecturalBackground";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -26,7 +27,6 @@ export default function ProjectsHero() {
   const metaRef = useRef<HTMLDivElement>(null);
   const chipsRef = useRef<HTMLDivElement>(null);
   const scrollIndicatorRef = useRef<HTMLDivElement>(null);
-  const gridLinesRef = useRef<HTMLDivElement>(null);
 
   useGSAP(
     () => {
@@ -119,22 +119,8 @@ export default function ProjectsHero() {
       ref={containerRef}
       className="relative w-full min-h-[85vh] sm:min-h-[90vh] flex flex-col justify-between overflow-hidden bg-[#fafaf9] text-zinc-900 pt-28 sm:pt-36 pb-12 px-6 sm:px-12 md:px-16 lg:px-20 select-none border-b border-neutral-200"
     >
-      {/* 1. Subtle Architectural Dot Grid & Crosshair Lines */}
-      <div
-        ref={gridLinesRef}
-        className="absolute inset-0 w-full h-full pointer-events-none z-0"
-      >
-        <div className="absolute inset-0 bg-dot-pattern opacity-60 [mask-image:radial-gradient(ellipse_at_center,black_50%,transparent_90%)]" />
-
-        {/* Structural Blueprint Grid Lines */}
-        <div className="absolute top-28 left-0 w-full h-[1px] bg-neutral-200/70" />
-        <div className="absolute bottom-24 left-0 w-full h-[1px] bg-neutral-200/70" />
-        <div className="absolute top-0 left-12 sm:left-20 w-[1px] h-full bg-neutral-200/60" />
-        <div className="absolute top-0 right-12 sm:right-20 w-[1px] h-full bg-neutral-200/60" />
-
-        {/* Soft Ambient Warm Glow */}
-        <div className="absolute top-1/3 right-1/4 w-[500px] h-[500px] bg-gradient-to-br from-amber-100/40 via-orange-50/20 to-transparent rounded-full blur-3xl pointer-events-none" />
-      </div>
+      {/* 1. Unified Architectural Dot Grid & Ambient Glow */}
+      <ArchitecturalBackground dotOpacity={0.65} glowVariant="subtle" />
 
       {/* 2. Top Header Metadata Breadcrumb */}
       <div className="relative z-10 w-full flex items-center justify-between hero-crumb">

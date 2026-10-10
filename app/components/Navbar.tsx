@@ -74,7 +74,7 @@ const Navbar = () => {
   const isLineWhite = !navOpen && isOverDark;
 
   return (
-    <header className="z-50 fixed top-0 left-0 w-full flex items-center justify-between p-6 sm:p-10 md:p-14 lg:p-16 pointer-events-none">
+    <header className="z-50 fixed top-0 left-0 w-full flex items-center justify-between p-4 sm:p-8 md:p-12 lg:p-16 pointer-events-none">
       {/* 2-line Menu Button on top left that morphs into a Cross ('X') */}
       <button
         type="button"

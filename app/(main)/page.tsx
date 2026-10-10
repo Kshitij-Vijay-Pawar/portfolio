@@ -4,6 +4,7 @@ import ProjectsShowcase from "../components/ProjectsShowcase";
 import HomeAboutSection from "../components/HomeAboutSection";
 import HomeJourneySection from "../components/HomeJourneySection";
 import ProjectsCtaTransition from "../components/ProjectsCtaTransition";
+import ArchitecturalBackground from "../components/ui/ArchitecturalBackground";
 
 export default function Home() {
   return (
@@ -18,8 +19,10 @@ export default function Home() {
       <HomeJourneySection />
 
       {/* 4. Scroll Narrative Statement Section */}
-      <section className="relative w-full py-32 sm:py-40 px-6 sm:px-12 md:px-20 max-w-6xl mx-auto flex flex-col justify-center items-center text-center">
-        <div className="mb-8 inline-flex items-center gap-2 px-3 py-1 rounded-full border border-neutral-300 bg-white/70 text-xs font-mono uppercase tracking-widest text-neutral-600">
+      <section className="relative w-full py-32 sm:py-40 px-6 sm:px-12 md:px-20 max-w-6xl mx-auto flex flex-col justify-center items-center text-center overflow-hidden">
+        <ArchitecturalBackground dotOpacity={0.5} glowVariant="subtle" showGridLines={false} />
+        
+        <div className="relative z-10 mb-8 inline-flex items-center gap-2 px-3 py-1 rounded-full border border-neutral-300 bg-white/70 text-xs font-mono uppercase tracking-widest text-neutral-600">
           Philosophy
         </div>
 

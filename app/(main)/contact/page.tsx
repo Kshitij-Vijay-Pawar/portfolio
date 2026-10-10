@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Mascot from "@/app/components/Mascot";
 import { Mail, ArrowUpRight, Check, Send } from "lucide-react";
+import ArchitecturalBackground from "@/app/components/ui/ArchitecturalBackground";
 
 export default function ContactPage() {
   const [result, setResult] = useState<string>("");
@@ -40,25 +41,15 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="relative w-full min-h-screen bg-[#fafaf9] text-zinc-900 selection:bg-zinc-900 selection:text-white flex flex-col justify-between pt-24 sm:pt-28 lg:pt-32 pb-16 px-4 sm:px-8 md:px-12 lg:px-14 xl:px-16 font-sans">
+    <div className="relative w-full min-h-screen bg-[#fafaf9] text-zinc-900 selection:bg-zinc-900 selection:text-white flex flex-col justify-between pt-20 sm:pt-28 lg:pt-32 pb-12 sm:pb-16 px-4 sm:px-8 md:px-12 lg:px-14 xl:px-16 font-sans overflow-x-hidden">
 
-      {/* 1. Background Grid & Dot Matrix Layer */}
-      <div className="absolute inset-0 w-full h-full pointer-events-none z-0">
-        <div className="absolute inset-0 bg-dot-pattern opacity-70 [mask-image:radial-gradient(ellipse_at_center,black_45%,transparent_85%)]" />
-
-        {/* Subtle Architectural Cross-lines for Technical Editorial Aesthetic */}
-        <div className="absolute top-24 left-0 w-full h-[1px] bg-neutral-200/60" />
-        <div className="absolute top-0 left-12 md:left-20 w-[1px] h-full bg-neutral-200/50" />
-        <div className="absolute top-0 right-12 md:right-20 w-[1px] h-full bg-neutral-200/50" />
-
-        {/* Soft Ambient Radial Glow Behind Mascot */}
-        <div className="absolute top-1/3 right-1/4 w-[400px] sm:w-[550px] lg:w-[700px] h-[400px] sm:h-[550px] lg:h-[700px] bg-gradient-to-tr from-orange-100/40 via-red-50/20 to-transparent rounded-full blur-3xl pointer-events-none" />
-      </div>
+      {/* 1. Unified Background Grid & Dot Matrix Layer */}
+      <ArchitecturalBackground dotOpacity={0.7} glowVariant="subtle" />
 
       {/* 2. Top Header Content & Status Badge */}
-      <div className="relative z-20 w-full flex items-center justify-between pb-6 mb-6 sm:mb-8 border-b border-neutral-200/80">
+      <div className="relative z-20 w-full flex items-center justify-between pb-4 sm:pb-6 mb-4 sm:mb-8 border-b border-neutral-200/80">
         {/* Left Sub-Header Detail */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
           <span className="w-2 h-2 rounded-full bg-[#ff5500] animate-pulse" />
           <span className="font-mono text-xs text-neutral-400">LOC</span>
           <a
@@ -82,13 +73,13 @@ export default function ContactPage() {
       </div>
 
       {/* 3. Central Canvas: Smooth natural flow with responsive layout */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto flex-1 flex flex-col justify-center my-auto py-4 sm:py-8">
+      <div className="relative z-10 w-full max-w-7xl mx-auto flex-1 flex flex-col justify-center my-auto py-2 sm:py-8">
 
         {/* Top Section: Headline + Description + Mascot on Top Right */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center mb-8 sm:mb-12">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-10 items-center mb-6 sm:mb-12">
 
           {/* Left Column: Big Headline */}
-          <div className="lg:col-span-7 flex flex-col space-y-4">
+          <div className="lg:col-span-7 flex flex-col space-y-3 sm:space-y-4">
             <div className="inline-flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-[#ff5500] inline-block" />
               <span className="font-mono text-[11px] text-neutral-500 uppercase tracking-widest font-semibold">
@@ -96,7 +87,7 @@ export default function ContactPage() {
               </span>
             </div>
 
-            <h1 className="text-[clamp(2.4rem,5.6vw,4.8rem)] font-black uppercase tracking-[-0.04em] leading-[0.92] text-neutral-950">
+            <h1 className="text-[clamp(2.2rem,5.6vw,4.8rem)] font-black uppercase tracking-[-0.04em] leading-[0.92] text-neutral-950">
               LET’S BUILD<br />
               SOMETHING<br />
               GREAT<span className="text-[#ff5500]">.</span>
@@ -108,15 +99,15 @@ export default function ContactPage() {
           </div>
 
           {/* Right Column: Narrative Callout + Interactive Mascot */}
-          <div className="lg:col-span-5 flex items-center justify-end gap-6 sm:gap-10 relative">
+          <div className="lg:col-span-5 flex items-center justify-center lg:justify-end gap-6 sm:gap-10 relative">
             {/* Mascot with orbit and cursor pupil tracking */}
-            <div className="relative flex flex-col items-center shrink-0 pr-4 sm:pr-8">
+            <div className="relative flex flex-col items-center shrink-0 pr-0 lg:pr-8 py-2">
               {/* Elliptical Orbit Ring */}
-              <div className="absolute -inset-6 sm:-inset-8 rounded-full border border-neutral-300/70 pointer-events-none transform -rotate-12 scale-y-45" />
+              <div className="absolute -inset-4 sm:-inset-8 rounded-full border border-neutral-300/70 pointer-events-none transform -rotate-12 scale-y-45" />
               <div className="absolute -top-2 right-4 w-2 h-2 rounded-full bg-[#ff5500]" />
 
               <Mascot
-                sizeClassName="w-28 h-28 sm:w-36 sm:h-36 md:w-44 md:h-44 lg:w-48 lg:h-48"
+                sizeClassName="w-24 h-24 sm:w-36 sm:h-36 md:w-44 md:h-44 lg:w-48 lg:h-48"
                 className="drop-shadow-lg"
               />
 
@@ -132,10 +123,10 @@ export default function ContactPage() {
         </div>
 
         {/* Bottom Form & Details Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start pt-8 border-t border-neutral-200/80">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-10 items-start pt-6 sm:pt-8 border-t border-neutral-200/80">
 
           {/* Left Column: Social Badges */}
-          <div className="lg:col-span-3 flex flex-col gap-3">
+          <div className="lg:col-span-3 flex flex-col gap-2.5 sm:gap-3">
             <span className="text-[10px] font-mono uppercase tracking-widest text-neutral-400 font-semibold mb-1">
               CONNECT &middot; DIRECT
             </span>

@@ -8,6 +8,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import TechText from "./ui/TechText";
 import heroImage from "@/public/images/Hero.png";
 import OptionWheel from "./ui/OptionWheel";
+import ArchitecturalBackground from "./ui/ArchitecturalBackground";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -244,27 +245,18 @@ export default function HeroSection() {
   return (
     <section
       ref={containerRef}
-      className="relative w-full h-screen min-h-[720px] flex flex-col justify-between overflow-hidden bg-[#fafaf9] pt-20 sm:pt-24 pb-6 px-4 sm:px-8 md:px-14 select-none"
+      className="relative w-full h-[100svh] min-h-[640px] max-h-[1200px] flex flex-col justify-between overflow-hidden bg-[#fafaf9] pt-16 sm:pt-20 md:pt-24 pb-4 sm:pb-6 px-3 sm:px-6 md:px-12 lg:px-14 select-none"
     >
-      {/* 1. Background Grid & Dot Matrix Layer */}
+      {/* 1. Background Grid & Dot Matrix Layer with Parallax */}
       <div
         ref={dotsRef}
         className="absolute inset-0 w-full h-full pointer-events-none z-0"
       >
-        <div className="absolute inset-0 bg-dot-pattern opacity-70 [mask-image:radial-gradient(ellipse_at_center,black_45%,transparent_85%)]" />
-        
-        {/* Subtle Cross-lines for Technical Editorial Aesthetic */}
-        <div className="absolute top-24 left-0 w-full h-[1px] bg-neutral-200/60" />
-        <div className="absolute bottom-20 left-0 w-full h-[1px] bg-neutral-200/60" />
-        <div className="absolute top-0 left-16 md:left-24 w-[1px] h-full bg-neutral-200/50" />
-        <div className="absolute top-0 right-16 md:right-24 w-[1px] h-full bg-neutral-200/50" />
-
-        {/* Soft Ambient Radial Glow Behind Centerpiece */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] sm:w-[700px] md:w-[900px] h-[500px] sm:h-[700px] md:h-[900px] bg-gradient-to-tr from-neutral-200/40 via-zinc-100/30 to-transparent rounded-full blur-3xl pointer-events-none" />
+        <ArchitecturalBackground dotOpacity={0.7} glowVariant="center" />
       </div>
 
       {/* 2. Top Header Content & Status Badge */}
-      <div className="relative z-20 w-full flex items-center justify-between pointer-events-none">
+      <div className="relative z-20 w-full flex items-center justify-between pointer-events-none px-2 sm:px-0">
         {/* Left Sub-Header Detail */}
         <div className="hero-corner-item hidden md:flex items-center gap-3">
           <span className="font-mono text-xs text-neutral-400">LOC</span>
@@ -279,8 +271,6 @@ export default function HeroSection() {
           </a>
         </div>
 
-        
-
         {/* Right Sub-Header Detail */}
         <div className="hero-corner-item hidden md:flex items-center gap-3">
           <span className="font-mono text-xs text-neutral-400">STACK</span>
@@ -291,13 +281,13 @@ export default function HeroSection() {
       </div>
 
       {/* 3. Central Canvas: Big Watermark + Giant TechText + Centered Hero Portrait + Side Badges */}
-      <div className="relative w-full flex-1 flex items-center justify-center my-auto">
-        
-        {/* Giant "DEVELOPER" TechText Typography in Top-Left Area behind Portrait */}
+      <div className="relative w-full flex-1 flex items-center justify-center my-auto overflow-hidden">
+
+        {/* Giant "DEVELOPER" TechText Typography in Top-Left Area behind Portrait (Subtle Architectural Background Watermark) */}
         <div
           ref={watermarkRef}
           data-cursor="interactive"
-          className="absolute -top-6 left-0 sm:top-0 sm:left-4 md:top-2 md:left-8 w-[550px] sm:w-[680px] md:w-[820px] h-[180px] sm:h-[220px] md:h-[260px] pointer-events-auto z-[5] overflow-visible select-none"
+          className="absolute -top-4 -left-4 sm:top-0 sm:left-4 md:top-2 md:left-8 w-[280px] sm:w-[480px] md:w-[680px] lg:w-[820px] h-[100px] sm:h-[160px] md:h-[220px] lg:h-[260px] pointer-events-auto z-[5] overflow-visible select-none max-w-full opacity-60"
         >
           <TechText
             text="DEVELOPER"
@@ -308,8 +298,8 @@ export default function HeroSection() {
             dashGap={3}
             specks={16}
             fontFamily=""
-            color="#18181b"
-            accentColor="#000000"
+            color="#676767"
+            accentColor="#94a3b8"
             letterSpacing={-0.03}
             reach={180}
             softness={0.7}
@@ -323,28 +313,28 @@ export default function HeroSection() {
           />
         </div>
 
-        {/* Centered Hero Cutout Portrait (Foreground Focal Point - Even Bigger) */}
+        {/* Centered Hero Cutout Portrait (Foreground Focal Point) */}
         <div
           ref={heroImgRef}
           className="relative z-20 flex items-end justify-center pointer-events-none h-full w-full max-w-6xl"
         >
-          <div className="relative w-[400px] sm:w-[580px] md:w-[720px] lg:w-[860px] xl:w-[940px] h-[88vh] max-h-[920px] min-h-[500px]">
+          <div className="relative w-[280px] sm:w-[420px] md:w-[580px] lg:w-[760px] xl:w-[900px] h-[68svh] sm:h-[76svh] md:h-[84svh] max-h-[880px] min-h-[360px]">
             <Image
               src={heroImage}
               alt="Kshitij - Creative Developer"
               priority
               fill
-              sizes="(max-width: 768px) 580px, (max-width: 1200px) 860px, 940px"
-              className="object-contain object-bottom drop-shadow-[0_32px_60px_rgba(0,0,0,0.26)] filter contrast-[1.03]"
+              sizes="(max-width: 640px) 280px, (max-width: 768px) 420px, (max-width: 1200px) 760px, 900px"
+              className="object-contain object-bottom drop-shadow-[0_24px_50px_rgba(0,0,0,0.22)] filter contrast-[1.03]"
             />
           </div>
         </div>
 
-        {/* Giant TechText Canvas Layer ON TOP OF IMAGE in Bottom-Right Area (Draggable & Interactive) */}
+        {/* Giant TechText Canvas Layer ON TOP OF IMAGE in Bottom-Right Area (Draggable & Interactive - Primary Focal Text) */}
         <div
           ref={techTextRef}
           data-cursor="interactive"
-          className="absolute -bottom-4 right-0 sm:bottom-0 sm:right-4 md:bottom-2 md:right-8 w-[520px] sm:w-[640px] md:w-[760px] h-[180px] sm:h-[220px] md:h-[260px] flex items-center justify-end z-30 pointer-events-auto select-none"
+          className="absolute -bottom-2 -right-4 sm:bottom-0 sm:right-4 md:bottom-2 md:right-8 w-[280px] sm:w-[460px] md:w-[640px] lg:w-[760px] h-[100px] sm:h-[150px] md:h-[200px] lg:h-[240px] flex items-center justify-end z-30 pointer-events-auto select-none max-w-full drop-shadow-[0_4px_16px_rgba(255,255,255,0.85)] filter"
         >
           <TechText
             text="KSHITIJ"
@@ -355,7 +345,7 @@ export default function HeroSection() {
             dashGap={3}
             specks={20}
             fontFamily=""
-            color="#09090b"
+            color="#080808"
             accentColor="#000000"
             letterSpacing={-0.03}
             reach={220}
@@ -375,8 +365,8 @@ export default function HeroSection() {
           ref={badgesRef}
           className="absolute inset-0 pointer-events-none z-30 flex items-center justify-between w-full max-w-7xl mx-auto px-2 sm:px-4"
         >
-          {/* Left: Scaled down, perfectly clickable OptionWheel */}
-          <div data-cursor="default" className="h-[220px] sm:h-[260px] w-[210px] sm:w-[260px] pointer-events-auto flex items-center">
+          {/* Left: Scaled down OptionWheel (hidden on very small phones < 640px to prevent visual clash, accessible via bottom tags) */}
+          <div data-cursor="default" className="hidden sm:flex h-[200px] sm:h-[260px] w-[180px] sm:w-[260px] pointer-events-auto items-center">
             <OptionWheel
               items={SKILL_CATEGORIES}
               selectedIndex={selectedIndex}
@@ -401,8 +391,6 @@ export default function HeroSection() {
 
           {/* Right Area: Dynamic Category Technical Graph Lines */}
           <div className="parallax-lines-container hidden lg:flex flex-col gap-4 translate-y-6 max-w-[340px] xl:max-w-[390px] w-full pointer-events-auto ">
-            
-
             {SKILLS_DATA[selectedCategory].slice(0, 4).map((skill, idx) => {
               const skillLevel = skill.level ?? 88;
               const lineLabels = ["VEC // 01", "GRID // 02", "AXIS // 03", "DATUM // 04"];
@@ -441,7 +429,7 @@ export default function HeroSection() {
       </div>
 
       {/* 4. Bottom Footer Bar: Dynamic Selected Category Skills + Scroll Mouse */}
-      <div className="relative z-20 w-full flex items-end justify-between pointer-events-none pt-2">
+      <div className="relative z-20 w-full flex flex-col sm:flex-row items-center sm:items-end justify-between pointer-events-none pt-2 gap-3 sm:gap-0">
         {/* Left Bottom Tag: Active Category + Skills Count */}
         <div className="hero-corner-item hidden sm:flex flex-col text-left pointer-events-auto">
           <span className="font-mono text-[11px] text-neutral-400 uppercase tracking-wider">
@@ -456,7 +444,7 @@ export default function HeroSection() {
         <div
           ref={scrollIndicatorRef}
           data-cursor="interactive"
-          className="pointer-events-auto mx-auto flex flex-col items-center gap-2 text-neutral-500 hover:text-neutral-950 transition-colors cursor-pointer"
+          className="pointer-events-auto mx-auto flex flex-col items-center gap-1.5 sm:gap-2 text-neutral-500 hover:text-neutral-950 transition-colors cursor-pointer"
           onClick={() => {
             window.scrollTo({
               top: window.innerHeight,
@@ -464,24 +452,24 @@ export default function HeroSection() {
             });
           }}
         >
-          <span className="font-mono text-[10px] sm:text-[11px] tracking-widest uppercase">
+          <span className="font-mono text-[9px] sm:text-[11px] tracking-widest uppercase">
             Scroll to explore
           </span>
-          <div className="w-5 h-8 rounded-full border-2 border-neutral-300 flex items-start justify-center p-1">
-            <div className="w-1 h-2 bg-neutral-800 rounded-full animate-bounce" />
+          <div className="w-4 h-7 sm:w-5 sm:h-8 rounded-full border-2 border-neutral-300 flex items-start justify-center p-1">
+            <div className="w-1 h-1.5 sm:w-1 sm:h-2 bg-neutral-800 rounded-full animate-bounce" />
           </div>
         </div>
 
         {/* Right Bottom Tag: Dynamic Category Skills Display */}
-        <div className="hero-corner-item pointer-events-auto flex items-center gap-2 flex-wrap justify-end max-w-[460px]">
-          {SKILLS_DATA[selectedCategory].map((skill) => (
+        <div className="hero-corner-item pointer-events-auto flex items-center gap-1.5 sm:gap-2 flex-wrap justify-center sm:justify-end max-w-full sm:max-w-[460px]">
+          {SKILLS_DATA[selectedCategory].slice(0, 4).map((skill) => (
             <div
               key={skill.name}
-              className="font-mono text-[11px] px-2.5 py-1 bg-white/85 border border-neutral-200/90 rounded-md shadow-xs backdrop-blur-sm flex items-center gap-1.5 transition-all duration-300 hover:border-neutral-900 hover:bg-white"
+              className="font-mono text-[10px] sm:text-[11px] px-2 sm:px-2.5 py-0.5 sm:py-1 bg-white/85 border border-neutral-200/90 rounded-md shadow-xs backdrop-blur-sm flex items-center gap-1 transition-all duration-300 hover:border-neutral-900 hover:bg-white"
             >
               <span className="font-medium text-neutral-800">{skill.name}</span>
               {skill.level !== undefined && (
-                <span className="text-[10px] text-neutral-400 font-semibold">
+                <span className="text-[9px] sm:text-[10px] text-neutral-400 font-semibold">
                   {skill.level}%
                 </span>
               )}

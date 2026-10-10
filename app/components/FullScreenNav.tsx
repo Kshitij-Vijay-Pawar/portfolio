@@ -260,24 +260,24 @@ const FullScreenNav = () => {
       </div>
 
       {/* Foreground Content (Matches image layout) */}
-      <div className="relative z-10 h-full w-full flex flex-col justify-between p-6 sm:p-10 md:p-14 lg:p-16 pointer-events-none">
+      <div className="relative z-10 h-full w-full flex flex-col justify-between p-4 sm:p-8 md:p-12 lg:p-16 pointer-events-none">
         {/* Top bar: Left gap for fixed toggle button & Right Email */}
         <div className="flex items-center justify-between w-full">
           {/* Spacer so the top-left button lines up cleanly */}
-          <div className="w-12 h-12" />
+          <div className="w-12 h-12 shrink-0" />
 
           {/* Top Right Actions: Resume Download & Email */}
-          <div className="flex items-center gap-4 sm:gap-6 pointer-events-auto">
+          <div className="flex items-center gap-2.5 sm:gap-6 pointer-events-auto">
             <a
               href="/resume/Kshitij_Resume.pdf"
               download="Kshitij_Resume.pdf"
               data-cursor="interactive"
               onMouseEnter={() => triggerDoubleBlink()}
               onMouseLeave={() => resetMascotEmotion()}
-              className="email-tag flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-zinc-900/15 bg-white/70 hover:bg-zinc-950 hover:text-white transition-all text-xs sm:text-sm font-mono tracking-tight text-zinc-900 shadow-xs opacity-0"
+              className="email-tag flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-1.5 rounded-full border border-zinc-900/15 bg-white/70 hover:bg-zinc-950 hover:text-white transition-all text-[11px] sm:text-xs md:text-sm font-mono tracking-tight text-zinc-900 shadow-xs opacity-0"
               title="Download Resume / CV"
             >
-              <Download className="w-3.5 h-3.5" />
+              <Download className="w-3 sm:w-3.5 h-3 sm:h-3.5" />
               <span>Resume</span>
             </a>
 
@@ -287,15 +287,16 @@ const FullScreenNav = () => {
               onMouseEnter={() => triggerDoubleBlink()}
               onMouseLeave={() => resetMascotEmotion()}
               onClick={() => triggerDoubleBlink()}
-              className="email-tag font-mono text-sm sm:text-base text-zinc-900 hover:opacity-70 transition-opacity tracking-tight opacity-0"
+              className="email-tag font-mono text-xs sm:text-sm md:text-base text-zinc-900 hover:opacity-70 transition-opacity tracking-tight opacity-0 truncate max-w-[190px] sm:max-w-none"
             >
-              kshitij.vijay.pawar@gmail.com
+              <span className="hidden sm:inline">kshitij.vijay.pawar@gmail.com</span>
+              <span className="inline sm:hidden">Email</span>
             </a>
           </div>
         </div>
 
         {/* Bottom Area: Large Left-aligned Links & Bottom-Right Red Mascot Icon */}
-        <div className="flex items-end justify-between w-full pb-4">
+        <div className="flex items-end justify-between w-full pb-2 sm:pb-4 gap-4">
           {/* Left Column: Bold Typography Menu Links with Responsive Stack Compensation */}
           <nav
             onMouseLeave={handleLinkMouseLeave}
@@ -307,7 +308,7 @@ const FullScreenNav = () => {
                 ref={(el) => {
                   navItemRefs.current[index] = el;
                 }}
-                className="menu-link-item opacity-0 overflow-visible py-1 will-change-transform"
+                className="menu-link-item opacity-0 overflow-visible py-0.5 sm:py-1 will-change-transform"
               >
                 <Link
                   href={item.href}
@@ -323,7 +324,7 @@ const FullScreenNav = () => {
                     ref={(el) => {
                       navTextRefs.current[index] = el;
                     }}
-                    className="font-extrabold text-3xl sm:text-4xl md:text-5xl lg:text-[4.4vw] leading-[0.95] tracking-tighter text-zinc-950 uppercase origin-bottom-left transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-145 block will-change-transform"
+                    className="font-extrabold text-3xl sm:text-5xl md:text-6xl lg:text-[4.4vw] leading-[0.95] tracking-tighter text-zinc-950 uppercase origin-bottom-left transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-110 sm:group-hover:scale-135 md:group-hover:scale-145 block will-change-transform"
                   >
                     {item.title}
                   </span>
@@ -337,7 +338,7 @@ const FullScreenNav = () => {
             href="/ai"
             onClick={() => setNavOpen(false)}
             data-cursor="interactive"
-            className="pointer-events-auto block"
+            className="pointer-events-auto block shrink-0"
             title="Talk to AI Mascot"
           >
             <Mascot className="opacity-0 hidden sm:flex" />

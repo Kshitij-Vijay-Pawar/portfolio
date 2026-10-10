@@ -198,7 +198,7 @@ export default function Footer() {
           {/* Col 4 (span 4): Contact Meta & Interactive 3D Globe with based in indicator */}
           <div className="lg:col-span-4 flex flex-col sm:flex-row lg:flex-row gap-6 items-start justify-between">
             {/* Direct Connect details */}
-            <div className="flex flex-col">
+            <div className="flex flex-col min-w-0">
               <div className="inline-flex items-center gap-1.5 mb-4">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#ff4400]" />
                 <span className="font-mono text-[11px] text-neutral-500 uppercase tracking-widest font-semibold">
@@ -210,7 +210,7 @@ export default function Footer() {
                   <Mail className="w-3.5 h-3.5 text-neutral-400 shrink-0" />
                   <a
                     href="mailto:kshitij.vijay.pawar@gmail.com"
-                    className="hover:text-neutral-950 transition-colors font-mono text-xs"
+                    className="hover:text-neutral-950 transition-colors font-mono text-[11px] sm:text-xs truncate"
                   >
                     kshitij.vijay.pawar@gmail.com
                   </a>
@@ -231,8 +231,8 @@ export default function Footer() {
             </div>
 
             {/* Interactive 3D Globe Display */}
-            <div className="flex flex-col items-center">
-              <div className="relative w-36 h-36 sm:w-40 sm:h-40 rounded-2xl overflow-hidden flex items-center justify-center">
+            <div className="flex flex-col items-center self-center sm:self-start shrink-0">
+              <div className="relative w-32 h-32 sm:w-36 sm:h-36 rounded-2xl overflow-hidden flex items-center justify-center">
                 <Globe className="scale-100" />
               </div>
 
@@ -242,7 +242,7 @@ export default function Footer() {
                   <span>BASED IN INDIA</span>
                   <span>WORKING GLOBALLY</span>
                 </div>
-                <ArrowUpRight className="w-4 h-4 text-neutral-600" />
+                <ArrowUpRight className="w-4 h-4 text-neutral-600 shrink-0" />
               </div>
             </div>
 

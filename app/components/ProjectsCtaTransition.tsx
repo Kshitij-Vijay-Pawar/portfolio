@@ -406,7 +406,7 @@ export default function ProjectsCtaTransition() {
             ref={sentenceRef}
             className="flex items-center whitespace-nowrap font-black uppercase tracking-[-0.04em] text-white will-change-transform select-none"
             style={{
-              fontSize: "clamp(4.2rem, 11vw, 14.5rem)",
+              fontSize: "clamp(2.8rem, 9vw, 13rem)",
               lineHeight: 1,
             }}
           >
@@ -437,22 +437,22 @@ export default function ProjectsCtaTransition() {
         {/* ── Minimal Editorial Final CTA Revealed on White Screen ── */}
         <div
           ref={ctaContentRef}
-          className="absolute inset-0 z-20 flex flex-col items-center justify-center text-center px-6 sm:px-12 pointer-events-none opacity-0"
+          className="absolute inset-0 z-20 flex flex-col items-center justify-center text-center px-4 sm:px-8 md:px-12 pointer-events-none opacity-0"
         >
           <div className="max-w-4xl mx-auto flex flex-col items-center">
             {/* Subtle chapter label */}
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-neutral-200 bg-neutral-100/90 text-[11px] font-mono tracking-widest uppercase text-neutral-600 mb-8 shadow-xs">
+            <div className="inline-flex items-center gap-2 px-3.5 sm:px-4 py-1 sm:py-1.5 rounded-full border border-neutral-200 bg-neutral-100/90 text-[10px] sm:text-[11px] font-mono tracking-widest uppercase text-neutral-600 mb-6 sm:mb-8 shadow-xs">
               <span className="w-1.5 h-1.5 rounded-full bg-[#ff5500]" />
               <span>CHAPTER TRANSITION • CONTACT</span>
             </div>
 
             {/* Giant Editorial Heading */}
-            <h2 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black uppercase tracking-[-0.04em] text-neutral-950 leading-[0.95] mb-6 drop-shadow-xs">
+            <h2 className="text-3xl sm:text-5xl md:text-6xl lg:text-8xl font-black uppercase tracking-[-0.04em] text-neutral-950 leading-[0.95] mb-4 sm:mb-6 drop-shadow-xs">
               Let&apos;s build something<span className="text-[#ff5500]">.</span>
             </h2>
 
             {/* Subtext with generous editorial whitespace */}
-            <p className="text-neutral-500 font-light text-sm sm:text-base md:text-lg max-w-lg mb-10 leading-relaxed">
+            <p className="text-neutral-500 font-light text-xs sm:text-base md:text-lg max-w-lg mb-8 sm:mb-10 leading-relaxed px-2">
               Available for selected client projects, bespoke digital experiences, and creative engineering.
             </p>
 
@@ -461,10 +461,10 @@ export default function ProjectsCtaTransition() {
               <Link
                 href="/contact"
                 data-cursor="interactive"
-                className="inline-flex items-center gap-3 px-8 sm:px-10 py-4 sm:py-5 rounded-full bg-neutral-950 hover:bg-[#ff5500] text-white font-mono text-xs sm:text-sm uppercase tracking-widest transition-all duration-300 hover:scale-105 shadow-xl group"
+                className="inline-flex items-center gap-2.5 sm:gap-3 px-6 sm:px-10 py-3.5 sm:py-5 rounded-full bg-neutral-950 hover:bg-[#ff5500] text-white font-mono text-xs sm:text-sm uppercase tracking-widest transition-all duration-300 hover:scale-105 shadow-xl group"
               >
                 <span>GET IN TOUCH</span>
-                <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                <ArrowRight className="w-3.5 sm:w-4 h-3.5 sm:h-4 transition-transform group-hover:translate-x-1" />
               </Link>
             </div>
           </div>

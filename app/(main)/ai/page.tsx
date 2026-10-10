@@ -18,6 +18,7 @@ import {
 import ChatMessageBubble from "./components/ChatMessageBubble";
 import { MascotFeeling } from "@/lib/ai/schema";
 import { useChat } from "@/app/context/ChatContext";
+import ArchitecturalBackground from "@/app/components/ui/ArchitecturalBackground";
 
 const PRESET_PROMPTS = [
   {
@@ -103,45 +104,41 @@ export default function AIPage() {
   }, [activeFeeling, registerMascotFeelingHandler]);
 
   return (
-    <div className="relative w-full min-h-screen bg-[#fafaf9] text-zinc-900 pt-28 pb-16 px-4 sm:px-8 md:px-12 lg:px-16 selection:bg-[#ff4400] selection:text-white flex flex-col justify-between overflow-x-hidden">
-      {/* Background Architectural Ambient Grid Lines */}
-      <div className="absolute inset-0 w-full h-full pointer-events-none z-0">
-        <div className="absolute inset-0 bg-dot-pattern opacity-40 [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_90%)]" />
-        <div className="absolute top-0 left-8 sm:left-14 w-[1px] h-full bg-neutral-200/50" />
-        <div className="absolute top-0 right-8 sm:right-14 w-[1px] h-full bg-neutral-200/50" />
-      </div>
+    <div className="relative w-full min-h-screen bg-[#fafaf9] text-zinc-900 pt-20 sm:pt-28 pb-12 sm:pb-16 px-3 sm:px-8 md:px-12 lg:px-16 selection:bg-[#ff4400] selection:text-white flex flex-col justify-between overflow-x-hidden">
+      {/* Unified Architectural Background Grid & Ambient Glow */}
+      <ArchitecturalBackground dotOpacity={0.55} glowVariant="subtle" />
 
-      <div className="relative z-10 max-w-7xl mx-auto w-full flex flex-col gap-8">
+      <div className="relative z-10 max-w-7xl mx-auto w-full flex flex-col gap-6 sm:gap-8">
         {/* ========================================================
             TOP SECTION: HERO BANNER & 60FPS REACTIVE MASCOT STAGE
             ======================================================== */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center p-6 sm:p-8 rounded-3xl bg-white/80 backdrop-blur-md border border-neutral-200/80 shadow-xs">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center p-5 sm:p-8 rounded-3xl bg-white/80 backdrop-blur-md border border-neutral-200/80 shadow-xs">
           {/* Left Column: Title & Description */}
           <div className="lg:col-span-7 flex flex-col">
-            <div className="inline-flex items-center gap-2 mb-3">
+            <div className="inline-flex items-center gap-2 mb-2 sm:mb-3">
               <span className="w-2 h-2 rounded-full bg-[#f03e2f] animate-pulse" />
               <span className="font-mono text-[11px] text-neutral-500 uppercase tracking-widest">
                 04 // NEURAL AI LAB
               </span>
             </div>
 
-            <h1 className="text-[clamp(2.4rem,5vw,4.4rem)] font-black uppercase tracking-[-0.04em] leading-[0.92] text-neutral-950">
+            <h1 className="text-[clamp(2.2rem,5vw,4.4rem)] font-black uppercase tracking-[-0.04em] leading-[0.92] text-neutral-950">
               INTELLIGENT<br />
               COMPANION<span className="text-[#f03e2f]">.</span>
             </h1>
 
-            <p className="mt-3 text-xs sm:text-sm text-neutral-600 font-light max-w-xl leading-relaxed">
+            <p className="mt-2.5 sm:mt-3 text-xs sm:text-sm text-neutral-600 font-light max-w-xl leading-relaxed">
               Meet Kshitij&apos;s digital AI companion. Grounded in verified engineering data, synchronized with the reactive 60fps Mascot expression engine, and saved locally in your browser.
             </p>
           </div>
 
           {/* Right Column: Live Interactive Mascot Stage */}
           <div className="lg:col-span-5 flex flex-col sm:flex-row items-center justify-center lg:justify-end gap-5">
-            <div className="relative flex flex-col items-center shrink-0 p-4 rounded-3xl">
+            <div className="relative flex flex-col items-center shrink-0 p-2 sm:p-4 rounded-3xl">
               {/* Interactive Mascot Component */}
               <Mascot
                 ref={mascotRef}
-                sizeClassName="w-32 h-32 sm:w-40 sm:h-40 md:w-44 md:h-44"
+                sizeClassName="w-28 h-28 sm:w-40 sm:h-40 md:w-44 md:h-44"
                 className="drop-shadow-md"
               />
             </div>
@@ -215,7 +212,7 @@ export default function AIPage() {
           </div>
 
           {/* Right Column: AI Conversation Terminal */}
-          <div className="lg:col-span-8 flex flex-col h-[520px] sm:h-[560px] rounded-3xl bg-white border border-neutral-200/90 shadow-sm overflow-hidden">
+          <div className="lg:col-span-8 flex flex-col h-[480px] sm:h-[560px] rounded-3xl bg-white border border-neutral-200/90 shadow-sm overflow-hidden">
             {/* Terminal Top Bar */}
             <div className="px-5 py-3.5 bg-neutral-950 text-white flex items-center justify-between border-b border-neutral-800">
               <div className="flex items-center gap-2.5">

@@ -19,6 +19,7 @@ import {
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useNav } from "@/app/context/NavContext";
+import ArchitecturalBackground from "./ui/ArchitecturalBackground";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -123,14 +124,14 @@ export default function HomeAboutSection() {
     >
       {/* Dynamic Interactive Ambient Spotlight following cursor */}
       <div
-        className="pointer-events-none absolute -inset-px opacity-0 sm:opacity-100 transition-opacity duration-500"
+        className="pointer-events-none absolute -inset-px opacity-0 sm:opacity-100 transition-opacity duration-500 z-0"
         style={{
           background: `radial-gradient(600px circle at ${mousePos.x}px ${mousePos.y}px, rgba(255, 85, 0, 0.05), transparent 70%)`,
         }}
       />
 
-      {/* Grid Pattern with subtle mask */}
-      <div className="absolute inset-0 bg-dot-pattern opacity-40 pointer-events-none [mask-image:radial-gradient(ellipse_at_center,black_30%,transparent_80%)]" />
+      {/* Unified Architectural Background Pattern */}
+      <ArchitecturalBackground dotOpacity={0.6} glowVariant="split" />
 
       <div className="relative z-10 max-w-7xl mx-auto flex flex-col">
         {/* Section Header Tag */}
@@ -244,29 +245,29 @@ export default function HomeAboutSection() {
             </div>
 
             {/* Quick Stat Pill Highlights */}
-            <div className="about-bento-card rounded-3xl p-6 bg-white border border-neutral-200/90 shadow-sm flex flex-col justify-between">
-              <div className="grid grid-cols-3 gap-3 divide-x divide-neutral-100 text-center">
+            <div className="about-bento-card rounded-3xl p-5 sm:p-6 bg-white border border-neutral-200/90 shadow-sm flex flex-col justify-between">
+              <div className="grid grid-cols-3 gap-2 sm:gap-3 divide-x divide-neutral-100 text-center">
                 <div className="flex flex-col">
-                  <span className="text-2xl sm:text-3xl font-black text-neutral-950 font-sans tracking-tight">
+                  <span className="text-xl sm:text-2xl md:text-3xl font-black text-neutral-950 font-sans tracking-tight">
                     3+
                   </span>
-                  <span className="text-[10px] font-mono text-neutral-500 uppercase tracking-wider mt-1">
+                  <span className="text-[9px] sm:text-[10px] font-mono text-neutral-500 uppercase tracking-wider mt-1">
                     Years Exp
                   </span>
                 </div>
-                <div className="flex flex-col pl-3">
-                  <span className="text-2xl sm:text-3xl font-black text-[#ff5500] font-sans tracking-tight">
+                <div className="flex flex-col pl-2 sm:pl-3">
+                  <span className="text-xl sm:text-2xl md:text-3xl font-black text-[#ff5500] font-sans tracking-tight">
                     100%
                   </span>
-                  <span className="text-[10px] font-mono text-neutral-500 uppercase tracking-wider mt-1">
+                  <span className="text-[9px] sm:text-[10px] font-mono text-neutral-500 uppercase tracking-wider mt-1">
                     TypeScript
                   </span>
                 </div>
-                <div className="flex flex-col pl-3">
-                  <span className="text-2xl sm:text-3xl font-black text-neutral-950 font-sans tracking-tight">
+                <div className="flex flex-col pl-2 sm:pl-3">
+                  <span className="text-xl sm:text-2xl md:text-3xl font-black text-neutral-950 font-sans tracking-tight">
                     60fps
                   </span>
-                  <span className="text-[10px] font-mono text-neutral-500 uppercase tracking-wider mt-1">
+                  <span className="text-[9px] sm:text-[10px] font-mono text-neutral-500 uppercase tracking-wider mt-1">
                     Smooth Motion
                   </span>
                 </div>
