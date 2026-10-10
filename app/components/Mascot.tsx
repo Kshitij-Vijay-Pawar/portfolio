@@ -193,6 +193,18 @@ const Mascot = forwardRef<MascotRef, MascotProps>(function Mascot(
 
   // Smooth 60fps cursor pupil/eye tracking with zero React re-render lag
   useEffect(() => {
+    // Honor accessibility preference for reduced motion
+    const prefersReducedMotion =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (prefersReducedMotion) {
+      if (eyesGroupRef.current) {
+        eyesGroupRef.current.style.transform = "translate3d(0, 0, 0)";
+      }
+      return;
+    }
+
     let animationFrameId: number;
     let targetX = 0;
     let targetY = 0;
@@ -315,6 +327,8 @@ const Mascot = forwardRef<MascotRef, MascotProps>(function Mascot(
         viewBox="0 0 200 200"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+        role="img"
       >
         {/* Rounded Red App Icon Box */}
         <rect
