@@ -1,6 +1,9 @@
 import HeroSection from "../components/HeroSection";
 import ScrollReveal from "../components/ui/ScrollReveal";
 import ProjectsShowcase from "../components/ProjectsShowcase";
+import HomeAboutSection from "../components/HomeAboutSection";
+import HomeJourneySection from "../components/HomeJourneySection";
+import ProjectsCtaTransition from "../components/ProjectsCtaTransition";
 
 export default function Home() {
   return (
@@ -8,7 +11,13 @@ export default function Home() {
       {/* 1. Modern Hero Section */}
       <HeroSection />
 
-      {/* 2. Scroll Narrative Statement Section */}
+      {/* 2. Interactive About Showcase Section */}
+      <HomeAboutSection />
+
+      {/* 3. Interactive Journey & Milestones Section */}
+      <HomeJourneySection />
+
+      {/* 4. Scroll Narrative Statement Section */}
       <section className="relative w-full py-32 sm:py-40 px-6 sm:px-12 md:px-20 max-w-6xl mx-auto flex flex-col justify-center items-center text-center">
         <div className="mb-8 inline-flex items-center gap-2 px-3 py-1 rounded-full border border-neutral-300 bg-white/70 text-xs font-mono uppercase tracking-widest text-neutral-600">
           Philosophy
@@ -33,10 +42,13 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 3. Featured Projects Section with Glass Circle Cursor */}
+      {/* 5. Featured Projects Section with Glass Circle Cursor */}
       <section id="projects" className="relative w-full max-w-none bg-[#09090b]">
         <ProjectsShowcase />
       </section>
+
+      {/* 6. Cinematic Projects CTA Transition Section */}
+      <ProjectsCtaTransition />
     </main>
   );
 }

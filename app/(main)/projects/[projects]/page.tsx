@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, ArrowUpRight, Calendar, User, Tag } from "lucide-react";
 import { PROJECTS, type Project } from "@/app/data/projects";
+import ProjectsCtaTransition from "@/app/components/ProjectsCtaTransition";
 
 interface PageProps {
   params: Promise<{
@@ -155,6 +156,9 @@ export default async function ProjectDetailPage({ params }: PageProps) {
           </Link>
         </div>
       </section>
+
+      {/* Cinematic Transition CTA Section */}
+      <ProjectsCtaTransition />
     </div>
   );
 }

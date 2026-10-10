@@ -26,7 +26,7 @@ GEMINI_API_KEY=your_gemini_api_key_here
 GEMINI_MODEL=gemini-2.5-flash
 
 # Contact form integration
-NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY=your_web3forms_key_here
+PUBLIC_WEB3FORMS_ACCESS_KEY=your_web3forms_key_here
 ```
 
 > **Security Note:** `GEMINI_API_KEY` is loaded strictly on the server within `/app/api/ai/route.ts` and is never bundled into client scripts.

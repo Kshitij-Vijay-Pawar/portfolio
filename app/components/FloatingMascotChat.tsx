@@ -15,13 +15,15 @@ import {
 import Mascot, { MascotRef } from "@/app/components/Mascot";
 import { MascotFeeling } from "@/lib/ai/schema";
 import { useChat } from "@/app/context/ChatContext";
+import { useNav } from "@/app/context/NavContext";
 import ChatMessageBubble from "@/app/(main)/ai/components/ChatMessageBubble";
 
 export default function FloatingMascotChat() {
   const pathname = usePathname();
   const router = useRouter();
+  const { navOpen } = useNav();
 
-  // If already on the dedicated /ai page, don't show the duplicate floating trigger
+  // If already on the dedicated /ai page or full-screen navigation is open, don't show the duplicate floating trigger
   const isAiPage = pathname === "/ai";
 
   const [isOpen, setIsOpen] = useState(false);
@@ -89,7 +91,7 @@ export default function FloatingMascotChat() {
     router.push("/ai");
   };
 
-  if (isAiPage) {
+  if (isAiPage || navOpen) {
     return null;
   }
 

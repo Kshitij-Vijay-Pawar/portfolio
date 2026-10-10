@@ -15,7 +15,7 @@ export default function ContactPage() {
 
     const form = event.currentTarget;
     const formData = new FormData(form);
-    const accessKey = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY || "";
+    const accessKey = process.env.PUBLIC_WEB3FORMS_ACCESS_KEY || "";
     formData.append("access_key", accessKey);
 
     try {
@@ -296,13 +296,12 @@ export default function ContactPage() {
               {/* Status Feedback Message */}
               {result && (
                 <div
-                  className={`p-3 rounded-xl text-xs font-mono text-center transition-all ${
-                    status === "success"
+                  className={`p-3 rounded-xl text-xs font-mono text-center transition-all ${status === "success"
                       ? "bg-emerald-50 border border-emerald-200 text-emerald-800"
                       : status === "error"
                         ? "bg-red-50 border border-red-200 text-red-800"
                         : "bg-neutral-100 text-neutral-700"
-                  }`}
+                    }`}
                 >
                   {result}
                 </div>

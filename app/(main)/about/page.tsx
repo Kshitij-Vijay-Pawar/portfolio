@@ -21,8 +21,11 @@ import {
   Laptop,
   Flame,
   Zap,
+  Compass,
 } from "lucide-react";
 import Mascot from "@/app/components/Mascot";
+import HomeJourneySection from "@/app/components/HomeJourneySection";
+import ProjectsCtaTransition from "@/app/components/ProjectsCtaTransition";
 import { useNav } from "@/app/context/NavContext";
 
 // Tech stack categories
@@ -77,30 +80,9 @@ const PHILOSOPHIES = [
   {
     num: "04",
     title: "Craft & Detail Obsession",
-    desc: "From custom cursor mechanics to tactile sound feedback, every pixel, bezier curve, and typography choice is designed intentionally.",
+    desc: "From custom cursor mechanics to tactile feedback, every pixel, bezier curve, and typography choice is designed intentionally.",
     icon: Sparkles,
     tag: "QUALITY",
-  },
-];
-
-const MILESTONES = [
-  {
-    year: "2024 - Present",
-    role: "Full Stack & Creative Technologist",
-    subtitle: "Modern Web Apps, Three.js & AI Systems",
-    desc: "Architecting high-performance digital products, interactive 3D portfolios, and AI-enabled platforms with Next.js, WebGL, and Node.js.",
-  },
-  {
-    year: "2022 - 2026",
-    role: "B.Tech in Artificial Intelligence & Data Science",
-    subtitle: "Undergraduate Degree • Pune, India",
-    desc: "Specialized in machine learning algorithms, distributed computing, database management systems, and advanced software engineering.",
-  },
-  {
-    year: "2023 - 2024",
-    role: "Open Source & Frontend Engineering",
-    subtitle: "Community & Interactive UI Labs",
-    desc: "Built dynamic web experiments, motion design toolkits, real-time messaging apps, and developer-centric utilities.",
   },
 ];
 
@@ -114,7 +96,7 @@ export default function AboutPage() {
       : SKILLS.filter((skill) => skill.category === activeTab);
 
   return (
-    <div className="relative w-full min-h-screen bg-[#fafaf9] text-zinc-900 selection:bg-zinc-900 selection:text-white pt-24 sm:pt-28 pb-20 px-4 sm:px-8 md:px-12 lg:px-16 overflow-hidden">
+    <div className="relative w-full min-h-screen bg-[#fafaf9] text-zinc-900 selection:bg-zinc-900 selection:text-white pt-24 sm:pt-28 overflow-hidden font-sans">
       {/* 1. Background Grid & Dot Matrix Layer */}
       <div className="absolute inset-0 w-full h-full pointer-events-none z-0">
         <div className="absolute inset-0 bg-dot-pattern opacity-60 [mask-image:radial-gradient(ellipse_at_center,black_45%,transparent_90%)]" />
@@ -129,7 +111,7 @@ export default function AboutPage() {
         <div className="absolute top-2/3 -right-20 w-[600px] h-[600px] bg-gradient-to-bl from-neutral-200/40 via-stone-100/30 to-transparent rounded-full blur-3xl pointer-events-none" />
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto flex flex-col space-y-24 sm:space-y-32">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-8 md:px-12 lg:px-16 flex flex-col space-y-24 sm:space-y-32">
         {/* =================================================================
             SECTION 1: HERO & EDITORIAL INTRO
             ================================================================= */}
@@ -179,8 +161,8 @@ export default function AboutPage() {
               <p className="text-base sm:text-lg text-neutral-600 font-light leading-relaxed max-w-2xl">
                 Hi, I&apos;m <strong className="font-semibold text-neutral-900">Kshitij Pawar</strong>. 
                 I bridge the gap between creative visual design and robust software engineering. 
-                With a background in <strong className="font-semibold text-neutral-900">Artificial Intelligence &amp; Data Science</strong>, 
-                I build high-performance web applications, interactive 3D environments, and intelligent AI tools that leave a memorable impression.
+                With an engineering degree in <strong className="font-semibold text-neutral-900">Artificial Intelligence &amp; Data Science</strong>, 
+                I build high-performance web applications, interactive 3D environments, and intelligent AI tools that leave a lasting impression.
               </p>
 
               {/* Stat Badges Grid */}
@@ -436,168 +418,50 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* =================================================================
-            SECTION 4: EXPERIENCE & EDUCATION ROADMAP
-            ================================================================= */}
-        <section className="grid grid-cols-1 lg:grid-cols-12 gap-10">
-          {/* Left Column: Experience Timeline (7 cols) */}
-          <div className="lg:col-span-7 flex flex-col space-y-6">
-            <div className="pb-4 border-b border-neutral-200/80">
-              <div className="inline-flex items-center gap-2 mb-2 text-xs font-mono uppercase tracking-widest text-neutral-500">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#ff5500]" />
-                Journey
-              </div>
-              <h2 className="text-2xl sm:text-3xl font-black uppercase tracking-tight text-neutral-950">
-                Experience &amp; Milestones<span className="text-[#ff5500]">.</span>
-              </h2>
+        {/* Academic Degree Highlights Card */}
+        <section className="p-8 sm:p-10 rounded-3xl bg-white border border-neutral-200/90 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-8">
+          <div className="flex items-start gap-5">
+            <div className="w-14 h-14 rounded-2xl bg-neutral-100 border border-neutral-200 flex items-center justify-center text-neutral-900 shrink-0">
+              <GraduationCap className="w-7 h-7 text-[#ff5500]" />
             </div>
-
-            <div className="relative pl-6 space-y-8 before:absolute before:left-2 before:top-2 before:bottom-2 before:w-[2px] before:bg-neutral-200">
-              {MILESTONES.map((item, idx) => (
-                <div key={idx} className="relative group">
-                  {/* Timeline dot */}
-                  <div className="absolute -left-[29px] top-1.5 w-3.5 h-3.5 rounded-full bg-white border-2 border-neutral-900 group-hover:border-[#ff5500] group-hover:scale-125 transition-all" />
-
-                  <div className="p-5 rounded-2xl bg-white/80 border border-neutral-200/80 shadow-xs flex flex-col space-y-1.5">
-                    <div className="flex items-center justify-between text-xs font-mono text-neutral-500">
-                      <span className="font-semibold text-[#ff5500]">{item.year}</span>
-                      <span>STATUS // VERIFIED</span>
-                    </div>
-                    <h3 className="text-base font-bold text-neutral-900">
-                      {item.role}
-                    </h3>
-                    <p className="text-xs font-medium text-neutral-600">
-                      {item.subtitle}
-                    </p>
-                    <p className="text-xs text-neutral-500 leading-relaxed pt-1 font-light">
-                      {item.desc}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Right Column: Education & Academic Credentials (5 cols) */}
-          <div className="lg:col-span-5 flex flex-col space-y-6">
-            <div className="pb-4 border-b border-neutral-200/80">
-              <div className="inline-flex items-center gap-2 mb-2 text-xs font-mono uppercase tracking-widest text-neutral-500">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#ff5500]" />
-                Academics
-              </div>
-              <h2 className="text-2xl sm:text-3xl font-black uppercase tracking-tight text-neutral-950">
-                Education<span className="text-[#ff5500]">.</span>
-              </h2>
-            </div>
-
-            {/* Degree Card */}
-            <div className="p-6 rounded-3xl bg-white/90 border border-neutral-200/90 shadow-xs flex flex-col space-y-4">
-              <div className="w-12 h-12 rounded-2xl bg-neutral-100 border border-neutral-200 flex items-center justify-center text-neutral-900">
-                <GraduationCap className="w-6 h-6" />
-              </div>
-
-              <div className="flex flex-col space-y-1">
-                <span className="font-mono text-xs text-[#ff5500] font-semibold">
-                  BACHELOR OF TECHNOLOGY (B.TECH)
-                </span>
-                <h3 className="text-lg font-bold text-neutral-950 leading-snug">
-                  Artificial Intelligence &amp; Data Science
-                </h3>
-                <span className="text-xs font-mono text-neutral-500">
-                  Pune, Maharashtra, India &middot; 2022 - 2026
-                </span>
-              </div>
-
-              <p className="text-xs text-neutral-600 leading-relaxed font-light">
-                Rigorous curriculum covering Data Structures, Machine Learning, Deep Neural Networks, Cloud Systems, and Advanced Web Engineering.
+            <div className="space-y-1.5">
+              <span className="font-mono text-xs text-[#ff5500] font-semibold uppercase tracking-wider">
+                UNDERGRADUATE DEGREE &middot; 2022 — 2026
+              </span>
+              <h3 className="text-xl sm:text-2xl font-bold text-neutral-950">
+                B.Tech in Artificial Intelligence &amp; Data Science
+              </h3>
+              <p className="text-xs sm:text-sm text-neutral-500 font-light max-w-xl">
+                Rigorous curriculum covering Data Structures, Machine Learning, Deep Neural Networks, Cloud Systems, and Advanced Distributed Engineering.
               </p>
-
-              <div className="pt-3 border-t border-neutral-100 flex flex-wrap gap-1.5">
-                {[
-                  "Algorithms & DSA",
-                  "Deep Learning",
-                  "Database Systems",
-                  "Distributed Architecture",
-                  "AI Ethics",
-                ].map((course) => (
-                  <span
-                    key={course}
-                    className="px-2.5 py-1 rounded-md bg-neutral-100 text-[10px] font-mono text-neutral-700"
-                  >
-                    {course}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            {/* Interactive Mascot Feature Callout */}
-            <div className="p-6 rounded-3xl bg-neutral-950 text-white flex items-center justify-between gap-4 shadow-lg">
-              <div className="flex flex-col space-y-1">
-                <span className="text-[10px] font-mono uppercase tracking-widest text-neutral-400">
-                  AI ASSISTANT
-                </span>
-                <h4 className="text-sm font-bold">Want to chat with me directly?</h4>
-                <p className="text-xs text-neutral-400 font-light max-w-[200px]">
-                  My custom AI mascot is trained on all my skills &amp; projects.
-                </p>
-                <Link
-                  href="/ai"
-                  data-cursor="interactive"
-                  className="inline-flex items-center gap-1 text-xs font-mono text-[#ff5500] pt-2 hover:underline"
-                >
-                  <span>Launch AI Chat</span>
-                  <ArrowUpRight className="w-3.5 h-3.5" />
-                </Link>
-              </div>
-
-              <Link href="/ai" data-cursor="interactive" className="shrink-0">
-                <Mascot sizeClassName="w-20 h-20" />
-              </Link>
             </div>
           </div>
-        </section>
 
-        {/* =================================================================
-            SECTION 5: BOTTOM CTA SECTION
-            ================================================================= */}
-        <section className="relative w-full rounded-3xl bg-white border border-neutral-200/90 p-8 sm:p-12 md:p-16 shadow-lg overflow-hidden flex flex-col items-center text-center">
-          <div className="absolute inset-0 bg-dot-grid-fine opacity-50 pointer-events-none" />
-
-          <div className="relative z-10 flex flex-col items-center max-w-2xl space-y-6">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-neutral-100 border border-neutral-200 text-xs font-mono uppercase tracking-widest text-neutral-700">
-              <span className="w-2 h-2 rounded-full bg-[#ff5500]" />
-              LET’S COLLABORATE
-            </div>
-
-            <h2 className="text-3xl sm:text-5xl font-black uppercase tracking-tight text-neutral-950 leading-[0.95]">
-              HAVE AN IDEA OR <br />
-              PROJECT IN MIND<span className="text-[#ff5500]">?</span>
-            </h2>
-
-            <p className="text-sm sm:text-base text-neutral-600 font-light leading-relaxed">
-              I am currently open to full-time engineering roles, freelance opportunities, and ambitious collaborations.
-            </p>
-
-            <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
-              <Link
-                href="/contact"
-                data-cursor="interactive"
-                className="px-8 py-4 rounded-xl bg-neutral-950 text-white font-mono text-xs uppercase tracking-widest hover:bg-neutral-800 transition-all hover:scale-[1.02] active:scale-[0.98] shadow-md flex items-center gap-2"
-              >
-                <span>Get in Touch</span>
-                <ArrowUpRight className="w-4 h-4" />
-              </Link>
-
-              <a
-                href="mailto:kshitij.vijay.pawar@gmail.com"
-                data-cursor="interactive"
-                className="px-8 py-4 rounded-xl bg-neutral-100 border border-neutral-200 text-neutral-900 font-mono text-xs uppercase tracking-widest hover:bg-neutral-200 transition-all"
-              >
-                kshitij.vijay.pawar@gmail.com
-              </a>
-            </div>
+          <div className="flex items-center gap-3 shrink-0">
+            <Link
+              href="/ai"
+              data-cursor="interactive"
+              className="px-5 py-3 rounded-xl bg-orange-50 border border-orange-200 text-[#ff5500] font-mono text-xs uppercase tracking-wider flex items-center gap-2 hover:bg-orange-100 transition-colors"
+            >
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>Ask AI Mascot</span>
+            </Link>
           </div>
         </section>
+      </div>
+
+      {/* =================================================================
+          SECTION 4: CHRONOLOGICAL CINEMATIC TIMELINE COMPONENT
+          ================================================================= */}
+      <div className="w-full mt-24">
+        <HomeJourneySection />
+      </div>
+
+      {/* =================================================================
+          SECTION 5: CINEMATIC TRANSITION CTA SECTION
+          ================================================================= */}
+      <div className="w-full">
+        <ProjectsCtaTransition />
       </div>
     </div>
   );
