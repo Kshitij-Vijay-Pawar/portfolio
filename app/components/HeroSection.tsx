@@ -319,6 +319,7 @@ export default function HeroSection() {
       <div className="relative w-full flex-1 flex items-center justify-center my-auto">
 
         {/* DEVELOPER TechText Typography: Top-left / center on mobile */}
+        
         <div
           ref={watermarkRef}
           data-cursor="interactive"
