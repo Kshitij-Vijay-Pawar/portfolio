@@ -39,9 +39,26 @@ export interface TechTextProps {
   speed?: number;
   className?: string;
   style?: CSSProperties;
+  /**
+   * Where to position the text within the canvas.
+   * Useful when the canvas is larger than the visual text area (e.g. covers the full hero).
+   * Default: 'center'
+   */
+  align?: 'top-left' | 'top-center' | 'top-right' | 'center' | 'bottom-left' | 'bottom-center' | 'bottom-right';
+  /** Width of the sub-region the text is sized & centred in (pixels). Defaults to full canvas width. */
+  textAreaW?: number;
+  /** Height of the sub-region the text is sized & centred in (pixels). Defaults to full canvas height. */
+  textAreaH?: number;
+  /**
+   * Extends the canvas bitmap by this many pixels on every side beyond the wrapper div.
+   * Lets dragged letters roam freely outside the wrapper without clipping.
+   * Pointer events are still captured only within the wrapper, so two TechTexts
+   * with overlapping extended canvases won't steal each other's events.
+   */
+  canvasPadding?: number;
 }
 
-type Settings = Required<Omit<TechTextProps, 'className' | 'style'>>;
+type Settings = Required<Omit<TechTextProps, 'className' | 'style' | 'align' | 'textAreaW' | 'textAreaH' | 'canvasPadding'>>;
 
 const LABEL_FONT = '10px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace';
 const FALLOFF_STEPS = 8;
@@ -98,12 +115,16 @@ const TechText = ({
   sweep = true,
   speed = 1,
   className = '',
-  style
+  style,
+  align = 'center',
+  textAreaW,
+  textAreaH,
+  canvasPadding = 0,
 }: TechTextProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const settingsRef = useRef<Settings | null>(null);
-  const wakeRef = useRef<() => void>(() => {});
+  const wakeRef = useRef<() => void>(() => { });
 
   useEffect(() => {
     settingsRef.current = {
@@ -209,6 +230,11 @@ const TechText = ({
     };
 
     const ensureLayout = (s: Settings): Word => {
+      // The usable area for sizing/centering text = wrapper's own dimensions (without padding)
+      const ownW = width - canvasPadding * 2;
+      const ownH = height - canvasPadding * 2;
+      const areaW = textAreaW ?? ownW;
+      const areaH = textAreaH ?? ownH;
       const key = [
         s.text,
         family(s),
@@ -222,7 +248,11 @@ const TechText = ({
         s.lineStyle,
         width,
         height,
-        dpr
+        dpr,
+        align,
+        areaW,
+        areaH,
+        canvasPadding
       ].join('|');
       if (key === layoutKey && word) return word;
       layoutKey = key;
@@ -247,8 +277,8 @@ const TechText = ({
       );
       const fit = Math.min(
         1,
-        (width * 0.95) / measuredWidth,
-        (height * 0.85) / measuredHeight
+        (areaW * 0.95) / measuredWidth,
+        (areaH * 0.85) / measuredHeight
       );
       const size = Math.max(s.fontSize * fit, 12);
       setFont(probe, s, size);
@@ -262,8 +292,18 @@ const TechText = ({
         size * 0.85
       );
       const ascent = m.actualBoundingBoxAscent || size * 0.75;
-      const x = (width - inkWidth) / 2 + (m.actualBoundingBoxLeft || 0);
-      const baseline = (height - inkHeight) / 2 + ascent;
+
+      // Compute text-area origin within ownW/ownH, then shift by canvasPadding
+      const halign = align.includes('right') ? 'right' : align.includes('left') ? 'left' : 'center';
+      const valign = align.startsWith('top') ? 'top' : align.startsWith('bottom') ? 'bottom' : 'center';
+      const areaOriginX =
+        halign === 'left' ? 0 : halign === 'right' ? ownW - areaW : (ownW - areaW) / 2;
+      const areaOriginY =
+        valign === 'top' ? 0 : valign === 'bottom' ? ownH - areaH : (ownH - areaH) / 2;
+
+      // Centre text within sub-area, then shift everything right/down by canvasPadding
+      const x = canvasPadding + areaOriginX + (areaW - inkWidth) / 2 + (m.actualBoundingBoxLeft || 0);
+      const baseline = canvasPadding + areaOriginY + (areaH - inkHeight) / 2 + ascent;
       const next = {
         size,
         baseline,
@@ -653,8 +693,9 @@ const TechText = ({
     wakeRef.current = wake;
 
     const resize = () => {
-      width = Math.max(1, container.clientWidth);
-      height = Math.max(1, container.clientHeight);
+      // Canvas bitmap = wrapper size + 2*canvasPadding on each side
+      width = Math.max(1, container.clientWidth) + canvasPadding * 2;
+      height = Math.max(1, container.clientHeight) + canvasPadding * 2;
       dpr = Math.min(window.devicePixelRatio || 1, 2);
       canvas.width = Math.round(width * dpr);
       canvas.height = Math.round(height * dpr);
@@ -664,8 +705,9 @@ const TechText = ({
 
     const locate = (e: PointerEvent) => {
       const rect = container.getBoundingClientRect();
-      pointer.x = e.clientX - rect.left;
-      pointer.y = e.clientY - rect.top;
+      // Pointer coords in canvas-space: container-local + padding offset
+      pointer.x = e.clientX - rect.left + canvasPadding;
+      pointer.y = e.clientY - rect.top + canvasPadding;
     };
     const onMove = (e: PointerEvent) => {
       locate(e);
@@ -724,7 +766,7 @@ const TechText = ({
     return () => {
       alive = false;
       cancelAnimationFrame(raf);
-      wakeRef.current = () => {};
+      wakeRef.current = () => { };
       resizeObserver.disconnect();
       intersectionObserver.disconnect();
       container.removeEventListener('pointermove', onMove);
@@ -740,11 +782,26 @@ const TechText = ({
     <div
       ref={containerRef}
       className={`relative w-full h-full touch-pan-y select-none ${className}`.trim()}
-      style={style}
+      style={{ ...style, overflow: canvasPadding ? 'visible' : undefined }}
       role="img"
       aria-label={text}
     >
-      <canvas ref={canvasRef} className="block w-full h-full" />
+      <canvas
+        ref={canvasRef}
+        style={
+          canvasPadding
+            ? {
+                display: 'block',
+                position: 'absolute',
+                left: -canvasPadding,
+                top: -canvasPadding,
+                width: `calc(100% + ${canvasPadding * 2}px)`,
+                height: `calc(100% + ${canvasPadding * 2}px)`,
+                pointerEvents: 'none',
+              }
+            : { display: 'block', width: '100%', height: '100%' }
+        }
+      />
     </div>
   );
 };

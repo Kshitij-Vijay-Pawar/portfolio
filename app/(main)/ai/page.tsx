@@ -332,20 +332,7 @@ export default function AIPage() {
         </div>
       </div>
 
-      {/* Bottom Footer Metadata Detail */}
-      <div className="relative z-10 max-w-7xl mx-auto w-full flex items-center justify-between text-neutral-400 text-xs font-mono pt-8 pointer-events-none">
-        <div className="flex items-center gap-2 pointer-events-auto">
-          <div className="w-5 h-5 rounded-full border border-neutral-300 flex items-center justify-center">
-            <ArrowDown className="w-2.5 h-2.5 text-neutral-600 animate-bounce" />
-          </div>
-          <span className="text-[9px] uppercase tracking-widest text-neutral-500">
-            KSHITIJ // AI LAB INTERACTION
-          </span>
-        </div>
-        <span className="text-[9px] uppercase tracking-widest text-neutral-400 hidden sm:inline-block">
-          INDEXED_DB PERSISTENT // STRICT ZERO AUTO-DELETION
-        </span>
-      </div>
+
     </div>
   );
 }

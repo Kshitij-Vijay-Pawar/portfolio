@@ -113,7 +113,7 @@ export default function ErrorPage({ error, reset }: ErrorProps) {
           
           {/* Left Column: Disoriented Mascot Box */}
           <div className="lg:col-span-5 flex flex-col items-center justify-center">
-            <div className="relative group p-6 sm:p-8 rounded-3xl bg-white/85 border border-red-200 shadow-[0_20px_50px_rgba(239,68,68,0.08)] backdrop-blur-xl">
+            <div className="relative group p-6 sm:p-8 shadow-[0_20px_50px_rgba(239,68,68,0.08)] backdrop-blur-xl">
               
               {/* Technical Warning Corner Crosshairs */}
               <div className="absolute -top-1.5 -left-1.5 w-3 h-3 border-t-2 border-l-2 border-red-600" />
@@ -139,13 +139,7 @@ export default function ErrorPage({ error, reset }: ErrorProps) {
                 />
               </div>
 
-              {/* Caption */}
-              <div className="mt-4 pt-3 border-t border-neutral-100 text-center">
-                <p className="font-mono text-xs text-neutral-700">
-                  Unit <span className="font-semibold text-red-600">BOT-01</span> triggered emergency failsafe.
-                </p>
-                <p className="text-[11px] text-neutral-400 mt-0.5">Click mascot or trigger recovery below.</p>
-              </div>
+
             </div>
           </div>
 

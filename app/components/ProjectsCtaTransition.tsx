@@ -12,13 +12,12 @@ if (typeof window !== "undefined") {
 }
 
 export default function ProjectsCtaTransition() {
-  // Stable root wrapper: acts as the layout trigger in the document flow
   const wrapperRef = useRef<HTMLDivElement>(null);
-  // Inner viewport: pinned by GSAP inside wrapperRef
   const viewportRef = useRef<HTMLDivElement>(null);
   const sentenceRef = useRef<HTMLDivElement>(null);
   const firstLetterRef = useRef<HTMLSpanElement>(null);
   const targetARef = useRef<HTMLSpanElement>(null);
+  const lastCharRef = useRef<HTMLSpanElement>(null);
   const whiteExpansionRef = useRef<HTMLSpanElement>(null);
   const ctaContentRef = useRef<HTMLDivElement>(null);
   const bgOverlayRef = useRef<HTMLDivElement>(null);
@@ -32,6 +31,7 @@ export default function ProjectsCtaTransition() {
       const sentence = sentenceRef.current;
       const firstLetter = firstLetterRef.current;
       const targetA = targetARef.current;
+      const lastChar = lastCharRef.current;
       const whiteExp = whiteExpansionRef.current;
       const ctaContent = ctaContentRef.current;
       const bgOverlay = bgOverlayRef.current;
@@ -44,6 +44,7 @@ export default function ProjectsCtaTransition() {
         !sentence ||
         !firstLetter ||
         !targetA ||
+        !lastChar ||
         !whiteExp ||
         !ctaContent ||
         !bgOverlay ||
@@ -52,20 +53,18 @@ export default function ProjectsCtaTransition() {
         return;
       }
 
-      const clamp = (v: number, lo: number, hi: number) =>
-        Math.max(lo, Math.min(hi, v));
-
-      let originX = 0;
-      let originY = 0;
       let xStart = 0;
       let xEnd = 0;
 
       const measureLayout = () => {
+        // Reset transform to measure accurately
+        const currentTransform = sentence.style.transform;
         sentence.style.transform = "none";
 
         const sRect = sentence.getBoundingClientRect();
         const hRect = firstLetter.getBoundingClientRect();
         const aRect = targetA.getBoundingClientRect();
+        const qRect = lastChar.getBoundingClientRect();
         const vRect = viewport.getBoundingClientRect();
 
         const viewportCenterX = vRect.width / 2;
@@ -73,228 +72,175 @@ export default function ProjectsCtaTransition() {
         // Center of first letter 'H' relative to sentence container
         const hCenterInSentence = (hRect.left - sRect.left) + hRect.width / 2;
 
+        // Center of last letter '?' relative to sentence container
+        const qCenterInSentence = (qRect.left - sRect.left) + qRect.width / 2;
+
         // Focal point inside target letter 'A' relative to sentence container
-        // Targeting the solid white junction of the letter A
-        const focalInA_X = aRect.width * 0.68;
+        const focalInA_X = aRect.width * 0.65;
         const focalInA_Y = aRect.height * 0.52;
         const aFocalInSentence = (aRect.left - sRect.left) + focalInA_X;
         const aFocalInSentenceY = (aRect.top - sRect.top) + focalInA_Y;
 
-        originX = aFocalInSentence;
-        originY = aFocalInSentenceY;
+        sentence.style.transformOrigin = `${aFocalInSentence}px ${aFocalInSentenceY}px`;
 
-        sentence.style.transformOrigin = `${originX}px ${originY}px`;
-
-        // Start position: first letter 'H' is centered in the viewport
+        // Start: first letter 'H' centered
         xStart = viewportCenterX - hCenterInSentence;
 
-        // End position: target letter 'A' focal point is centered in the viewport
-        // Moving from xStart to xEnd moves the sentence slowly from RIGHT to LEFT!
-        xEnd = viewportCenterX - aFocalInSentence;
+        // End of scroll roll: '?' is centered in viewport
+        xEnd = viewportCenterX - qCenterInSentence;
+
+        sentence.style.transform = currentTransform || `translate3d(${xStart}px, 0, 0) scale(1)`;
       };
 
       measureLayout();
 
-      const updateTransition = (progress: number) => {
-        // Live progress counter in editorial HUD
+      // Dedicated GSAP Timeline to animate the zoom into 'A' and show the final screen
+      const zoomTimeline = gsap.timeline({
+        paused: true,
+        defaults: { ease: "power2.inOut" },
+      });
+
+      zoomTimeline
+        // 1. Fade out HUD details smoothly
+        .to(
+          details,
+          {
+            opacity: 0,
+            y: -20,
+            duration: 0.35,
+            ease: "power2.out",
+          },
+          0
+        )
+        // 2. Zoom into letter 'A'
+        .to(
+          sentence,
+          {
+            scale: 360,
+            duration: 1.1,
+            ease: "power3.in",
+          },
+          0.1
+        )
+        // 3. Bloom white expansion sphere & background
+        .to(
+          whiteExp,
+          {
+            opacity: 1,
+            scale: 6,
+            duration: 0.8,
+            ease: "power2.inOut",
+          },
+          0.3
+        )
+        .to(
+          bgOverlay,
+          {
+            opacity: 1,
+            duration: 0.65,
+            ease: "power1.inOut",
+          },
+          0.45
+        )
+        .set(
+          viewport,
+          {
+            backgroundColor: "#ffffff",
+          },
+          0.8
+        )
+        // 4. Reveal final CTA content smoothly
+        .to(
+          ctaContent,
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.75,
+            ease: "power3.out",
+            pointerEvents: "auto",
+          },
+          0.85
+        );
+
+      let isZoomTriggered = false;
+
+      // Function to play zoom animation to final screen
+      const playZoomToFinal = () => {
+        if (!isZoomTriggered) {
+          isZoomTriggered = true;
+          zoomTimeline.play();
+        }
+      };
+
+      // Function to reverse animation back to text with '?' at center
+      const reverseZoomToText = () => {
+        if (isZoomTriggered) {
+          isZoomTriggered = false;
+          zoomTimeline.reverse();
+        }
+      };
+
+      // Update text horizontal roll based on scroll progress (0 to 1)
+      const updateScrollText = (progress: number) => {
         if (percentCounter) {
           const pct = Math.round(progress * 100);
           percentCounter.textContent = `${String(pct).padStart(2, "0")}%`;
         }
 
-        // ═════════════════════════════════════════════════════════════════
-        // PHASE 0: Initial Stationary Hold on Black Screen (0.00 → 0.02)
-        // First letter ("H") is calmly framed in the center of viewport
-        // ═════════════════════════════════════════════════════════════════
-        if (progress <= 0.02) {
-          sentence.style.transform = `translate3d(${xStart}px, 0, 0) scale(1)`;
-          sentence.style.opacity = "1";
-          sentence.style.filter = "none";
-
-          details.style.opacity = "1";
-          details.style.transform = "translate3d(0, 0, 0)";
-
-          whiteExp.style.opacity = "0";
-          whiteExp.style.transform = "translate(-50%, -50%) scale(1)";
-
-          bgOverlay.style.opacity = "0";
-          viewport.style.backgroundColor = "#000000";
-
-          ctaContent.style.opacity = "0";
-          ctaContent.style.transform = "translate3d(0, 28px, 0)";
-          ctaContent.style.pointerEvents = "none";
-          return;
-        }
-
-        // ═════════════════════════════════════════════════════════════════
-        // PHASE 1: Cinematic Slow Text Glide: RIGHT → LEFT (0.02 → 0.28)
-        // Smooth cubic smoothstep curve for natural momentum.
-        // ═════════════════════════════════════════════════════════════════
-        if (progress <= 0.28) {
-          const tRaw = (progress - 0.02) / (0.28 - 0.02);
-          // Smooth cubic smoothstep curve for natural momentum
-          const tEased = tRaw * tRaw * (3 - 2 * tRaw);
-          const currentX = xStart + (xEnd - xStart) * tEased;
-
+        // When not zoomed in, update horizontal roll
+        if (!isZoomTriggered && zoomTimeline.progress() === 0) {
+          const currentX = xStart + (xEnd - xStart) * progress;
           sentence.style.transform = `translate3d(${currentX}px, 0, 0) scale(1)`;
-          sentence.style.opacity = "1";
-          sentence.style.filter = "none";
-
-          details.style.opacity = "1";
-          details.style.transform = "translate3d(0, 0, 0)";
-
-          whiteExp.style.opacity = "0";
-          whiteExp.style.transform = "translate(-50%, -50%) scale(1)";
-
-          bgOverlay.style.opacity = "0";
-          viewport.style.backgroundColor = "#000000";
-
-          ctaContent.style.opacity = "0";
-          ctaContent.style.transform = "translate3d(0, 28px, 0)";
-          ctaContent.style.pointerEvents = "none";
-          return;
         }
-
-        // ═════════════════════════════════════════════════════════════════
-        // PHASE 2: Centering Settle & Cinematic Pause on "A" (0.28 → 0.35)
-        // Dedicated scroll hold with target "A" perfectly centered.
-        // HUD details gently fade away.
-        // ═════════════════════════════════════════════════════════════════
-        if (progress <= 0.35) {
-          const tHold = (progress - 0.28) / (0.35 - 0.28);
-
-          sentence.style.transform = `translate3d(${xEnd}px, 0, 0) scale(1)`;
-          sentence.style.opacity = "1";
-          sentence.style.filter = "none";
-
-          // Gentle HUD fadeout during the hold
-          const hudFade = clamp(1 - tHold * 1.5, 0, 1);
-          details.style.opacity = `${hudFade}`;
-          details.style.transform = `translate3d(0, ${-tHold * 12}px, 0)`;
-
-          whiteExp.style.opacity = "0";
-          whiteExp.style.transform = "translate(-50%, -50%) scale(1)";
-
-          bgOverlay.style.opacity = "0";
-          viewport.style.backgroundColor = "#000000";
-
-          ctaContent.style.opacity = "0";
-          ctaContent.style.transform = "translate3d(0, 28px, 0)";
-          ctaContent.style.pointerEvents = "none";
-          return;
-        }
-
-        // ═════════════════════════════════════════════════════════════════
-        // PHASE 3: Fast, Silky Zoom into "A" & Bloom (0.35 → 0.45)
-        // Swift, punchy, silky camera dive into the letter.
-        // Gradual, organic white diffusion blooms seamlessly.
-        // ═════════════════════════════════════════════════════════════════
-        if (progress <= 0.45) {
-          const u = (progress - 0.35) / (0.45 - 0.35);
-          const currentX = xEnd;
-
-          details.style.opacity = "0";
-
-          // Fast, balanced camera zoom curve
-          const maxScale = 380;
-          const uCurve = 0.50 * Math.pow(u, 1.4) + 0.50 * Math.pow(u, 2.4);
-          const scale = 1 + (maxScale - 1) * uCurve;
-
-          sentence.style.transform = `translate3d(${currentX}px, 0, 0) scale(${scale})`;
-          sentence.style.opacity = "1";
-          sentence.style.filter = "none";
-
-          // White expansion blooming smoothly alongside the zoom
-          if (u > 0.20) {
-            const wRaw = clamp((u - 0.20) / (0.90 - 0.20), 0, 1);
-            const wEased = wRaw * wRaw * (3 - 2 * wRaw);
-
-            // Bloom expands and brightens smoothly
-            whiteExp.style.opacity = `${wEased}`;
-            whiteExp.style.transform = `translate(-50%, -50%) scale(${1 + wEased * 4})`;
-
-            // Background overlay softly transitions to pure white
-            const bgAlpha = Math.pow(wRaw, 1.8);
-            bgOverlay.style.opacity = `${bgAlpha}`;
-
-            if (wRaw >= 0.98) {
-              viewport.style.backgroundColor = "#ffffff";
-            } else {
-              viewport.style.backgroundColor = "#000000";
-            }
-          } else {
-            whiteExp.style.opacity = "0";
-            whiteExp.style.transform = "translate(-50%, -50%) scale(1)";
-            bgOverlay.style.opacity = "0";
-            viewport.style.backgroundColor = "#000000";
-          }
-
-          ctaContent.style.opacity = "0";
-          ctaContent.style.transform = "translate3d(0, 28px, 0)";
-          ctaContent.style.pointerEvents = "none";
-          return;
-        }
-
-        // ═════════════════════════════════════════════════════════════════
-        // PHASE 4: Pure White Screen Hold (0.45 → 0.49)
-        // Serene moment on complete white before the message emerges.
-        // ═════════════════════════════════════════════════════════════════
-        if (progress <= 0.49) {
-          viewport.style.backgroundColor = "#ffffff";
-          bgOverlay.style.opacity = "1";
-          whiteExp.style.opacity = "1";
-          details.style.opacity = "0";
-
-          ctaContent.style.opacity = "0";
-          ctaContent.style.transform = "translate3d(0, 28px, 0)";
-          ctaContent.style.pointerEvents = "none";
-          return;
-        }
-
-        // ═════════════════════════════════════════════════════════════════
-        // PHASE 5: Smooth CTA Reveal (0.49 → 0.62) & Retain (0.62 → 1.00)
-        // Gentle fade-in and subtle upward glide into resting place.
-        // ═════════════════════════════════════════════════════════════════
-        viewport.style.backgroundColor = "#ffffff";
-        bgOverlay.style.opacity = "1";
-        whiteExp.style.opacity = "1";
-        details.style.opacity = "0";
-
-        const cRaw = clamp((progress - 0.49) / (0.62 - 0.49), 0, 1);
-        const cEased = cRaw * cRaw * (3 - 2 * cRaw);
-
-        ctaContent.style.opacity = `${cEased}`;
-        ctaContent.style.transform = `translate3d(0, ${(1 - cEased) * 28}px, 0)`;
-        ctaContent.style.pointerEvents = cEased > 0.5 ? "auto" : "none";
       };
 
-      updateTransition(0);
-
-      // Total scroll distance calibrated for responsive transition
+      // Responsive scroll travel distance
       const isMobile = window.innerWidth < 768;
-      const scrollDistance = isMobile ? "2500vh" : "4000vh";
+      const scrollDistance = isMobile ? "220vh" : "320vh";
 
-      // scrub: 1.0 gives direct, 1:1, silky control
       const st = ScrollTrigger.create({
         trigger: wrapper,
         pin: viewport,
         start: "top top",
         end: `+=${scrollDistance}`,
         anticipatePin: 1,
-        scrub: 1.0,
-        refreshPriority: -1,
+        scrub: 0.6,
         invalidateOnRefresh: true,
         onRefresh: () => {
           measureLayout();
         },
         onUpdate: (self) => {
-          updateTransition(self.progress);
+          // As the user scrolls through, scroll the text until ? is centered at self.progress >= 0.96
+          if (self.progress >= 0.96) {
+            updateScrollText(1);
+            if (self.direction > 0) {
+              playZoomToFinal();
+            }
+          } else {
+            if (self.direction < 0 && self.progress < 0.90) {
+              reverseZoomToText();
+            }
+            updateScrollText(self.progress / 0.96);
+          }
+        },
+        onLeaveBack: () => {
+          reverseZoomToText();
+          updateScrollText(0);
         },
       });
 
+      // Handle wheel gestures when on the final screen so scrolling up immediately reverses
+      const handleWheel = (e: WheelEvent) => {
+        if (isZoomTriggered && e.deltaY < -10) {
+          reverseZoomToText();
+        }
+      };
+
+      window.addEventListener("wheel", handleWheel, { passive: true });
+
       const handleResize = () => {
         measureLayout();
-        updateTransition(st.progress);
+        updateScrollText(st.progress <= 0.96 ? st.progress / 0.96 : 1);
       };
 
       window.addEventListener("resize", handleResize);
@@ -305,7 +251,9 @@ export default function ProjectsCtaTransition() {
 
       return () => {
         clearTimeout(refreshTimeout);
+        window.removeEventListener("wheel", handleWheel);
         window.removeEventListener("resize", handleResize);
+        zoomTimeline.kill();
       };
     },
     { scope: wrapperRef }
@@ -400,14 +348,14 @@ export default function ProjectsCtaTransition() {
           </div>
         </div>
 
-        {/* ── Giant Single-Line Headline Container ── */}
+        {/* ── Giant Single-Line Headline Container (Text made bigger) ── */}
         <div className="absolute inset-0 z-1 flex items-center justify-start overflow-visible pointer-events-none">
           <div
             ref={sentenceRef}
-            className="flex items-center whitespace-nowrap font-black uppercase tracking-[-0.04em] text-white will-change-transform select-none"
+            className="flex items-center whitespace-nowrap font-black uppercase tracking-[-0.03em] text-white will-change-transform select-none"
             style={{
-              fontSize: "clamp(2.8rem, 9vw, 13rem)",
-              lineHeight: 1,
+              fontSize: "clamp(4.5rem, 16vw, 24rem)",
+              lineHeight: 0.9,
             }}
           >
             {/* First letter 'H' anchored for initial center framing */}
@@ -422,22 +370,25 @@ export default function ProjectsCtaTransition() {
                 ref={whiteExpansionRef}
                 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none opacity-0 will-change-transform"
                 style={{
-                  width: "200px",
-                  height: "200px",
+                  width: "240px",
+                  height: "240px",
                   background:
-                    "radial-gradient(circle, rgba(255,255,255,1) 35%, rgba(255,255,255,0.85) 65%, rgba(255,255,255,0) 100%)",
-                  filter: "blur(6px)",
+                    "radial-gradient(circle, rgba(255,255,255,1) 40%, rgba(255,255,255,0.9) 65%, rgba(255,255,255,0) 100%)",
+                  filter: "blur(4px)",
                 }}
               />
             </span>
-            <span>?</span>
+            {/* Last character '?' that stops at viewport center before triggering zoom */}
+            <span ref={lastCharRef} className="relative inline-block">
+              ?
+            </span>
           </div>
         </div>
 
         {/* ── Minimal Editorial Final CTA Revealed on White Screen ── */}
         <div
           ref={ctaContentRef}
-          className="absolute inset-0 z-20 flex flex-col items-center justify-center text-center px-4 sm:px-8 md:px-12 pointer-events-none opacity-0"
+          className="absolute inset-0 z-20 flex flex-col items-center justify-center text-center px-4 sm:px-8 md:px-12 pointer-events-none opacity-0 translate-y-7"
         >
           <div className="max-w-4xl mx-auto flex flex-col items-center">
             {/* Subtle chapter label */}

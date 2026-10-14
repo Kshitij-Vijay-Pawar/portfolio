@@ -78,7 +78,16 @@ export const SKILLS_DATA: Record<SkillCategory, SkillItem[]> = {
 
 export default function HeroSection() {
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
+  const [windowWidth, setWindowWidth] = useState<number>(1200);
   const selectedCategory = SKILL_CATEGORIES[selectedIndex];
+
+  // Track window resize for responsive canvas font size and layout tuning
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   // Auto-rotate skill categories every 20 seconds
   useEffect(() => {
@@ -242,10 +251,36 @@ export default function HeroSection() {
     { scope: containerRef }
   );
 
+  // Dynamic font sizing & reach for TechText canvases based on screen width
+  const developerFontSize =
+    windowWidth < 480
+      ? 88
+      : windowWidth < 640
+        ? 100
+        : windowWidth < 780
+          ? 118
+          : windowWidth < 1024
+            ? 140
+            : 160;
+
+  const kshitijFontSize =
+    windowWidth < 480
+      ? 92
+      : windowWidth < 640
+        ? 108
+        : windowWidth < 780
+          ? 130
+          : windowWidth < 1024
+            ? 152
+            : 170;
+
+  const developerReach = windowWidth < 640 ? 150 : 180;
+  const kshitijReach = windowWidth < 640 ? 170 : 220;
+
   return (
     <section
       ref={containerRef}
-      className="relative w-full h-[100svh] min-h-[640px] max-h-[1200px] flex flex-col justify-between overflow-hidden bg-[#fafaf9] pt-16 sm:pt-20 md:pt-24 pb-4 sm:pb-6 px-3 sm:px-6 md:px-12 lg:px-14 select-none"
+      className="relative w-full h-[100svh] min-h-[660px] max-h-[1200px] flex flex-col justify-between overflow-hidden bg-[#fafaf9] pt-16 sm:pt-20 md:pt-24 pb-0 sm:pb-2 px-3 sm:px-6 md:px-12 lg:px-14 select-none"
     >
       {/* 1. Background Grid & Dot Matrix Layer with Parallax */}
       <div
@@ -256,23 +291,23 @@ export default function HeroSection() {
       </div>
 
       {/* 2. Top Header Content & Status Badge */}
-      <div className="relative z-20 w-full flex items-center justify-between pointer-events-none px-2 sm:px-0">
-        {/* Left Sub-Header Detail */}
-        <div className="hero-corner-item hidden md:flex items-center gap-3">
-          <span className="font-mono text-xs text-neutral-400">LOC</span>
+      <div className="relative z-20 w-full flex items-center justify-center sm:justify-between pointer-events-none px-2 sm:px-0">
+        {/* Left Sub-Header Detail: On mobile centered with no bg and no border */}
+        <div className="hero-corner-item flex items-center gap-2">
+          <span className="font-mono text-[10px] sm:text-xs text-neutral-400">LOC</span>
           <a
             href="https://www.google.com/maps/search/?api=1&query=43.978412,15.383477"
             target="_blank"
             rel="noopener noreferrer"
             data-cursor="interactive"
-            className="font-mono text-xs font-semibold text-neutral-800 tracking-wider cursor-pointer pointer-events-auto hover:opacity-75 transition-opacity"
+            className="font-mono text-[10px] sm:text-xs font-semibold text-neutral-800 tracking-wider cursor-pointer pointer-events-auto hover:opacity-75 transition-opacity"
           >
             [43.978412° N, 15.383477° E]
           </a>
         </div>
 
-        {/* Right Sub-Header Detail */}
-        <div className="hero-corner-item hidden md:flex items-center gap-3">
+        {/* Right Sub-Header Detail: Hidden on mobile (<640px) */}
+        <div className="hero-corner-item hidden sm:flex items-center gap-2 sm:gap-3">
           <span className="font-mono text-xs text-neutral-400">STACK</span>
           <span className="font-mono text-xs font-semibold text-neutral-800 tracking-wider">
             NEXT.JS // GSAP // THREE
@@ -281,18 +316,19 @@ export default function HeroSection() {
       </div>
 
       {/* 3. Central Canvas: Big Watermark + Giant TechText + Centered Hero Portrait + Side Badges */}
-      <div className="relative w-full flex-1 flex items-center justify-center my-auto overflow-hidden">
+      <div className="relative w-full flex-1 flex items-center justify-center my-auto">
 
-        {/* Giant "DEVELOPER" TechText Typography in Top-Left Area behind Portrait (Subtle Architectural Background Watermark) */}
+        {/* DEVELOPER TechText Typography: Top-left / center on mobile */}
         <div
           ref={watermarkRef}
           data-cursor="interactive"
-          className="absolute -top-4 -left-4 sm:top-0 sm:left-4 md:top-2 md:left-8 w-[280px] sm:w-[480px] md:w-[680px] lg:w-[820px] h-[100px] sm:h-[160px] md:h-[220px] lg:h-[260px] pointer-events-auto z-[5] overflow-visible select-none max-w-full opacity-60"
+          className="absolute top-1 sm:top-2 md:top-2 left-1/2 -translate-x-1/2 sm:translate-x-0 sm:left-4 md:left-8 w-[320px] sm:w-[420px] md:w-[600px] lg:w-[740px] xl:w-[820px] h-[95px] sm:h-[130px] md:h-[180px] lg:h-[240px] pointer-events-auto z-[5] select-none max-w-full opacity-60 flex items-center justify-center sm:justify-start"
         >
           <TechText
+            key={`dev-${developerFontSize}`}
             text="DEVELOPER"
             fontWeight={800}
-            fontSize={160}
+            fontSize={developerFontSize}
             reveal="letter"
             dashLength={4}
             dashGap={3}
@@ -301,7 +337,7 @@ export default function HeroSection() {
             color="#676767"
             accentColor="#94a3b8"
             letterSpacing={-0.03}
-            reach={180}
+            reach={developerReach}
             softness={0.7}
             strokeWidth={1.5}
             speed={1}
@@ -310,36 +346,21 @@ export default function HeroSection() {
             labels
             draggable
             sweep
+            canvasPadding={800}
           />
         </div>
 
-        {/* Centered Hero Cutout Portrait (Foreground Focal Point) */}
-        <div
-          ref={heroImgRef}
-          className="relative z-20 flex items-end justify-center pointer-events-none h-full w-full max-w-6xl"
-        >
-          <div className="relative w-[280px] sm:w-[420px] md:w-[580px] lg:w-[760px] xl:w-[900px] h-[68svh] sm:h-[76svh] md:h-[84svh] max-h-[880px] min-h-[360px]">
-            <Image
-              src={heroImage}
-              alt="Kshitij - Creative Developer"
-              priority
-              fill
-              sizes="(max-width: 640px) 280px, (max-width: 768px) 420px, (max-width: 1200px) 760px, 900px"
-              className="object-contain object-bottom drop-shadow-[0_24px_50px_rgba(0,0,0,0.22)] filter contrast-[1.03]"
-            />
-          </div>
-        </div>
-
-        {/* Giant TechText Canvas Layer ON TOP OF IMAGE in Bottom-Right Area (Draggable & Interactive - Primary Focal Text) */}
+        {/* KSHITIJ TechText Layer: Positioned bottom-right on desktop, bottom-center on mobile */}
         <div
           ref={techTextRef}
           data-cursor="interactive"
-          className="absolute -bottom-2 -right-4 sm:bottom-0 sm:right-4 md:bottom-2 md:right-8 w-[280px] sm:w-[460px] md:w-[640px] lg:w-[760px] h-[100px] sm:h-[150px] md:h-[200px] lg:h-[240px] flex items-center justify-end z-30 pointer-events-auto select-none max-w-full drop-shadow-[0_4px_16px_rgba(255,255,255,0.85)] filter"
+          className="absolute top-[88px] sm:top-auto sm:bottom-0 md:bottom-2 left-1/2 -translate-x-1/2 sm:translate-x-0 sm:left-auto sm:right-4 md:right-8 w-[320px] sm:w-[420px] md:w-[600px] lg:w-[720px] xl:w-[780px] h-[95px] sm:h-[130px] md:h-[180px] lg:h-[220px] flex items-center justify-center sm:justify-end z-10 sm:z-30 pointer-events-auto select-none max-w-full drop-shadow-[0_4px_16px_rgba(255,255,255,0.85)] filter"
         >
           <TechText
+            key={`ksh-${kshitijFontSize}`}
             text="KSHITIJ"
             fontWeight={800}
-            fontSize={170}
+            fontSize={kshitijFontSize}
             reveal="letter"
             dashLength={5}
             dashGap={3}
@@ -348,7 +369,7 @@ export default function HeroSection() {
             color="#080808"
             accentColor="#000000"
             letterSpacing={-0.03}
-            reach={220}
+            reach={kshitijReach}
             softness={0.7}
             strokeWidth={1.8}
             speed={1}
@@ -357,7 +378,25 @@ export default function HeroSection() {
             labels
             draggable
             sweep
+            canvasPadding={800}
           />
+        </div>
+
+        {/* Centered Hero Cutout Portrait: Bigger on mobile */}
+        <div
+          ref={heroImgRef}
+          className="relative z-20 flex items-end justify-center pointer-events-none h-full w-full max-w-6xl mt-10 sm:mt-0"
+        >
+          <div className="relative w-full sm:w-[540px] md:w-[700px] lg:w-[820px] xl:w-[940px] h-[62svh] sm:h-[82svh] md:h-[86svh] max-h-[960px] min-h-[400px]">
+            <Image
+              src={heroImage}
+              alt="Kshitij - Creative Developer"
+              priority
+              fill
+              sizes="(max-width: 640px) 100vw, (max-width: 768px) 80vw, (max-width: 1200px) 820px, 940px"
+              className="object-contain object-bottom drop-shadow-[0_24px_50px_rgba(0,0,0,0.22)] filter contrast-[1.03]"
+            />
+          </div>
         </div>
 
         {/* Floating Context Badges & Editorial Detail Cards */}
@@ -365,7 +404,7 @@ export default function HeroSection() {
           ref={badgesRef}
           className="absolute inset-0 pointer-events-none z-30 flex items-center justify-between w-full max-w-7xl mx-auto px-2 sm:px-4"
         >
-          {/* Left: Scaled down OptionWheel (hidden on very small phones < 640px to prevent visual clash, accessible via bottom tags) */}
+          {/* Left: OptionWheel (hidden on very small screens < 640px) */}
           <div data-cursor="default" className="hidden sm:flex h-[200px] sm:h-[260px] w-[180px] sm:w-[260px] pointer-events-auto items-center">
             <OptionWheel
               items={SKILL_CATEGORIES}
@@ -389,8 +428,8 @@ export default function HeroSection() {
             />
           </div>
 
-          {/* Right Area: Dynamic Category Technical Graph Lines */}
-          <div className="parallax-lines-container hidden lg:flex flex-col gap-4 translate-y-6 max-w-[340px] xl:max-w-[390px] w-full pointer-events-auto ">
+          {/* Right Area: Dynamic Category Technical Graph Lines (Visible on all screens >= 768px, and streamlined on tablet) */}
+          <div className="parallax-lines-container hidden md:flex flex-col gap-3.5 translate-y-6 max-w-[260px] lg:max-w-[340px] xl:max-w-[390px] w-full pointer-events-auto bg-white/40 lg:bg-transparent backdrop-blur-xs lg:backdrop-blur-none p-3 lg:p-0 rounded-xl border border-neutral-200/50 lg:border-none shadow-xs lg:shadow-none">
             {SKILLS_DATA[selectedCategory].slice(0, 4).map((skill, idx) => {
               const skillLevel = skill.level ?? 88;
               const lineLabels = ["VEC // 01", "GRID // 02", "AXIS // 03", "DATUM // 04"];
@@ -406,10 +445,10 @@ export default function HeroSection() {
               return (
                 <div key={skill.name} className="flex flex-col gap-1.5 origin-left group">
                   <div className="flex items-center justify-between text-[10px] font-mono tracking-wider">
-                    <span className="text-neutral-500 font-medium group-hover:text-neutral-900 transition-colors">
+                    <span className="text-neutral-600 lg:text-neutral-500 font-medium group-hover:text-neutral-900 transition-colors">
                       {label} &middot; {skill.name}
                     </span>
-                    <span className="text-neutral-700 font-semibold font-mono">
+                    <span className="text-neutral-900 lg:text-neutral-700 font-semibold font-mono">
                       {skill.level !== undefined ? `${skill.level}%` : "EXP"}
                     </span>
                   </div>
@@ -428,51 +467,33 @@ export default function HeroSection() {
         </div>
       </div>
 
-      {/* 4. Bottom Footer Bar: Dynamic Selected Category Skills + Scroll Mouse */}
-      <div className="relative z-20 w-full flex flex-col sm:flex-row items-center sm:items-end justify-between pointer-events-none pt-2 gap-3 sm:gap-0">
-        {/* Left Bottom Tag: Active Category + Skills Count */}
-        <div className="hero-corner-item hidden sm:flex flex-col text-left pointer-events-auto">
-          <span className="font-mono text-[11px] text-neutral-400 uppercase tracking-wider">
-            Category // {selectedCategory}
+      {/* 4. Mobile Technical Stat HUD — pinned to bottom, always visible on < 768px */}
+      <div className="relative z-30 w-full flex-shrink-0 flex md:hidden flex-col gap-1.5 pb-3 pt-1 px-3 pointer-events-auto bg-gradient-to-t from-[#fafaf9]/95 via-[#fafaf9]/80 to-transparent">
+        <div className="flex items-center justify-between text-[10px] font-mono tracking-wider text-neutral-500 border-b border-neutral-200/60 pb-1">
+          <span className="font-semibold text-neutral-800 uppercase tracking-widest flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#ff5500] animate-pulse" />
+            {selectedCategory}
           </span>
-          <span className="font-mono text-xs font-semibold text-neutral-800">
-            {SKILLS_DATA[selectedCategory].length} PROFICIENCIES
-          </span>
+          <span className="text-neutral-400">SYSTEM METRICS</span>
         </div>
-
-        {/* Center Scroll Prompt */}
-        <div
-          ref={scrollIndicatorRef}
-          data-cursor="interactive"
-          className="pointer-events-auto mx-auto flex flex-col items-center gap-1.5 sm:gap-2 text-neutral-500 hover:text-neutral-950 transition-colors cursor-pointer"
-          onClick={() => {
-            window.scrollTo({
-              top: window.innerHeight,
-              behavior: "smooth",
-            });
-          }}
-        >
-          <span className="font-mono text-[9px] sm:text-[11px] tracking-widest uppercase">
-            Scroll to explore
-          </span>
-          <div className="w-4 h-7 sm:w-5 sm:h-8 rounded-full border-2 border-neutral-300 flex items-start justify-center p-1">
-            <div className="w-1 h-1.5 sm:w-1 sm:h-2 bg-neutral-800 rounded-full animate-bounce" />
-          </div>
-        </div>
-
-        {/* Right Bottom Tag: Dynamic Category Skills Display */}
-        <div className="hero-corner-item pointer-events-auto flex items-center gap-1.5 sm:gap-2 flex-wrap justify-center sm:justify-end max-w-full sm:max-w-[460px]">
+        <div className="grid grid-cols-2 gap-1.5">
           {SKILLS_DATA[selectedCategory].slice(0, 4).map((skill) => (
             <div
               key={skill.name}
-              className="font-mono text-[10px] sm:text-[11px] px-2 sm:px-2.5 py-0.5 sm:py-1 bg-white/85 border border-neutral-200/90 rounded-md shadow-xs backdrop-blur-sm flex items-center gap-1 transition-all duration-300 hover:border-neutral-900 hover:bg-white"
+              className="flex flex-col gap-1 bg-white/80 backdrop-blur-sm px-2.5 py-1.5 rounded-lg border border-neutral-200/70 shadow-sm"
             >
-              <span className="font-medium text-neutral-800">{skill.name}</span>
-              {skill.level !== undefined && (
-                <span className="text-[9px] sm:text-[10px] text-neutral-400 font-semibold">
-                  {skill.level}%
+              <div className="flex items-center justify-between text-[9px] font-mono">
+                <span className="text-neutral-600 truncate max-w-[90px] font-medium">{skill.name}</span>
+                <span className="text-neutral-900 font-bold ml-1">
+                  {skill.level !== undefined ? `${skill.level}%` : "EXP"}
                 </span>
-              )}
+              </div>
+              <div className="h-[2px] w-full bg-neutral-200 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-neutral-950 rounded-full transition-all duration-500"
+                  style={{ width: `${skill.level ?? 88}%` }}
+                />
+              </div>
             </div>
           ))}
         </div>

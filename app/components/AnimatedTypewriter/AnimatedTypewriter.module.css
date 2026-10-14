@@ -1,0 +1,240 @@
+/* ==========================================================================
+   AnimatedTypewriter
+   Stacking order inside .root (which isolates its own stacking context):
+     0  .ambient            black + soft glows + vignette
+     1  .plant.pBack        small, dark, slightly blurred plants growing from behind the text
+     2  .content            sharp white text
+     3  .plant.pFront       plants that grow out toward the viewer and cross the text
+   Every plant is a single SVG whose growth is scrubbed by --p (0..1, written per frame
+   by FloraLayer). Stems reveal with stroke-dashoffset, leaves unfold, roses open ring by ring.
+   ========================================================================== */
+
+.root {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden; /* plants may leave the box, but never cause page scroll */
+  box-sizing: border-box;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  min-height: 28rem;
+  min-height: clamp(24rem, 82svh, 56rem);
+  padding: clamp(2.5rem, 8vw, 6rem) clamp(1.25rem, 6vw, 6rem);
+  background: #000000;
+  color: #ffffff;
+  font-family: var(--font-sans, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif);
+}
+
+.defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* ---------------------------------------------------------------- ambient */
+
+.ambient {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(120% 100% at 50% 50%, transparent 55%, rgba(0, 0, 0, 0.88) 100%),
+    radial-gradient(60% 52% at 50% 50%, rgba(110, 8, 26, 0.2), transparent 72%),
+    radial-gradient(40% 40% at 10% 90%, rgba(22, 90, 40, 0.13), transparent 72%),
+    radial-gradient(40% 40% at 92% 10%, rgba(120, 8, 26, 0.12), transparent 72%);
+  animation: breathe 14s ease-in-out infinite alternate;
+}
+@keyframes breathe {
+  from { opacity: 0.7; }
+  to   { opacity: 1; }
+}
+
+/* ------------------------------------------------------------------- text */
+
+.content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+
+.textGrid {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  width: 100%;
+  max-width: 16em;
+  font-size: clamp(2rem, 1.15rem + 4.1vw, 5.25rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.035em;
+  text-align: center;
+  color: #ffffff;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Soft dark pool behind the words: keeps contrast high wherever a leaf or rose passes behind them. */
+.textGrid::before {
+  content: '';
+  position: absolute;
+  inset: -30% -14%;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(closest-side, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.28) 60%, transparent);
+}
+
+.ghost,
+.live {
+  grid-area: 1 / 1;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+.ghost {
+  visibility: hidden;
+  pointer-events: none;
+  user-select: none;
+}
+.live {
+  align-self: start; /* anchored to the top of the reserved block, so wrapping never moves it */
+  text-shadow: 0 0 0.3em rgba(0, 0, 0, 0.75), 0 2px 26px rgba(0, 0, 0, 0.8);
+}
+
+.cursor {
+  display: inline-block;
+  width: 0.055em;
+  height: 0.86em;
+  margin-left: 0.07em;
+  vertical-align: -0.1em;
+  border-radius: 0.03em;
+  background: #ffffff;
+  opacity: 0.9;
+  box-shadow: 0 0 0.35em rgba(255, 255, 255, 0.45);
+}
+/* Steady while typing, blinks while the finished sentence rests. */
+.live[data-resting] .cursor {
+  animation: blink 1.05s steps(1, end) infinite;
+}
+@keyframes blink {
+  0%, 100% { opacity: 0.9; }
+  50%      { opacity: 0; }
+}
+
+/* ================================================================ plants */
+
+/* No z-index / transform / filter here: it must NOT create a stacking context, so each
+   plant can interleave with the text through its own z-index. */
+.plants {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.plant {
+  position: absolute;
+  overflow: visible;
+  pointer-events: none;
+  backface-visibility: hidden;
+}
+.pBack {
+  z-index: 1;
+  filter: brightness(0.72) saturate(0.95) blur(1px); /* depth of field: far plants are dark and soft */
+}
+.pFront {
+  z-index: 3;
+  filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.55));
+}
+
+/* ------------------------------------------------------------------ stems */
+
+.stem {
+  fill: none;
+  stroke-linecap: round;
+  stroke-dasharray: 1 1;
+  /* --s = when this segment starts growing, --d = how long it takes (plant-local, 0..1) */
+  stroke-dashoffset: calc(1 - clamp(0, calc((var(--p) - var(--s)) / var(--d)), 1));
+}
+
+.thorn {
+  fill: #4a0b14;
+  opacity: clamp(0, calc((var(--p) - var(--s)) * 40), 1);
+}
+
+/* ----------------------------------------------------------------- leaves */
+
+.leaf {
+  --e: clamp(0, calc((var(--p) - var(--s)) / var(--d)), 1);
+  --ee: calc(var(--e) * var(--e) * (3 - 2 * var(--e)));
+}
+.k0 { --sw: var(--sw0); }
+.k1 { --sw: var(--sw1); }
+.k2 { --sw: var(--sw2); }
+
+.lSway {
+  transform: rotate(calc(var(--sw) * 4.5deg));
+}
+/* Folded along the midrib and pressed against the stem, then it opens. */
+.lUnf {
+  transform:
+    rotate(calc(var(--sd) * (1 - var(--ee)) * -42deg))
+    scale(calc(0.18 + 0.82 * var(--ee)), calc(0.04 + 0.96 * var(--ee) * var(--ee)));
+  opacity: clamp(0, calc(var(--e) * 10), 1);
+}
+
+/* ------------------------------------------------------------------ roses */
+
+.rose {
+  /* --s = the moment the stem tip arrives and a bud appears */
+  --bud: clamp(0, calc((var(--p) - var(--s)) / 0.05), 1);
+  --open: clamp(0, calc((var(--p) - var(--s) - 0.06) / 0.21), 1);
+}
+.rSway {
+  transform: rotate(calc(var(--sw) * 3deg));
+  transform-origin: 50px 50px;
+}
+.spin {
+  transform: rotate(calc((1 - var(--open)) * -26deg));
+  transform-origin: 50px 50px;
+}
+.sepals {
+  transform: scale(calc(0.25 + 0.75 * var(--bud)));
+  transform-origin: 50px 70px;
+  opacity: clamp(0, calc(var(--bud) * 6), 1);
+}
+.bud {
+  transform: scale(calc(0.1 + 0.9 * var(--bud)));
+  transform-origin: 50px 70px;
+  opacity: calc(clamp(0, calc(var(--bud) * 8), 1) * (1 - clamp(0, calc((var(--p) - var(--s) - 0.07) / 0.04), 1)));
+}
+/* Petals unfold from the inside out: core -> inner -> middle -> outer. */
+.ring {
+  transform-origin: 50px 50px;
+  transform:
+    rotate(calc((1 - var(--re)) * -34deg))
+    scale(calc(0.16 + 0.84 * var(--re)), calc(0.1 + 0.9 * var(--re)));
+  opacity: clamp(0, calc(var(--rl) * 5), 1);
+}
+.r0 { --rl: clamp(0, calc((var(--p) - var(--s) - 0.07) / 0.1), 1);  --re: calc(var(--rl) * var(--rl) * (3 - 2 * var(--rl))); }
+.r1 { --rl: clamp(0, calc((var(--p) - var(--s) - 0.09) / 0.11), 1); --re: calc(var(--rl) * var(--rl) * (3 - 2 * var(--rl))); }
+.r2 { --rl: clamp(0, calc((var(--p) - var(--s) - 0.115) / 0.12), 1); --re: calc(var(--rl) * var(--rl) * (3 - 2 * var(--rl))); }
+.r3 { --rl: clamp(0, calc((var(--p) - var(--s) - 0.14) / 0.13), 1); --re: calc(var(--rl) * var(--rl) * (3 - 2 * var(--rl))); }
+
+/* ------------------------------------------------------------- responsive */
+
+@media (max-width: 640px) {
+  .pBack  { filter: brightness(0.6); }   /* no blur on phones */
+  .pFront { filter: none; }
+  .textGrid { max-width: 100%; }
+}
+
+/* ---------------------------------------------------------- reduced motion */
+
+/* FloraLayer renders a still, fully grown composition and never starts its clock. */
+@media (prefers-reduced-motion: reduce) {
+  .ambient { animation: none; }
+  .live[data-resting] .cursor { animation: none; }
+}

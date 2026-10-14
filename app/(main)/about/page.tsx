@@ -102,32 +102,7 @@ export default function AboutPage() {
             SECTION 1: HERO & EDITORIAL INTRO
             ================================================================= */}
         <section className="flex flex-col">
-          {/* Top Metadata Header Row */}
-          <div className="w-full flex items-center justify-between pb-6 mb-8 border-b border-neutral-200/80 text-xs font-mono">
-            <div className="flex items-center gap-3">
-              <span className="w-2 h-2 rounded-full bg-[#ff5500] animate-pulse" />
-              <span className="text-neutral-500 uppercase tracking-widest font-semibold">
-                02 // ABOUT ME
-              </span>
-              <span className="text-neutral-300 hidden sm:inline">|</span>
-              <span className="text-neutral-600 hidden sm:inline">
-                KSHITIJ VIJAY PAWAR
-              </span>
-            </div>
 
-            <div className="flex items-center gap-4">
-              <div className="hidden md:flex items-center gap-2 text-neutral-400">
-                <span>LOC:</span>
-                <span className="text-neutral-800 font-semibold">
-                  [43.978412° N, 15.383477° E] &middot; PUNE, IN
-                </span>
-              </div>
-              <div className="px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 font-medium text-[11px] flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                <span>OPEN FOR WORK</span>
-              </div>
-            </div>
-          </div>
 
           {/* Main Hero Headline & Portrait Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">

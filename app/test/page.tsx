@@ -1,7 +1,11 @@
+import AnimatedTypewriter from '@/app/components/AnimatedTypewriter/AnimatedTypewriter';
+
 export default function TestPage() {
+  const sampleStrings = ['Creating thoughtful digital experiences.'];
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#fafaf9] p-8">
-      <h1 className="text-xl font-bold font-mono">Test Page</h1>
+    <div className="min-h-screen flex flex-col items-center justify-center bg-black p-8">
+      <AnimatedTypewriter strings={sampleStrings} />
     </div>
   );
 }

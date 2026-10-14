@@ -46,31 +46,7 @@ export default function ContactPage() {
       {/* 1. Unified Background Grid & Dot Matrix Layer */}
       <ArchitecturalBackground dotOpacity={0.7} glowVariant="subtle" />
 
-      {/* 2. Top Header Content & Status Badge */}
-      <div className="relative z-20 w-full flex items-center justify-between pb-4 sm:pb-6 mb-4 sm:mb-8 border-b border-neutral-200/80">
-        {/* Left Sub-Header Detail */}
-        <div className="flex items-center gap-2 sm:gap-3">
-          <span className="w-2 h-2 rounded-full bg-[#ff5500] animate-pulse" />
-          <span className="font-mono text-xs text-neutral-400">LOC</span>
-          <a
-            href="https://www.google.com/maps/search/?api=1&query=43.978412,15.383477"
-            target="_blank"
-            rel="noopener noreferrer"
-            data-cursor="interactive"
-            className="font-mono text-xs font-semibold text-neutral-800 tracking-wider hover:opacity-75 transition-opacity"
-          >
-            [43.978412° N, 15.383477° E] &middot; PUNE, IN
-          </a>
-        </div>
 
-        {/* Right Sub-Header Detail */}
-        <div className="hidden sm:flex items-center gap-3">
-          <span className="font-mono text-xs text-neutral-400">STACK</span>
-          <span className="font-mono text-xs font-semibold text-neutral-800 tracking-wider uppercase">
-            NEXT.JS // GSAP // THREE
-          </span>
-        </div>
-      </div>
 
       {/* 3. Central Canvas: Smooth natural flow with responsive layout */}
       <div className="relative z-10 w-full max-w-7xl mx-auto flex-1 flex flex-col justify-center my-auto py-2 sm:py-8">
