@@ -553,6 +553,7 @@ export default function HomeJourneySection() {
           trigger: sectionEl,
           pin: true,
           scrub: 1,
+          refreshPriority: 3,
           start: "top top",
           end: () => `+=${Math.max(trackEl.scrollWidth - window.innerWidth + 800, 1800)}`,
           invalidateOnRefresh: true,
@@ -627,11 +628,11 @@ export default function HomeJourneySection() {
     <section
       ref={sectionRef}
       id="journey"
-      className="relative w-full bg-[#000000] text-white selection:bg-white selection:text-black overflow-hidden font-sans border-t border-neutral-900"
+      className="relative w-full bg-[#000000] text-white selection:bg-white selection:text-black overflow-hidden font-sans border-t border-neutral-900 lg:h-screen lg:flex lg:flex-col lg:justify-between"
       aria-label="Chronological Journey Timeline"
     >
       {/* Editorial Header */}
-      <div className="relative z-20 w-full pt-16 sm:pt-20 lg:pt-24 px-6 sm:px-12 md:px-16 max-w-7xl mx-auto flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-white/10">
+      <div className="relative z-20 w-full pt-16 sm:pt-20 lg:pt-20 px-6 sm:px-12 md:px-16 max-w-7xl mx-auto flex flex-col md:flex-row md:items-end justify-between gap-6 pb-4 lg:pb-5 border-b border-white/10 shrink-0">
         <div>
           <div className="inline-flex items-center gap-2 mb-3 px-3 py-1 rounded-full border border-white/20 bg-white/5 text-[11px] font-mono uppercase tracking-[0.2em] text-neutral-400">
             <span className="w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_8px_#ffffff]" />
@@ -654,7 +655,7 @@ export default function HomeJourneySection() {
       {/* =======================================================================
           DESKTOP: Continuous Horizontal Timeline (min-width: 1024px)
           ======================================================================= */}
-      <div className="hidden lg:block relative w-full h-[78vh] min-h-[640px] overflow-hidden">
+      <div className="hidden lg:block relative w-full flex-1 min-h-0 overflow-hidden">
         {/* Main Central Glowing LED Timeline Axis (Locked vertically at 50% viewport height) */}
         <div className="absolute top-1/2 left-0 right-0 h-[1px] -translate-y-1/2 z-10 pointer-events-none">
           {/* Base Background Track: Thin white rule */}

@@ -211,15 +211,15 @@ const Mascot = forwardRef<MascotRef, MascotProps>(function Mascot(
     let currentX = 0;
     let currentY = 0;
 
-    const onMouseMove = (e: MouseEvent) => {
+    const updateEyesTarget = (clientX: number, clientY: number) => {
       if (!containerRef.current) return;
       const rect = containerRef.current.getBoundingClientRect();
       const centerX = rect.left + rect.width / 2;
       const centerY = rect.top + rect.height / 2;
 
-      // Distance and angle from mascot center to mouse
-      const deltaX = e.clientX - centerX;
-      const deltaY = e.clientY - centerY;
+      // Distance and angle from mascot center to pointer/touch
+      const deltaX = clientX - centerX;
+      const deltaY = clientY - centerY;
       const distance = Math.hypot(deltaX, deltaY);
       const angle = Math.atan2(deltaY, deltaX);
 
@@ -230,6 +230,22 @@ const Mascot = forwardRef<MascotRef, MascotProps>(function Mascot(
 
       targetX = Math.cos(angle) * clampedDistance;
       targetY = Math.sin(angle) * clampedDistance;
+    };
+
+    const onMouseMove = (e: MouseEvent) => {
+      updateEyesTarget(e.clientX, e.clientY);
+    };
+
+    const onTouchMove = (e: TouchEvent) => {
+      if (e.touches.length > 0) {
+        updateEyesTarget(e.touches[0].clientX, e.touches[0].clientY);
+      }
+    };
+
+    const onTouchStart = (e: TouchEvent) => {
+      if (e.touches.length > 0) {
+        updateEyesTarget(e.touches[0].clientX, e.touches[0].clientY);
+      }
     };
 
     const render = () => {
@@ -245,10 +261,14 @@ const Mascot = forwardRef<MascotRef, MascotProps>(function Mascot(
     };
 
     window.addEventListener("mousemove", onMouseMove, { passive: true });
+    window.addEventListener("touchmove", onTouchMove, { passive: true });
+    window.addEventListener("touchstart", onTouchStart, { passive: true });
     animationFrameId = requestAnimationFrame(render);
 
     return () => {
       window.removeEventListener("mousemove", onMouseMove);
+      window.removeEventListener("touchmove", onTouchMove);
+      window.removeEventListener("touchstart", onTouchStart);
       cancelAnimationFrame(animationFrameId);
     };
   }, []);

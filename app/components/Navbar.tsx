@@ -85,6 +85,9 @@ const Navbar = () => {
         onMouseLeave={() => {
           if (navOpen) resetMascotEmotion();
         }}
+        onTouchStart={() => {
+          if (navOpen) triggerAngry();
+        }}
         aria-label={navOpen ? "Close menu" : "Open menu"}
         data-cursor="interactive"
         className="pointer-events-auto w-12 h-12 flex flex-col items-center justify-center relative cursor-pointer group focus:outline-none"
