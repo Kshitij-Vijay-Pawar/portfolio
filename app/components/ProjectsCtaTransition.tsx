@@ -58,7 +58,7 @@ export default function ProjectsCtaTransition() {
 
       const measureLayout = () => {
         // Reset transform to measure accurately
-        const currentTransform = sentence.style.transform;
+        gsap.set(sentence, { clearProps: "transform" });
         sentence.style.transform = "none";
 
         const sRect = sentence.getBoundingClientRect();
@@ -89,7 +89,7 @@ export default function ProjectsCtaTransition() {
         // End of scroll roll: '?' is centered in viewport
         xEnd = viewportCenterX - qCenterInSentence;
 
-        sentence.style.transform = currentTransform || `translate3d(${xStart}px, 0, 0) scale(1)`;
+        gsap.set(sentence, { x: xStart, y: 0, scale: 1 });
       };
 
       measureLayout();
@@ -112,135 +112,106 @@ export default function ProjectsCtaTransition() {
           },
           0
         )
-        // 2. Zoom into letter 'A'
-        .to(
-          sentence,
-          {
-            scale: 360,
-            duration: 1.1,
-            ease: "power3.in",
-          },
-          0.1
-        )
-        // 3. Bloom white expansion sphere & background
+        // 2. Bloom white expansion sphere & background
         .to(
           whiteExp,
           {
             opacity: 1,
             scale: 6,
-            duration: 0.8,
+            duration: 0.7,
             ease: "power2.inOut",
           },
-          0.3
+          0.25
         )
         .to(
           bgOverlay,
           {
             opacity: 1,
-            duration: 0.65,
+            duration: 0.5,
             ease: "power1.inOut",
           },
-          0.45
+          0.4
         )
         .set(
           viewport,
           {
             backgroundColor: "#ffffff",
           },
-          0.8
+          0.7
         )
-        // 4. Reveal final CTA content smoothly
+        // 3. Reveal final CTA content smoothly
         .to(
           ctaContent,
           {
             opacity: 1,
             y: 0,
-            duration: 0.75,
+            duration: 0.65,
             ease: "power3.out",
-            pointerEvents: "auto",
           },
-          0.85
+          0.75
         );
 
-      let isZoomTriggered = false;
+      // Update text horizontal roll and zoom based on scroll progress (0 to 1)
+      // 0.00 -> 0.58: Horizontal roll of "HAVE AN AMBITIOUS IDEA?" until '?' is centered
+      // 0.58 -> 0.90: Zoom into the letter 'A' and reveal white CTA screen
+      // 0.90 -> 1.00: Hold the final white CTA screen before scrolling to Footer
+      const ROLL_END = 0.58;
+      const ZOOM_END = 0.90;
 
-      // Function to play zoom animation to final screen
-      const playZoomToFinal = () => {
-        if (!isZoomTriggered) {
-          isZoomTriggered = true;
-          zoomTimeline.play();
-        }
-      };
+      const updateScrollState = (progress: number) => {
+        const rollProgress = Math.min(progress / ROLL_END, 1);
 
-      // Function to reverse animation back to text with '?' at center
-      const reverseZoomToText = () => {
-        if (isZoomTriggered) {
-          isZoomTriggered = false;
-          zoomTimeline.reverse();
-        }
-      };
-
-      // Update text horizontal roll based on scroll progress (0 to 1)
-      const updateScrollText = (progress: number) => {
         if (percentCounter) {
-          const pct = Math.round(progress * 100);
+          const pct = Math.round(rollProgress * 100);
           percentCounter.textContent = `${String(pct).padStart(2, "0")}%`;
         }
 
-        // When not zoomed in, update horizontal roll
-        if (!isZoomTriggered && zoomTimeline.progress() === 0) {
-          const currentX = xStart + (xEnd - xStart) * progress;
-          sentence.style.transform = `translate3d(${currentX}px, 0, 0) scale(1)`;
+        const currentX = xStart + (xEnd - xStart) * rollProgress;
+
+        if (progress <= ROLL_END) {
+          zoomTimeline.progress(0);
+          gsap.set(sentence, { x: currentX, y: 0, scale: 1 });
+          viewport.style.backgroundColor = "#000000";
+          ctaContent.style.pointerEvents = "none";
+        } else {
+          const rawZoom = (progress - ROLL_END) / (ZOOM_END - ROLL_END);
+          const zoomProgress = Math.max(0, Math.min(rawZoom, 1));
+          // Power-3 ease-in curve for the scale from 1 -> 360
+          const easedZoom = zoomProgress * zoomProgress * zoomProgress;
+          const currentScale = 1 + 359 * easedZoom;
+
+          gsap.set(sentence, { x: xEnd, y: 0, scale: currentScale });
+          zoomTimeline.progress(zoomProgress);
+          ctaContent.style.pointerEvents = zoomProgress > 0.6 ? "auto" : "none";
         }
       };
 
-      // Responsive scroll travel distance
-      const isMobile = window.innerWidth < 768;
-      const scrollDistance = isMobile ? "220vh" : "320vh";
+      const getScrollDistance = () => {
+        const isMobile = window.innerWidth < 768;
+        return (isMobile ? 2.4 : 3.2) * window.innerHeight;
+      };
 
       const st = ScrollTrigger.create({
-        trigger: wrapper,
-        pin: viewport,
+        trigger: viewport,
+        pin: true,
         start: "top top",
-        end: `+=${scrollDistance}`,
-        anticipatePin: 1,
-        scrub: 0.6,
+        end: () => `+=${getScrollDistance()}`,
+        pinSpacing: true,
+        scrub: 0.5,
+        refreshPriority: 1,
         invalidateOnRefresh: true,
-        onRefresh: () => {
+        onRefresh: (self) => {
           measureLayout();
+          updateScrollState(self.progress);
         },
         onUpdate: (self) => {
-          // As the user scrolls through, scroll the text until ? is centered at self.progress >= 0.96
-          if (self.progress >= 0.96) {
-            updateScrollText(1);
-            if (self.direction > 0) {
-              playZoomToFinal();
-            }
-          } else {
-            if (self.direction < 0 && self.progress < 0.90) {
-              reverseZoomToText();
-            }
-            updateScrollText(self.progress / 0.96);
-          }
-        },
-        onLeaveBack: () => {
-          reverseZoomToText();
-          updateScrollText(0);
+          updateScrollState(self.progress);
         },
       });
 
-      // Handle wheel gestures when on the final screen so scrolling up immediately reverses
-      const handleWheel = (e: WheelEvent) => {
-        if (isZoomTriggered && e.deltaY < -10) {
-          reverseZoomToText();
-        }
-      };
-
-      window.addEventListener("wheel", handleWheel, { passive: true });
-
       const handleResize = () => {
         measureLayout();
-        updateScrollText(st.progress <= 0.96 ? st.progress / 0.96 : 1);
+        updateScrollState(st.progress);
       };
 
       window.addEventListener("resize", handleResize);
@@ -251,8 +222,8 @@ export default function ProjectsCtaTransition() {
 
       return () => {
         clearTimeout(refreshTimeout);
-        window.removeEventListener("wheel", handleWheel);
         window.removeEventListener("resize", handleResize);
+        st.kill();
         zoomTimeline.kill();
       };
     },
@@ -262,12 +233,12 @@ export default function ProjectsCtaTransition() {
   return (
     <section
       ref={wrapperRef}
-      className="relative w-full bg-black select-none"
+      className="relative w-full bg-[#fafaf9] select-none"
     >
       {/* ── Pinned Transition Viewport ── */}
       <div
         ref={viewportRef}
-        className="relative w-full h-screen overflow-hidden bg-black transition-colors duration-200"
+        className="relative w-full h-screen overflow-hidden bg-black"
       >
         {/* Full White Overlay that guarantees seamless, unshakeable 100% white saturation */}
         <div
@@ -408,7 +379,7 @@ export default function ProjectsCtaTransition() {
             </p>
 
             {/* Action Button navigating to Contact page */}
-            <div className="pointer-events-auto">
+            <div>
               <Link
                 href="/contact"
                 data-cursor="interactive"

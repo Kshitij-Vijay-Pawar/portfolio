@@ -12,94 +12,133 @@ export interface ProjectSupplementalInfo {
 }
 
 export const PROJECTS_SUPPLEMENTAL: Record<string, ProjectSupplementalInfo> = {
-  codenarts: {
-    projectId: "codenarts",
+  "google-maps-scraper": {
+    projectId: "google-maps-scraper",
     architecturalHighlights: [
-      "Custom WebGL shader pipelines utilizing Three.js and custom GLSL uniforms for fluid ambient distortion.",
-      "Synchronized GSAP ScrollTrigger timelines driving camera translation and multi-stage typography reveals.",
-      "Strict layout preservation ensuring 60fps frame budgeting during 3D model rotation.",
+      "Asynchronous job queue pipeline using BullMQ and Redis to decouple HTTP API requests from long-running Playwright browser scraping.",
+      "Multi-priority deduplication strategy matching business records by website URL, phone number, email, or normalized name + address.",
+      "Controlled website enrichment worker (concurrency = 2) using Axios and Cheerio to fill missing emails, phones, and social profiles without overwriting verified Google Maps source fields.",
     ],
     keyChallengesSolved: [
-      "Mitigated frame drops during intensive 3D canvas rendering via geometry instancing and dynamic device pixel ratio downscaling.",
-      "Seamless integration between React component lifecycles and imperative Three.js render loops.",
+      "Prevented HTTP request timeouts during multi-minute Google Maps feed scrolling by offloading Playwright browser automation to background BullMQ workers.",
+      "Eliminated duplicate business listings across overlapping search queries using a deterministic priority matching hierarchy in PostgreSQL with Drizzle ORM.",
     ],
     engineeringStackDetails: [
-      "Next.js App Router",
-      "Three.js & WebGL",
-      "GSAP ScrollTrigger & Timelines",
-      "Custom GLSL fragment/vertex shaders",
+      "Bun, TypeScript & Express 5 API",
+      "Playwright Chromium Automation",
+      "BullMQ & Redis Async Job Queue",
+      "PostgreSQL & Drizzle ORM",
+      "Next.js Frontend Dashboard & ExcelJS/CSV Export",
     ],
   },
-  "az-digital": {
-    projectId: "az-digital",
+  accentra: {
+    projectId: "accentra",
     architecturalHighlights: [
-      "Modern editorial UI with React 19 concurrent features and fluid page transitions using Motion.",
-      "Custom design token architecture structured on Tailwind CSS with high-contrast accessibility standards.",
-      "Conversion-optimized responsive layout with micro-interactions and magnetic cursor affordances.",
+      "Relational course hierarchy modeled in PostgreSQL (Neon) with Drizzle ORM across courses, units, lessons, challenges, options, progress, and subscriptions.",
+      "Server Actions with Next.js path revalidation managing hearts, XP points, practice mode recovery, and leaderboard state.",
+      "Context-aware AI Grammar Coach (/api/chat) powered by Google Gemini (gemini-2.0-flash) and Stripe subscription checkout/webhook integration.",
     ],
     keyChallengesSolved: [
-      "Maintained zero-cumulative layout shift (CLS) during high-resolution typography and image asset rehydration.",
-      "Engineered performant spring physics for interactive hover cards without DOM thrashing.",
+      "Synchronized gamified user state (hearts, points, lesson completion, and practice mode) across multiple routes using server-side Drizzle queries and path revalidation.",
+      "Constrained Gemini AI responses with system prompts to deliver concise, level-appropriate language explanations.",
     ],
     engineeringStackDetails: [
-      "React 19",
-      "Tailwind CSS custom tokens",
-      "Motion (Framer Motion v14)",
-      "TypeScript strict contracts",
+      "Next.js 15 App Router & React",
+      "PostgreSQL (Neon) & Drizzle ORM",
+      "Clerk Authentication & Stripe SDK",
+      "Google Gemini (@google/generative-ai)",
+      "Tailwind CSS & Zustand",
     ],
   },
-  amron: {
-    projectId: "amron",
+  edgelink: {
+    projectId: "edgelink",
     architecturalHighlights: [
-      "Cinematic 3D particle simulation driven by Frame Buffer Object (FBO) GPU computation.",
-      "Realtime optic post-processing passes creating chromatic aberration and depth-of-field effects.",
-      "Interactive physics system reacting smoothly to pointer velocity and scroll acceleration.",
+      "7-step SEO signal pipeline covering HTML crawl, on-page analysis, JSON-LD schema validation, robots.txt/sitemap checks, and external PageSpeed/backlink/ranking adapters.",
+      "Background BullMQ + Redis worker processing audits with retries and exponential backoff.",
+      "Anthropic Claude structured JSON synthesis combined with transactional Prisma persistence and Puppeteer executive PDF generation.",
     ],
     keyChallengesSolved: [
-      "Optimized thousands of floating particles simultaneously on the GPU via FBO texture ping-ponging without CPU memory bottleneck.",
-      "Graceful degradation on mobile GPUs with reduced particle density checks.",
+      "Built dual-mode signal adapters that operate with real third-party API keys or deterministic mock signals so the pipeline runs reliably in any environment.",
+      "Used Prisma database transactions to atomically persist audit scores, severity-ranked issues, action items, and executive reports.",
     ],
     engineeringStackDetails: [
-      "Three.js & Raw WebGL",
-      "FBO (Frame Buffer Object) Compute Shaders",
-      "Postprocessing shader passes",
-      "Pointer velocity mathematics",
+      "Next.js 16, React 19 & TypeScript",
+      "PostgreSQL & Prisma ORM",
+      "BullMQ & Redis Queue Workers",
+      "Anthropic Claude API",
+      "Puppeteer PDF Generation & Cheerio",
     ],
   },
-  chatone: {
-    projectId: "chatone",
+  "mcfly-pos-website": {
+    projectId: "mcfly-pos-website",
     architecturalHighlights: [
-      "Bi-directional realtime WebSocket communication layer with connection state machine and heartbeat reconnection.",
-      "Optimistic UI updates with instant message delivery acknowledgement and pending state reconciliation.",
-      "Clean, distraction-free light-themed UI engineered with modular component boundaries.",
+      "Component-driven marketing website built with Next.js 16, React 19, TypeScript, and Tailwind CSS 4.",
+      "Structured product storytelling sections covering POS capabilities, restaurant workflows, testimonials, FAQs, and demo requests.",
+      "Smooth interactive transitions and visual polish using GSAP.",
     ],
     keyChallengesSolved: [
-      "Prevented race conditions during rapid message bursts using client-side sequential queue dispatchers.",
-      "Handled automatic reconnection and backoff jitter seamlessly when moving across unstable networks.",
+      "Organized complex POS product features into scannable bento grids, workflow steps, and interactive FAQ accordions for prospective restaurant owners.",
+      "Clearly scoped as the product marketing website for McFly POS.",
     ],
     engineeringStackDetails: [
-      "TypeScript full-stack contracts",
-      "Realtime WebSocket protocol",
-      "Custom state machine hooks",
-      "Tailwind CSS responsive design",
+      "Next.js 16 (App Router) & React 19",
+      "TypeScript",
+      "Tailwind CSS 4",
+      "GSAP Animations & Lucide React",
     ],
   },
-  finance: {
-    projectId: "finance",
+  "authentication-system": {
+    projectId: "authentication-system",
     architecturalHighlights: [
-      "High-contrast dark mode financial dashboard with real-time SVG charting and data visualizations.",
-      "GSAP-driven metric counters and staggered timeline entries for portfolio asset distributions.",
-      "Secure banking UI primitives focusing on data hierarchy, typography legibility, and numeric clarity.",
+      "Modular Express 5 + MongoDB (Mongoose) authentication backend separating routes, controllers, JWT middleware, and email utilities.",
+      "Stateless JWT session tokens stored in HTTP-only cookies with bcrypt password hashing (10 salt rounds).",
+      "Time-bound 6-digit email OTP verification flow powered by Nodemailer.",
     ],
     keyChallengesSolved: [
-      "Eliminated UI lag during real-time chart data recalculation via memoized Canvas and SVG rendering pipelines.",
-      "Built resilient monetary formatting and numeric balance transitions with zero rounding errors.",
+      "Protected user sessions from client-side script access by issuing JWTs inside HTTP-only cookies with strict SameSite policies.",
+      "Implemented expiring OTP verification records on the Mongoose user model to validate account ownership.",
     ],
     engineeringStackDetails: [
-      "Next.js App Router",
-      "GSAP data visualization animations",
-      "High-density SVG / Canvas charts",
-      "Tailwind CSS dark mode tokens",
+      "Node.js & Express 5",
+      "MongoDB & Mongoose ODM",
+      "JWT (jsonwebtoken) & bcryptjs",
+      "Nodemailer SMTP & cookie-parser",
+    ],
+  },
+  aharaflow: {
+    projectId: "aharaflow",
+    architecturalHighlights: [
+      "Active product build for an India-first, multi-tenant restaurant POS platform with PostgreSQL Row-Level Security (RLS).",
+      "Backend architecture designed around Node.js, Express.js, TypeScript, PostgreSQL, and Redis.",
+      "Domain modeling for Indian GST billing (CGST/SGST splits), table management, and Kitchen Display System (KDS) workflows.",
+    ],
+    keyChallengesSolved: [
+      "Designed strict tenant and outlet isolation in PostgreSQL alongside Indian GST tax calculation rules.",
+      "Structured as an active phased build with completed foundation, multi-tenant auth, menu/order modules, and Next.js dashboard, with Tauri 2 desktop and React Native (Expo) apps planned next.",
+    ],
+    engineeringStackDetails: [
+      "Node.js, Express.js & TypeScript",
+      "PostgreSQL & Redis",
+      "Next.js Web Dashboard",
+      "Tauri 2 & React Native / Expo (Planned Phases)",
+    ],
+  },
+  "movie-discovery-app": {
+    projectId: "movie-discovery-app",
+    architecturalHighlights: [
+      "Cross-platform mobile movie discovery app built with React Native 0.81, Expo SDK 54, and file-based Expo Router navigation.",
+      "Reusable generic useFetch<T> hook with 1-second debounced TMDB API search.",
+      "Appwrite database integration logging user search queries and trending movie demand.",
+    ],
+    keyChallengesSolved: [
+      "Prevented redundant network requests while typing by combining a custom generic fetch hook with a 1-second search debounce.",
+      "Tracked popular search terms in Appwrite by incrementing query counts or creating new documents per TMDB movie result.",
+    ],
+    engineeringStackDetails: [
+      "React Native 0.81 & Expo SDK 54",
+      "Expo Router & TypeScript",
+      "TMDB REST API",
+      "Appwrite SDK & NativeWind (Tailwind CSS)",
     ],
   },
 };

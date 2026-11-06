@@ -27,28 +27,28 @@ if (typeof window !== "undefined") {
 
 const HIGHLIGHT_CARDS = [
   {
-    tag: "SPECIALTY",
-    title: "Full-Stack & Systems",
-    desc: "Production-grade Next.js 15+, TypeScript, Node.js, and robust relational schemas designed for scale.",
+    tag: "FRONTEND & MOBILE",
+    title: "React, Next.js & Cross-Platform",
+    desc: "Responsive web interfaces with React, Next.js App Router, TypeScript, and Tailwind CSS, plus desktop & mobile apps in Electron and React Native.",
     icon: Terminal,
-    stat: "100%",
-    statLabel: "Type Safety",
+    stat: "25+ Sites",
+    statLabel: "& 2 Apps Built",
   },
   {
-    tag: "CREATIVE",
-    title: "Motion & 3D Shaders",
-    desc: "Interactive WebGL, Three.js, and fluid GSAP physics engineered for cinematic, 60fps responsiveness.",
+    tag: "BACKEND & QUEUES",
+    title: "Async Workers & APIs",
+    desc: "Node.js, Express, PHP/Laravel REST APIs, and distributed BullMQ + Redis worker pipelines for Playwright scraping, crawlers, and background jobs.",
     icon: Cpu,
-    stat: "60 FPS",
-    statLabel: "Frame Budget",
+    stat: "BullMQ",
+    statLabel: "Redis Workers",
   },
   {
-    tag: "AUGMENTATION",
-    title: "Agentic AI Integration",
-    desc: "Integrating Gemini GenAI, structured outputs, and real-time mascot companion mechanics into seamless UX.",
+    tag: "DATA & AI SYSTEMS",
+    title: "Relational ORMs & LLM Pipelines",
+    desc: "Type-safe PostgreSQL, MySQL, and MongoDB architectures with Drizzle ORM & Prisma, integrated with Google Gemini and Anthropic Claude APIs.",
     icon: Sparkles,
-    stat: "GenAI",
-    statLabel: "Gemini 2.5/3",
+    stat: "PG + ORM",
+    statLabel: "Drizzle & Prisma",
   },
 ];
 
@@ -151,7 +151,7 @@ export default function HomeAboutSection() {
           </div>
 
           <p className="max-w-md text-sm sm:text-base text-neutral-600 font-light leading-relaxed">
-            I am <strong className="font-semibold text-neutral-900">Kshitij Pawar</strong>, a Full-Stack Engineer and Creative Technologist based in Pune, India. I specialize in bridging software architecture with fluid, high-frame-rate interaction design.
+            I am <strong className="font-semibold text-neutral-900">Kshitij Pawar</strong>, a Full-Stack Developer based in Pune, India. I build responsive React &amp; Next.js applications, asynchronous Node.js/BullMQ backends, and relational PostgreSQL systems.
           </p>
         </div>
 
@@ -166,10 +166,10 @@ export default function HomeAboutSection() {
             <div className="flex items-center justify-between mb-8">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-orange-50 border border-orange-200/70 text-[#ff5500] text-xs font-mono font-semibold uppercase tracking-wider">
                 <Flame className="w-3.5 h-3.5" />
-                <span>The Vision</span>
+                <span>Full-Stack Engineering</span>
               </div>
               <div className="flex items-center gap-2 text-xs font-mono text-neutral-400">
-                <span>EST. 2022</span>
+                <span>B.E. AI &amp; DS &apos;25</span>
                 <span className="w-1.5 h-1.5 rounded-full bg-neutral-300" />
                 <span>PUNE, IN</span>
               </div>
@@ -177,10 +177,10 @@ export default function HomeAboutSection() {
 
             <div className="space-y-4 my-auto">
               <h3 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-neutral-950 leading-snug">
-                Building modern web platforms that don&apos;t just work &mdash; they resonate.
+                End-to-end web products backed by clean schemas &amp; async worker queues.
               </h3>
               <p className="text-sm sm:text-base text-neutral-600 font-light leading-relaxed">
-                From full-scale Next.js architectures with strict TypeScript safety to custom WebGL shaders and AI-driven companions, I create interactive spaces where technical precision meets high aesthetic caliber.
+                Across roles at <strong className="font-medium text-neutral-800">McFlyworld</strong> (Goa), <strong className="font-medium text-neutral-800">Tvara</strong> (Bengaluru), and <strong className="font-medium text-neutral-800">NerdTech</strong> (Nashik), I have delivered 25+ websites, 2 Electron &amp; React Native apps, multi-channel AI sales workflows, and distributed scraping &amp; SEO auditing engines.
               </p>
             </div>
 
@@ -189,10 +189,10 @@ export default function HomeAboutSection() {
               <div className="flex items-center gap-6 text-xs font-mono text-neutral-500">
                 <span className="flex items-center gap-1.5">
                   <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
-                  Available for Impact
+                  Open to Full-Stack Roles
                 </span>
                 <span className="hidden sm:inline">&bull;</span>
-                <span className="hidden sm:inline">React 19 &middot; Next.js 15 &middot; WebGL</span>
+                <span className="hidden sm:inline">Next.js &middot; Node.js &middot; PostgreSQL</span>
               </div>
 
               <Link
@@ -223,13 +223,13 @@ export default function HomeAboutSection() {
                   Have Questions About Me?
                 </h4>
                 <p className="text-xs text-neutral-300 font-light leading-relaxed">
-                  My digital Mascot knows my projects, technical stack, resume, and experience. Ask it in real-time.
+                  My digital Mascot knows my projects, work experience at McFlyworld &amp; Tvara, skills, and resume. Ask it in real-time.
                 </p>
               </div>
 
               <div className="pt-5 mt-4 border-t border-white/10 flex items-center justify-between">
                 <span className="text-[11px] font-mono text-neutral-400">
-                  GEMINI 3.8 FLASH ENGINE
+                  GROUNDED PORTFOLIO AI
                 </span>
                 <Link
                   href="/ai"
@@ -249,26 +249,26 @@ export default function HomeAboutSection() {
               <div className="grid grid-cols-3 gap-2 sm:gap-3 divide-x divide-neutral-100 text-center">
                 <div className="flex flex-col">
                   <span className="text-xl sm:text-2xl md:text-3xl font-black text-neutral-950 font-sans tracking-tight">
-                    3+
+                    25+
                   </span>
                   <span className="text-[9px] sm:text-[10px] font-mono text-neutral-500 uppercase tracking-wider mt-1">
-                    Years Exp
+                    Websites Built
                   </span>
                 </div>
                 <div className="flex flex-col pl-2 sm:pl-3">
                   <span className="text-xl sm:text-2xl md:text-3xl font-black text-[#ff5500] font-sans tracking-tight">
-                    100%
+                    7.88
                   </span>
                   <span className="text-[9px] sm:text-[10px] font-mono text-neutral-500 uppercase tracking-wider mt-1">
-                    TypeScript
+                    B.E. CGPA
                   </span>
                 </div>
                 <div className="flex flex-col pl-2 sm:pl-3">
                   <span className="text-xl sm:text-2xl md:text-3xl font-black text-neutral-950 font-sans tracking-tight">
-                    60fps
+                    7+
                   </span>
                   <span className="text-[9px] sm:text-[10px] font-mono text-neutral-500 uppercase tracking-wider mt-1">
-                    Smooth Motion
+                    Core Systems
                   </span>
                 </div>
               </div>

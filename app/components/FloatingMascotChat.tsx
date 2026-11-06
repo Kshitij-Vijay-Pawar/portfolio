@@ -20,8 +20,7 @@ import ChatMessageBubble from "@/app/(main)/ai/components/ChatMessageBubble";
 
 export default function FloatingMascotChat() {
   const pathname = usePathname();
-  const router = useRouter();
-  const { navOpen } = useNav();
+  const { navOpen, navigateWithTransition } = useNav();
 
   // If already on the dedicated /ai page or full-screen navigation is open, don't show the duplicate floating trigger
   const isAiPage = pathname === "/ai";
@@ -88,7 +87,7 @@ export default function FloatingMascotChat() {
 
   const handleNavigateFullscreen = () => {
     setIsOpen(false);
-    router.push("/ai");
+    navigateWithTransition("/ai");
   };
 
   if (isAiPage || navOpen) {

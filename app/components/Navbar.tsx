@@ -2,6 +2,10 @@
 
 import React, { useEffect, useState } from "react";
 import { useNav } from "../context/NavContext";
+import {
+  playNavSubtleTick,
+  playNavToggleSound,
+} from "../utils/tactileSound";
 
 const Navbar = () => {
   const { navOpen, setNavOpen, triggerAngry, resetMascotEmotion } = useNav();
@@ -78,12 +82,20 @@ const Navbar = () => {
       {/* 2-line Menu Button on top left that morphs into a Cross ('X') */}
       <button
         type="button"
-        onClick={() => setNavOpen(!navOpen)}
+        onClick={() => {
+          const nextState = !navOpen;
+          playNavToggleSound(nextState);
+          setNavOpen(nextState);
+        }}
         onMouseEnter={() => {
+          playNavSubtleTick();
           if (navOpen) triggerAngry();
         }}
         onMouseLeave={() => {
           if (navOpen) resetMascotEmotion();
+        }}
+        onTouchStart={() => {
+          if (navOpen) triggerAngry();
         }}
         aria-label={navOpen ? "Close menu" : "Open menu"}
         data-cursor="interactive"

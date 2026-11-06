@@ -168,8 +168,9 @@ export default function HomeCtaSection() {
               </button>
 
               <a
-                href="/resume/Kshitij_Resume.pdf"
-                download
+                href="/resume"
+                target="_blank"
+                rel="noopener noreferrer"
                 data-cursor="interactive"
                 className="px-5 py-4 rounded-2xl bg-white/5 border border-white/10 text-neutral-300 font-mono text-xs uppercase tracking-widest flex items-center gap-2 hover:bg-white/10 hover:text-white transition-all cursor-pointer"
               >

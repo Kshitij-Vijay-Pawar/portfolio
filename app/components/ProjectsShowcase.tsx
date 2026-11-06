@@ -1,10 +1,12 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import React, { useRef, useState } from "react";
+import Link from "next/link";
+import { useNav } from "@/app/context/NavContext";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { ExternalLink } from "lucide-react";
+import { useGSAP } from "@gsap/react";
+import { ExternalLink, ArrowUpRight } from "lucide-react";
 import FluidGlass from "@/app/components/ui/FluidGlass";
 
 if (typeof window !== "undefined") {
@@ -80,397 +82,467 @@ export default function ProjectsShowcase() {
   const [activeIdx, setActiveIdx] = useState(0);
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
 
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
+  useGSAP(
+    () => {
+      const pinWrapper = pinWrapperRef.current;
+      const container = containerRef.current;
+      if (!pinWrapper || !container) return;
 
-    const total = PROJECTS.length;
-    const maxIdx = total - 1;
+      const total = PROJECTS.length;
+      const maxIdx = total - 1;
 
-    // Initialise circle dasharray
-    if (circleRef.current) {
-      circleRef.current.style.strokeDasharray = `${CIRCUMFERENCE}`;
-      circleRef.current.style.strokeDashoffset = `${CIRCUMFERENCE}`;
-    }
-
-    const clamp = (v: number, lo: number, hi: number) =>
-      Math.max(lo, Math.min(hi, v));
-
-    // Hermite smoothstep
-    const ss = (t: number) => t * t * (3 - 2 * t);
-
-    /* ------------------------------------------------------------------
-       applyCardState — set a card's transform, opacity, filter, z-index
-       position: -1 = prev preview (above), 0 = active (center), 1 = next preview (below)
-       t: 0 = fully in that position, used during transition blending
-    ------------------------------------------------------------------ */
-    const applyCardState = (
-      el: HTMLDivElement | null,
-      position: -1 | 0 | 1 | "hidden",
-      vh: number
-    ) => {
-      if (!el) return;
-      const { prevY, nextY } = getPreviewOffsets(vh);
-
-      if (position === "hidden") {
-        el.style.opacity = "0";
-        el.style.pointerEvents = "none";
-        el.style.zIndex = "1";
-        return;
-      }
-
-      if (position === 0) {
-        // Active
-        el.style.transform = `translate(-50%, calc(-50%))`;
-        el.style.opacity = "1";
-        el.style.filter = "none";
-        el.style.zIndex = "20";
-        el.style.pointerEvents = "auto";
-      } else if (position === -1) {
-        // Previous preview (above)
-        el.style.transform = `translate(-50%, calc(-50% + ${prevY}px)) scale(${PREVIEW_SCALE})`;
-        el.style.opacity = `${PREVIEW_OPACITY}`;
-        el.style.filter = `blur(${PREVIEW_BLUR}px) brightness(${PREVIEW_BRIGHTNESS})`;
-        el.style.zIndex = "10";
-        el.style.pointerEvents = "none";
-      } else {
-        // Next preview (below)
-        el.style.transform = `translate(-50%, calc(-50% + ${nextY}px)) scale(${PREVIEW_SCALE})`;
-        el.style.opacity = `${PREVIEW_OPACITY}`;
-        el.style.filter = `blur(${PREVIEW_BLUR}px) brightness(${PREVIEW_BRIGHTNESS})`;
-        el.style.zIndex = "10";
-        el.style.pointerEvents = "none";
-      }
-    };
-
-    /* ------------------------------------------------------------------
-       setStack — set the whole 3-card stack to a stable state for project[idx]
-    ------------------------------------------------------------------ */
-    const setStack = (idx: number) => {
-      const vh = window.innerHeight;
-      for (let i = 0; i < total; i++) {
-        const el = cardRefs.current[i];
-        if (i === idx - 1) applyCardState(el, -1, vh);
-        else if (i === idx) applyCardState(el, 0, vh);
-        else if (i === idx + 1) applyCardState(el, 1, vh);
-        else applyCardState(el, "hidden", vh);
-      }
-    };
-
-    /* ------------------------------------------------------------------
-       setBg — show only the active background
-    ------------------------------------------------------------------ */
-    const setBg = (idx: number) => {
-      for (let i = 0; i < total; i++) {
-        const el = bgRefs.current[i];
-        if (!el) continue;
-        el.style.opacity = i === idx ? "0.95" : "0";
-      }
-    };
-
-    /* ------------------------------------------------------------------
-       setTextBlock — show only the title/desc for project[idx]
-    ------------------------------------------------------------------ */
-    const setTextBlock = (idx: number) => {
-      for (let i = 0; i < total; i++) {
-        const title = titleBlockRefs.current[i];
-        const desc = descBlockRefs.current[i];
-        if (title) {
-          title.style.opacity = i === idx ? "1" : "0";
-          title.style.transform = "translateY(0px)";
-        }
-        if (desc) {
-          desc.style.opacity = i === idx ? "1" : "0";
-          desc.style.transform = "translateY(0px)";
-        }
-      }
-    };
-
-    // Bootstrap initial state
-    setStack(0);
-    setBg(0);
-    setTextBlock(0);
-
-    /* ------------------------------------------------------------------
-       Core update — one ScrollTrigger onUpdate drives all of this
-    ------------------------------------------------------------------ */
-    let lastCurrentIndex = 0;
-
-    const updateShowcase = (progress: number) => {
-      const vh = window.innerHeight;
-      const { prevY, nextY } = getPreviewOffsets(vh);
-
-      // projectProgress: 0 → maxIdx
-      const projectProgress = progress * maxIdx;
-
-      // currentIndex: which project is "active" (being held or leaving)
-      const currentIndex = clamp(Math.floor(projectProgress), 0, maxIdx);
-      const localProgress =
-        currentIndex === maxIdx ? 1 : projectProgress - currentIndex;
-
-      currentIndexRef.current = currentIndex;
-
-      /* ── 1. Progress circle (only continuously-changing element) ── */
+      // Initialise circle dasharray
       if (circleRef.current) {
-        circleRef.current.style.strokeDashoffset = `${CIRCUMFERENCE * (1 - localProgress)}`;
+        circleRef.current.style.strokeDasharray = `${CIRCUMFERENCE}`;
+        circleRef.current.style.strokeDashoffset = `${CIRCUMFERENCE}`;
       }
 
-      /* ── 2. Step number — update instantly on index change ── */
-      if (currentIndex !== lastCurrentIndex) {
-        lastCurrentIndex = currentIndex;
-        setActiveIdx(currentIndex);
-        if (stepNumberRef.current) {
-          stepNumberRef.current.textContent = String(currentIndex + 1).padStart(
-            2,
-            "0"
-          );
-        }
-      }
+      const clamp = (v: number, lo: number, hi: number) =>
+        Math.max(lo, Math.min(hi, v));
 
-      /* ── 3. Transition window ── */
-      const rawT = (localProgress - HOLD_END) / (1 - HOLD_END);
-      const transitionProgress = clamp(rawT, 0, 1);
-      const t = ss(transitionProgress); // smoothstepped 0→1
+      // Hermite smoothstep
+      const ss = (t: number) => t * t * (3 - 2 * t);
 
-      /* ── 4. HOLD phase: set stable 3-card stack, return early ── */
-      if (transitionProgress === 0) {
-        setStack(currentIndex);
-        setBg(currentIndex);
-        setTextBlock(currentIndex);
-        return;
-      }
+      /* ------------------------------------------------------------------
+         applyCardState — set a card's transform, opacity, filter, z-index
+         position: -1 = prev preview (above), 0 = active (center), 1 = next preview (below)
+         t: 0 = fully in that position, used during transition blending
+      ------------------------------------------------------------------ */
+      const applyCardState = (
+        el: HTMLDivElement | null,
+        position: -1 | 0 | 1 | "hidden",
+        vh: number
+      ) => {
+        if (!el) return;
+        const { prevY, nextY } = getPreviewOffsets(vh);
 
-      /* ── 5. LAST project: stay permanently visible ── */
-      if (currentIndex === maxIdx) {
-        setStack(maxIdx);
-        setBg(maxIdx);
-        setTextBlock(maxIdx);
-        return;
-      }
-
-      /* ── 6. TRANSITION phase: slide the whole stack upward ──
-         The entire stack translates upward such that:
-           - currentIndex  : active → prev position (shrinks, fades)
-           - currentIndex+1: next preview → active (grows, sharpens)
-           - currentIndex-1: prev preview → further offscreen (disappears)
-           - currentIndex+2: hidden → next preview (appears)
-      ── */
-      const nextIndex = currentIndex + 1;
-
-      for (let i = 0; i < total; i++) {
-        const card = cardRefs.current[i];
-        if (!card) continue;
-
-        // Determine this card's start and end position in the transition
-        let startY = 0;
-        let endY = 0;
-        let startScale = 1;
-        let endScale = 1;
-        let startOpacity = 0;
-        let endOpacity = 0;
-        let startBlur = 0;
-        let endBlur = 0;
-        let startBrightness = 1;
-        let endBrightness = 1;
-        let startZ = 1;
-        let endZ = 1;
-        let participates = false;
-
-        if (i === currentIndex) {
-          // Active → becomes top preview (moves up, shrinks)
-          startY = 0;
-          endY = prevY;
-          startScale = 1;
-          endScale = PREVIEW_SCALE;
-          startOpacity = 1;
-          endOpacity = PREVIEW_OPACITY;
-          startBlur = 0;
-          endBlur = PREVIEW_BLUR;
-          startBrightness = 1;
-          endBrightness = PREVIEW_BRIGHTNESS;
-          startZ = 20;
-          endZ = 10;
-          participates = true;
-        } else if (i === nextIndex) {
-          // Bottom preview → becomes active (moves up to center, grows)
-          startY = nextY;
-          endY = 0;
-          startScale = PREVIEW_SCALE;
-          endScale = 1;
-          startOpacity = PREVIEW_OPACITY;
-          endOpacity = 1;
-          startBlur = PREVIEW_BLUR;
-          endBlur = 0;
-          startBrightness = PREVIEW_BRIGHTNESS;
-          endBrightness = 1;
-          startZ = 10;
-          endZ = 20;
-          participates = true;
-        } else if (i === currentIndex - 1) {
-          // Top preview → slides further up off-screen (disappears)
-          startY = prevY;
-          endY = prevY * 1.8;
-          startScale = PREVIEW_SCALE;
-          endScale = PREVIEW_SCALE * 0.6;
-          startOpacity = PREVIEW_OPACITY;
-          endOpacity = 0;
-          startBlur = PREVIEW_BLUR;
-          endBlur = PREVIEW_BLUR + 2;
-          startBrightness = PREVIEW_BRIGHTNESS;
-          endBrightness = PREVIEW_BRIGHTNESS * 0.5;
-          startZ = 10;
-          endZ = 5;
-          participates = true;
-        } else if (i === nextIndex + 1 && nextIndex + 1 < total) {
-          // Hidden → slides in from below (becomes new bottom preview)
-          startY = nextY * 1.8;
-          endY = nextY;
-          startScale = PREVIEW_SCALE * 0.6;
-          endScale = PREVIEW_SCALE;
-          startOpacity = 0;
-          endOpacity = PREVIEW_OPACITY;
-          startBlur = PREVIEW_BLUR + 2;
-          endBlur = PREVIEW_BLUR;
-          startBrightness = PREVIEW_BRIGHTNESS * 0.5;
-          endBrightness = PREVIEW_BRIGHTNESS;
-          startZ = 5;
-          endZ = 10;
-          participates = true;
+        if (position === "hidden") {
+          el.style.opacity = "0";
+          el.style.pointerEvents = "none";
+          el.style.zIndex = "1";
+          return;
         }
 
-        if (!participates) {
-          card.style.opacity = "0";
-          card.style.pointerEvents = "none";
-          card.style.zIndex = "1";
-          continue;
+        if (position === 0) {
+          // Active
+          el.style.transform = `translate(-50%, calc(-50%))`;
+          el.style.opacity = "1";
+          el.style.filter = "none";
+          el.style.zIndex = "20";
+          el.style.pointerEvents = "auto";
+        } else if (position === -1) {
+          // Previous preview (above)
+          el.style.transform = `translate(-50%, calc(-50% + ${prevY}px)) scale(${PREVIEW_SCALE})`;
+          el.style.opacity = `${PREVIEW_OPACITY}`;
+          el.style.filter = `blur(${PREVIEW_BLUR}px) brightness(${PREVIEW_BRIGHTNESS})`;
+          el.style.zIndex = "10";
+          el.style.pointerEvents = "none";
+        } else {
+          // Next preview (below)
+          el.style.transform = `translate(-50%, calc(-50% + ${nextY}px)) scale(${PREVIEW_SCALE})`;
+          el.style.opacity = `${PREVIEW_OPACITY}`;
+          el.style.filter = `blur(${PREVIEW_BLUR}px) brightness(${PREVIEW_BRIGHTNESS})`;
+          el.style.zIndex = "10";
+          el.style.pointerEvents = "none";
         }
+      };
 
-        // Interpolate using smoothstepped t
-        const y = startY + (endY - startY) * t;
-        const scale = startScale + (endScale - startScale) * t;
-        const opacity = startOpacity + (endOpacity - startOpacity) * t;
-        const blur = startBlur + (endBlur - startBlur) * t;
-        const brightness =
-          startBrightness + (endBrightness - startBrightness) * t;
-        const z = Math.round(startZ + (endZ - startZ) * t);
-
-        card.style.transform = `translate(-50%, calc(-50% + ${y}px)) scale(${scale})`;
-        card.style.opacity = `${opacity}`;
-        card.style.filter =
-          blur < 0.1
-            ? "none"
-            : `blur(${blur.toFixed(1)}px) brightness(${brightness.toFixed(2)})`;
-        card.style.zIndex = `${z}`;
-        card.style.pointerEvents = i === currentIndex && t < 0.4 ? "auto" : "none";
-      }
-
-      /* ── 7. Background crossfade during transition ── */
-      const outBg = bgRefs.current[currentIndex];
-      const inBg = bgRefs.current[nextIndex];
-      if (outBg) outBg.style.opacity = `${(1 - t) * 0.95}`;
-      if (inBg) inBg.style.opacity = `${t * 0.95}`;
-      // Hide any others
-      for (let i = 0; i < total; i++) {
-        if (i !== currentIndex && i !== nextIndex) {
-          const bg = bgRefs.current[i];
-          if (bg) bg.style.opacity = "0";
+      /* ------------------------------------------------------------------
+         setStack — set the whole 3-card stack to a stable state for project[idx]
+      ------------------------------------------------------------------ */
+      const setStack = (idx: number) => {
+        const vh = window.innerHeight;
+        for (let i = 0; i < total; i++) {
+          const el = cardRefs.current[i];
+          if (i === idx - 1) applyCardState(el, -1, vh);
+          else if (i === idx) applyCardState(el, 0, vh);
+          else if (i === idx + 1) applyCardState(el, 1, vh);
+          else applyCardState(el, "hidden", vh);
         }
-      }
+      };
 
-      /* ── 8. Text transition — simple fade + subtle Y shift ── */
-      const outTitle = titleBlockRefs.current[currentIndex];
-      const outDesc = descBlockRefs.current[currentIndex];
-      const inTitle = titleBlockRefs.current[nextIndex];
-      const inDesc = descBlockRefs.current[nextIndex];
+      /* ------------------------------------------------------------------
+         setBg — show only the active background
+      ------------------------------------------------------------------ */
+      const setBg = (idx: number) => {
+        for (let i = 0; i < total; i++) {
+          const el = bgRefs.current[i];
+          if (!el) continue;
+          el.style.opacity = i === idx ? "0.95" : "0";
+        }
+      };
 
-      if (outTitle) {
-        outTitle.style.opacity = `${1 - t}`;
-        outTitle.style.transform = `translateY(${-t * 12}px)`;
-      }
-      if (outDesc) {
-        outDesc.style.opacity = `${1 - t}`;
-        outDesc.style.transform = `translateY(${-t * 8}px)`;
-      }
-      if (inTitle) {
-        inTitle.style.opacity = `${t}`;
-        inTitle.style.transform = `translateY(${(1 - t) * 12}px)`;
-      }
-      if (inDesc) {
-        inDesc.style.opacity = `${t}`;
-        inDesc.style.transform = `translateY(${(1 - t) * 8}px)`;
-      }
-      // Hide other text blocks
-      for (let i = 0; i < total; i++) {
-        if (i !== currentIndex && i !== nextIndex) {
+      /* ------------------------------------------------------------------
+         setWordsProgress — reveal words in descBlockRefs[idx] sequentially (one word at a time)
+         revealProgress: 0 = no words visible, 1 = all words visible
+      ------------------------------------------------------------------ */
+      const setWordsProgress = (idx: number, revealProgress: number) => {
+        const desc = descBlockRefs.current[idx];
+        if (!desc) return;
+        const words = desc.querySelectorAll<HTMLSpanElement>(".desc-word");
+        const count = words.length;
+        if (count === 0) return;
+
+        // Each word gets a staggered window across 0 -> 1 so they appear one by one
+        const spread = 0.82; // start times span 0 -> 0.82, each word takes 0.18 to fade/slide in
+        const wordDuration = 1 - spread;
+
+        words.forEach((word, wIdx) => {
+          const start = count > 1 ? (wIdx / (count - 1)) * spread : 0;
+          const rawW = (revealProgress - start) / wordDuration;
+          const w = clamp(rawW, 0, 1);
+          const eased = ss(w);
+          word.style.opacity = `${eased}`;
+          word.style.transform = `translateY(${(1 - eased) * 6}px)`;
+          word.style.filter = eased < 0.95 ? `blur(${((1 - eased) * 3).toFixed(1)}px)` : "none";
+        });
+      };
+
+      /* ------------------------------------------------------------------
+         setTextBlock — show only the title/desc for project[idx]
+      ------------------------------------------------------------------ */
+      const setTextBlock = (idx: number) => {
+        for (let i = 0; i < total; i++) {
           const title = titleBlockRefs.current[i];
           const desc = descBlockRefs.current[i];
-          if (title) { title.style.opacity = "0"; title.style.transform = "translateY(0px)"; }
-          if (desc) { desc.style.opacity = "0"; desc.style.transform = "translateY(0px)"; }
+          if (title) {
+            title.style.opacity = i === idx ? "1" : "0";
+            title.style.transform = "translateY(0px)";
+            title.style.pointerEvents = i === idx ? "auto" : "none";
+          }
+          if (desc) {
+            desc.style.opacity = i === idx ? "1" : "0";
+            desc.style.transform = "translateY(0px)";
+            desc.style.pointerEvents = i === idx ? "auto" : "none";
+            setWordsProgress(i, i === idx ? 1 : 0);
+          }
         }
-      }
-    };
+      };
 
-    // Bootstrap
-    updateShowcase(0);
+      // Bootstrap initial state
+      setStack(0);
+      setBg(0);
+      setTextBlock(0);
 
-    /* ------------------------------------------------------------------
-       Single ScrollTrigger.
-       550vh per project on desktop → very long hold before transition.
-       The transition itself is the last 22% of the segment (HOLD_END=0.78).
-    ------------------------------------------------------------------ */
-    const isMobile = window.innerWidth < 768;
-    const vhPerProject = isMobile ? 380 : 550;
-    const totalScrollDistance = `${maxIdx * vhPerProject}vh`;
+      /* ------------------------------------------------------------------
+         Core update — one ScrollTrigger onUpdate drives all of this
+      ------------------------------------------------------------------ */
+      let lastCurrentIndex = 0;
 
-    const ctx = gsap.context(() => {
-      ScrollTrigger.create({
+      const updateShowcase = (progress: number) => {
+        const vh = window.innerHeight;
+        const { prevY, nextY } = getPreviewOffsets(vh);
+
+        // Total of `total` segments (0 to total).
+        // Each project from 0 to maxIdx - 1 gets a full segment (hold + transition).
+        // The last project (maxIdx) gets a dedicated hold segment so the user can view it before unpinning into the CTA section.
+        const totalSegments = maxIdx + HOLD_END;
+        const projectProgress = progress * totalSegments;
+
+        // currentIndex: which project is "active" (being held or leaving)
+        const currentIndex = clamp(Math.floor(projectProgress), 0, maxIdx);
+        const rawSegmentProgress = projectProgress - currentIndex;
+        const localProgress =
+          currentIndex === maxIdx
+            ? clamp(rawSegmentProgress / HOLD_END, 0, 1)
+            : clamp(rawSegmentProgress, 0, 1);
+
+        currentIndexRef.current = currentIndex;
+
+        /* ── 1. Progress circle (only continuously-changing element) ── */
+        if (circleRef.current) {
+          circleRef.current.style.strokeDashoffset = `${CIRCUMFERENCE * (1 - localProgress)}`;
+        }
+
+        /* ── 2. Step number — update instantly on index change ── */
+        if (currentIndex !== lastCurrentIndex) {
+          lastCurrentIndex = currentIndex;
+          setActiveIdx(currentIndex);
+          if (stepNumberRef.current) {
+            stepNumberRef.current.textContent = String(currentIndex + 1).padStart(
+              2,
+              "0"
+            );
+          }
+        }
+
+        /* ── 3. LAST project: stay permanently visible during its hold segment ── */
+        if (currentIndex === maxIdx) {
+          setStack(maxIdx);
+          setBg(maxIdx);
+          setTextBlock(maxIdx);
+          return;
+        }
+
+        /* ── 4. Transition window ── */
+        const rawT = (localProgress - HOLD_END) / (1 - HOLD_END);
+        const transitionProgress = clamp(rawT, 0, 1);
+        const t = ss(transitionProgress); // smoothstepped 0→1
+
+        /* ── 5. HOLD phase: set stable 3-card stack, return early ── */
+        if (transitionProgress === 0) {
+          setStack(currentIndex);
+          setBg(currentIndex);
+          setTextBlock(currentIndex);
+          return;
+        }
+
+        /* ── 6. TRANSITION phase: slide the whole stack upward ──
+           The entire stack translates upward such that:
+             - currentIndex  : active → prev position (shrinks, fades)
+             - currentIndex+1: next preview → active (grows, sharpens)
+             - currentIndex-1: prev preview → further offscreen (disappears)
+             - currentIndex+2: hidden → next preview (appears)
+        ── */
+        const nextIndex = currentIndex + 1;
+
+        for (let i = 0; i < total; i++) {
+          const card = cardRefs.current[i];
+          if (!card) continue;
+
+          // Determine this card's start and end position in the transition
+          let startY = 0;
+          let endY = 0;
+          let startScale = 1;
+          let endScale = 1;
+          let startOpacity = 0;
+          let endOpacity = 0;
+          let startBlur = 0;
+          let endBlur = 0;
+          let startBrightness = 1;
+          let endBrightness = 1;
+          let startZ = 1;
+          let endZ = 1;
+          let participates = false;
+
+          if (i === currentIndex) {
+            // Active → becomes top preview (moves up, shrinks)
+            startY = 0;
+            endY = prevY;
+            startScale = 1;
+            endScale = PREVIEW_SCALE;
+            startOpacity = 1;
+            endOpacity = PREVIEW_OPACITY;
+            startBlur = 0;
+            endBlur = PREVIEW_BLUR;
+            startBrightness = 1;
+            endBrightness = PREVIEW_BRIGHTNESS;
+            startZ = 20;
+            endZ = 10;
+            participates = true;
+          } else if (i === nextIndex) {
+            // Bottom preview → becomes active (moves up to center, grows)
+            startY = nextY;
+            endY = 0;
+            startScale = PREVIEW_SCALE;
+            endScale = 1;
+            startOpacity = PREVIEW_OPACITY;
+            endOpacity = 1;
+            startBlur = PREVIEW_BLUR;
+            endBlur = 0;
+            startBrightness = PREVIEW_BRIGHTNESS;
+            endBrightness = 1;
+            startZ = 10;
+            endZ = 20;
+            participates = true;
+          } else if (i === currentIndex - 1) {
+            // Top preview → slides further up off-screen (disappears)
+            startY = prevY;
+            endY = prevY * 1.8;
+            startScale = PREVIEW_SCALE;
+            endScale = PREVIEW_SCALE * 0.6;
+            startOpacity = PREVIEW_OPACITY;
+            endOpacity = 0;
+            startBlur = PREVIEW_BLUR;
+            endBlur = PREVIEW_BLUR + 2;
+            startBrightness = PREVIEW_BRIGHTNESS;
+            endBrightness = PREVIEW_BRIGHTNESS * 0.5;
+            startZ = 10;
+            endZ = 5;
+            participates = true;
+          } else if (i === nextIndex + 1 && nextIndex + 1 < total) {
+            // Hidden → slides in from below (becomes new bottom preview)
+            startY = nextY * 1.8;
+            endY = nextY;
+            startScale = PREVIEW_SCALE * 0.6;
+            endScale = PREVIEW_SCALE;
+            startOpacity = 0;
+            endOpacity = PREVIEW_OPACITY;
+            startBlur = PREVIEW_BLUR + 2;
+            endBlur = PREVIEW_BLUR;
+            startBrightness = PREVIEW_BRIGHTNESS * 0.5;
+            endBrightness = PREVIEW_BRIGHTNESS;
+            startZ = 5;
+            endZ = 10;
+            participates = true;
+          }
+
+          if (!participates) {
+            card.style.opacity = "0";
+            card.style.pointerEvents = "none";
+            card.style.zIndex = "1";
+            continue;
+          }
+
+          // Interpolate using smoothstepped t
+          const y = startY + (endY - startY) * t;
+          const scale = startScale + (endScale - startScale) * t;
+          const opacity = startOpacity + (endOpacity - startOpacity) * t;
+          const blur = startBlur + (endBlur - startBlur) * t;
+          const brightness =
+            startBrightness + (endBrightness - startBrightness) * t;
+          const z = Math.round(startZ + (endZ - startZ) * t);
+
+          card.style.transform = `translate(-50%, calc(-50% + ${y}px)) scale(${scale})`;
+          card.style.opacity = `${opacity}`;
+          card.style.filter =
+            blur < 0.1
+              ? "none"
+              : `blur(${blur.toFixed(1)}px) brightness(${brightness.toFixed(2)})`;
+          card.style.zIndex = `${z}`;
+          card.style.pointerEvents = i === currentIndex && t < 0.4 ? "auto" : "none";
+        }
+
+        /* ── 7. Background crossfade during transition ── */
+        const outBg = bgRefs.current[currentIndex];
+        const inBg = bgRefs.current[nextIndex];
+        if (outBg) outBg.style.opacity = `${(1 - t) * 0.95}`;
+        if (inBg) inBg.style.opacity = `${t * 0.95}`;
+        // Hide any others
+        for (let i = 0; i < total; i++) {
+          if (i !== currentIndex && i !== nextIndex) {
+            const bg = bgRefs.current[i];
+            if (bg) bg.style.opacity = "0";
+          }
+        }
+
+        /* ── 8. Text transition — outgoing whole sentence vanishes together; incoming appears one word at a time ── */
+        const outTitle = titleBlockRefs.current[currentIndex];
+        const outDesc = descBlockRefs.current[currentIndex];
+        const inTitle = titleBlockRefs.current[nextIndex];
+        const inDesc = descBlockRefs.current[nextIndex];
+
+        if (outTitle) {
+          outTitle.style.opacity = `${1 - t}`;
+          outTitle.style.transform = `translateY(${-t * 12}px)`;
+          outTitle.style.pointerEvents = t < 0.4 ? "auto" : "none";
+        }
+        if (outDesc) {
+          // Whole sentence vanishes together as a single block (keeping all words at full opacity inside)
+          setWordsProgress(currentIndex, 1);
+          outDesc.style.opacity = `${Math.max(0, 1 - t * 1.4)}`;
+          outDesc.style.transform = `translateY(${-t * 8}px)`;
+          outDesc.style.pointerEvents = t < 0.4 ? "auto" : "none";
+        }
+        if (inTitle) {
+          inTitle.style.opacity = `${t}`;
+          inTitle.style.transform = `translateY(${(1 - t) * 12}px)`;
+          inTitle.style.pointerEvents = t >= 0.4 ? "auto" : "none";
+        }
+        if (inDesc) {
+          // Container stays visible while words appear one by one after the outgoing sentence starts vanishing
+          inDesc.style.opacity = "1";
+          inDesc.style.transform = "translateY(0px)";
+          inDesc.style.pointerEvents = t >= 0.4 ? "auto" : "none";
+          const wordAppearT = clamp((transitionProgress - 0.15) / 0.85, 0, 1);
+          setWordsProgress(nextIndex, wordAppearT);
+        }
+        // Hide other text blocks
+        for (let i = 0; i < total; i++) {
+          if (i !== currentIndex && i !== nextIndex) {
+            const title = titleBlockRefs.current[i];
+            const desc = descBlockRefs.current[i];
+            if (title) {
+              title.style.opacity = "0";
+              title.style.transform = "translateY(0px)";
+              title.style.pointerEvents = "none";
+            }
+            if (desc) {
+              desc.style.opacity = "0";
+              desc.style.transform = "translateY(0px)";
+              desc.style.pointerEvents = "none";
+              setWordsProgress(i, 0);
+            }
+          }
+        }
+      };
+
+      // Bootstrap
+      updateShowcase(0);
+
+      /* ------------------------------------------------------------------
+         Single ScrollTrigger.
+         Responsive scroll distance per project calculated dynamically on refresh
+         so resizing between mobile and desktop recalculates pin spacing cleanly.
+      ------------------------------------------------------------------ */
+      const getScrollEnd = () => {
+        const isMobile = window.innerWidth < 768;
+        const vhPerProject = isMobile ? 260 : 380;
+        const totalSegments = maxIdx + HOLD_END;
+        return (totalSegments * vhPerProject * window.innerHeight) / 100;
+      };
+
+      const st = ScrollTrigger.create({
         trigger: container,
-        start: "top top",
-        end: `+=${totalScrollDistance}`,
         pin: true,
-        anticipatePin: 1,
-        scrub: 0.8,
+        start: "top top",
+        end: () => `+=${getScrollEnd()}`,
+        pinSpacing: true,
+        scrub: 0.6,
+        refreshPriority: 2,
         invalidateOnRefresh: true,
+        onRefresh: (self) => {
+          updateShowcase(self.progress);
+        },
         onUpdate: (self) => {
           updateShowcase(self.progress);
         },
       });
-    }, container);
 
-    const refreshTimer = setTimeout(() => {
-      ScrollTrigger.refresh();
-    }, 200);
+      // Wait for all project images to load before final ScrollTrigger refresh
+      const imgs = container.querySelectorAll("img");
+      let loadedCount = 0;
+      const onImgLoad = () => {
+        loadedCount++;
+        if (loadedCount === imgs.length) {
+          ScrollTrigger.refresh();
+        }
+      };
+      imgs.forEach((img) => {
+        if (!img.complete) {
+          img.addEventListener("load", onImgLoad, { once: true });
+        }
+      });
 
-    return () => {
-      clearTimeout(refreshTimer);
-      ctx.revert();
-    };
-  }, []);
+      const refreshTimer = setTimeout(() => {
+        ScrollTrigger.refresh();
+      }, 200);
 
-  const router = useRouter();
+      return () => {
+        clearTimeout(refreshTimer);
+        imgs.forEach((img) => img.removeEventListener("load", onImgLoad));
+        st.kill();
+      };
+    },
+    { scope: pinWrapperRef }
+  );
 
-  const handleCardClick = (project: Project, index: number) => {
-    if (index === currentIndexRef.current) {
-      router.push(`/projects/${project.id}`);
-    }
+  const { navigateWithTransition } = useNav();
+
+  const handleCardClick = (project: Project) => {
+    navigateWithTransition(project.route);
   };
 
   return (
     <div
       ref={pinWrapperRef}
-      className="relative w-full max-w-none bg-[#0a0a0d] select-none text-white overflow-clip"
+      className="relative w-full max-w-none bg-[#0a0a0d] select-none text-white"
     >
       {/* ── Pinned Showcase Viewport ── */}
       <div
         ref={containerRef}
         id="work"
-        className="relative h-screen overflow-hidden bg-[#09090b] m-0"
-        style={{
-          width: "100vw",
-          maxWidth: "none",
-          marginLeft: 0,
-          marginRight: 0,
-        }}
+        className="relative w-full h-screen overflow-hidden bg-[#09090b] m-0"
       >
         {/* ── Blurred full-screen backgrounds ── */}
         <div className="absolute inset-0 w-full h-full pointer-events-none z-0 overflow-hidden">
@@ -497,9 +569,9 @@ export default function ProjectsShowcase() {
 
 
 
-        {/* ── Left: title blocks — positioned at vertical center, left side ── */}
-        <div className="absolute left-[4vw] sm:left-[5vw] top-1/2 -translate-y-1/2 z-25 pointer-events-none w-[28vw] sm:w-[22vw] max-w-[260px] min-w-[140px]">
-          <div className="relative w-full min-h-[10rem] flex items-center">
+        {/* ── Left / Top-Left: title blocks — responsive & clickable for mobile & desktop ── */}
+        <div className="absolute left-5 sm:left-[5vw] top-20 sm:top-1/2 sm:-translate-y-1/2 z-25 pointer-events-none w-[88vw] sm:w-[22vw] sm:max-w-[260px] min-w-[140px]">
+          <div className="relative w-full min-h-[4.5rem] sm:min-h-[10rem] flex items-center">
             {PROJECTS.map((project, i) => (
               <div
                 key={`title-${project.id}`}
@@ -508,17 +580,27 @@ export default function ProjectsShowcase() {
                 style={{
                   opacity: i === 0 ? 1 : 0,
                   transform: "translateY(0px)",
-                  pointerEvents: "none",
+                  pointerEvents: i === 0 ? "auto" : "none",
                 }}
               >
-                <span className="text-[9px] sm:text-[10px] font-mono uppercase tracking-[0.22em] text-[#ff5500] mb-2 block leading-tight">
-                  {project.category}
-                  <br />
-                  <span className="text-white/40">•</span> {project.year}
+                <span className="text-[9px] sm:text-[10px] font-mono uppercase tracking-[0.22em] text-[#ff5500] mb-1 sm:mb-2 block leading-tight">
+                  {project.category} <span className="sm:hidden text-white/40">• {project.year}</span>
+                  <br className="hidden sm:block" />
+                  <span className="hidden sm:inline"><span className="text-white/40">•</span> {project.year}</span>
                 </span>
-                <h1 className="text-lg sm:text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight text-white leading-[1.08] drop-shadow-[0_8px_24px_rgba(0,0,0,0.85)]">
-                  {project.title}
-                </h1>
+                <Link
+                  href={project.route}
+                  data-cursor="interactive"
+                  className="group/title inline-flex flex-col items-start focus:outline-none"
+                >
+                  <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight text-white group-hover/title:text-[#ff5500] transition-colors leading-[1.08] drop-shadow-[0_8px_24px_rgba(0,0,0,0.85)]">
+                    {project.title}
+                  </h1>
+                  <span className="mt-2 inline-flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-widest text-white/70 group-hover/title:text-white transition-colors">
+                    <span>Open Project</span>
+                    <ArrowUpRight className="w-3 h-3 text-[#ff5500] group-hover/title:translate-x-0.5 group-hover/title:-translate-y-0.5 transition-transform" />
+                  </span>
+                </Link>
               </div>
             ))}
           </div>
@@ -531,7 +613,7 @@ export default function ProjectsShowcase() {
               key={project.id}
               ref={(el) => { cardRefs.current[index] = el; }}
               id={`project-card-${project.id}`}
-              onClick={() => handleCardClick(project, index)}
+              onClick={() => handleCardClick(project)}
               onMouseEnter={() => setHoveredIdx(index)}
               onMouseLeave={() => setHoveredIdx(null)}
               data-cursor="fluid-glass"
@@ -590,9 +672,14 @@ export default function ProjectsShowcase() {
           ))}
         </div>
 
-        {/* ── Right: description blocks ── */}
-        <div className="absolute top-1/2 -translate-y-1/2 z-25 pointer-events-none hidden md:block"
-          style={{ left: "calc(50% + min(22vw, 420px) + 3vw)", maxWidth: "clamp(180px, 18vw, 300px)" }}>
+        {/* ── Right: description blocks (clickable to project page) ── */}
+        <div
+          className="absolute top-1/2 -translate-y-1/2 z-25 pointer-events-none hidden md:block"
+          style={{
+            left: "calc(50% + min(22vw, 410px) + 2vw)",
+            width: "clamp(220px, 21vw, 340px)",
+          }}
+        >
           <div className="relative w-full min-h-[140px] flex items-center">
             {PROJECTS.map((project, i) => (
               <div
@@ -602,12 +689,33 @@ export default function ProjectsShowcase() {
                 style={{
                   opacity: i === 0 ? 1 : 0,
                   transform: "translateY(0px)",
-                  pointerEvents: "none",
+                  pointerEvents: i === 0 ? "auto" : "none",
                 }}
               >
-                <p className="text-[11px] sm:text-[12px] md:text-[13px] text-zinc-200 font-normal leading-[1.7] tracking-normal drop-shadow-[0_4px_16px_rgba(0,0,0,0.9)]">
-                  {project.desc}
-                </p>
+                <Link
+                  href={project.route}
+                  data-cursor="interactive"
+                  className="group/desc block focus:outline-none"
+                >
+                  <p className="text-[11px] sm:text-[12px] md:text-[13px] text-zinc-200 group-hover/desc:text-white font-normal leading-[1.65] tracking-normal drop-shadow-[0_4px_16px_rgba(0,0,0,0.9)] flex flex-wrap gap-x-[0.32em] gap-y-[0.1em]">
+                    {project.desc.split(" ").map((word, wIdx) => (
+                      <span
+                        key={wIdx}
+                        className="desc-word inline-block will-change-[opacity,transform,filter]"
+                        style={{
+                          opacity: i === 0 ? 1 : 0,
+                          transform: i === 0 ? "translateY(0px)" : "translateY(6px)",
+                        }}
+                      >
+                        {word}
+                      </span>
+                    ))}
+                  </p>
+                  <span className="mt-3 inline-flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-widest text-[#ff5500] group-hover/desc:underline underline-offset-4">
+                    <span>View Case Study</span>
+                    <ArrowUpRight className="w-3 h-3 group-hover/desc:translate-x-0.5 group-hover/desc:-translate-y-0.5 transition-transform" />
+                  </span>
+                </Link>
               </div>
             ))}
           </div>
