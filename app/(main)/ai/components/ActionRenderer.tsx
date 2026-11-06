@@ -1,16 +1,16 @@
 "use client";
 
 import React from "react";
-import { useRouter } from "next/navigation";
 import { ArrowUpRight, Download, Compass, ExternalLink } from "lucide-react";
 import { AIAction } from "@/lib/ai/schema";
+import { useNav } from "@/app/context/NavContext";
 
 interface ActionRendererProps {
   actions: AIAction[];
 }
 
 export default function ActionRenderer({ actions }: ActionRendererProps) {
-  const router = useRouter();
+  const { navigateWithTransition } = useNav();
 
   if (!actions || actions.length === 0) {
     return null;
@@ -37,13 +37,14 @@ export default function ActionRenderer({ actions }: ActionRendererProps) {
       </div>
 
       {actions.map((act, index) => {
-        // 1. Resume download button
+        // 1. Resume download button (opens /resume in a new tab which previews & auto-downloads)
         if (act.type === "download_resume") {
           return (
             <a
               key={`${act.type}-${index}`}
-              href={act.target}
-              download="Kshitij_Resume.pdf"
+              href="/resume"
+              target="_blank"
+              rel="noopener noreferrer"
               data-cursor="interactive"
               className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-neutral-900 text-white hover:bg-neutral-800 text-xs font-mono font-medium shadow-2xs hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer"
             >
@@ -75,7 +76,7 @@ export default function ActionRenderer({ actions }: ActionRendererProps) {
           <button
             key={`${act.type}-${index}`}
             type="button"
-            onClick={() => router.push(act.target)}
+            onClick={() => navigateWithTransition(act.target)}
             data-cursor="interactive"
             className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-neutral-300 hover:border-neutral-900 hover:bg-neutral-50 text-neutral-800 text-xs font-mono font-medium shadow-2xs hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer"
           >

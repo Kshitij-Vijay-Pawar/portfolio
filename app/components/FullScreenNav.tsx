@@ -7,6 +7,11 @@ import Link from "next/link";
 import { Download } from "lucide-react";
 import { useNav } from "../context/NavContext";
 import Mascot from "./Mascot";
+import {
+  playNavHoverTuk,
+  playNavSelectClick,
+  playNavSubtleTick,
+} from "../utils/tactileSound";
 
 const navLinks = [
   { title: "HOME", href: "/" },
@@ -269,14 +274,22 @@ const FullScreenNav = () => {
           {/* Top Right Actions: Resume Download & Email */}
           <div className="flex items-center gap-2.5 sm:gap-6 pointer-events-auto">
             <a
-              href="/resume/Kshitij_Resume.pdf"
-              download="Kshitij_Resume.pdf"
+              href="/resume"
+              target="_blank"
+              rel="noopener noreferrer"
               data-cursor="interactive"
-              onMouseEnter={() => triggerDoubleBlink()}
+              onMouseEnter={() => {
+                playNavSubtleTick();
+                triggerDoubleBlink();
+              }}
               onMouseLeave={() => resetMascotEmotion()}
-              onTouchStart={() => triggerDoubleBlink()}
+              onTouchStart={() => {
+                playNavSubtleTick();
+                triggerDoubleBlink();
+              }}
+              onClick={() => playNavSelectClick()}
               className="email-tag flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-1.5 rounded-full border border-zinc-900/15 bg-white/70 hover:bg-zinc-950 hover:text-white transition-all text-[11px] sm:text-xs md:text-sm font-mono tracking-tight text-zinc-900 shadow-xs opacity-0"
-              title="Download Resume / CV"
+              title="Preview & Download Resume / CV"
             >
               <Download className="w-3 sm:w-3.5 h-3 sm:h-3.5" />
               <span>Resume</span>
@@ -285,10 +298,19 @@ const FullScreenNav = () => {
             <a
               href="mailto:kshitij.vijay.pawar@gmail.com"
               data-cursor="interactive"
-              onMouseEnter={() => triggerDoubleBlink()}
+              onMouseEnter={() => {
+                playNavSubtleTick();
+                triggerDoubleBlink();
+              }}
               onMouseLeave={() => resetMascotEmotion()}
-              onTouchStart={() => triggerDoubleBlink()}
-              onClick={() => triggerDoubleBlink()}
+              onTouchStart={() => {
+                playNavSubtleTick();
+                triggerDoubleBlink();
+              }}
+              onClick={() => {
+                playNavSelectClick();
+                triggerDoubleBlink();
+              }}
               className="email-tag font-mono text-xs sm:text-sm md:text-base text-zinc-900 hover:opacity-70 transition-opacity tracking-tight opacity-0 truncate max-w-[190px] sm:max-w-none"
             >
               <span className="hidden sm:inline">kshitij.vijay.pawar@gmail.com</span>
@@ -314,12 +336,17 @@ const FullScreenNav = () => {
               >
                 <Link
                   href={item.href}
-                  onClick={() => setNavOpen(false)}
+                  onClick={() => {
+                    playNavSelectClick();
+                    setNavOpen(false);
+                  }}
                   onMouseEnter={() => {
+                    playNavHoverTuk(index);
                     handleLinkMouseEnter(index);
                     triggerSurprise();
                   }}
                   onTouchStart={() => {
+                    playNavHoverTuk(index);
                     triggerSurprise();
                   }}
                   data-cursor="interactive"
@@ -341,7 +368,11 @@ const FullScreenNav = () => {
           {/* Right Bottom Mascot Illustration - Placed behind nav links (z-10) so it never blocks or clips them */}
           <Link
             href="/ai"
-            onClick={() => setNavOpen(false)}
+            onMouseEnter={() => playNavSubtleTick()}
+            onClick={() => {
+              playNavSelectClick();
+              setNavOpen(false);
+            }}
             data-cursor="interactive"
             className="absolute right-0 bottom-16 sm:bottom-8 md:static md:bottom-auto z-10 pointer-events-auto block shrink-0"
             title="Talk to AI Mascot"

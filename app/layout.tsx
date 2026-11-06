@@ -5,6 +5,7 @@ import "./globals.css";
 import CustomCursor from "@/app/components/CustomCursor";
 import CookieConsent from "@/app/components/CookieConsent";
 import CustomContextMenu from "@/app/components/CustomContextMenu";
+import { NavProvider } from "@/app/context/NavContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -43,10 +44,12 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <CustomCursor />
-        <CustomContextMenu enabled={isCustomContextMenuEnabled} />
-        {children}
-        <CookieConsent />
+        <NavProvider>
+          <CustomCursor />
+          <CustomContextMenu enabled={isCustomContextMenuEnabled} />
+          {children}
+          <CookieConsent />
+        </NavProvider>
       </body>
     </html>
   );

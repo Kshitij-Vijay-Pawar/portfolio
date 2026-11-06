@@ -2,7 +2,7 @@
 
 import React, { useRef, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useNav } from "@/app/context/NavContext";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
@@ -527,10 +527,10 @@ export default function ProjectsShowcase() {
     { scope: pinWrapperRef }
   );
 
-  const router = useRouter();
+  const { navigateWithTransition } = useNav();
 
   const handleCardClick = (project: Project) => {
-    router.push(project.route);
+    navigateWithTransition(project.route);
   };
 
   return (

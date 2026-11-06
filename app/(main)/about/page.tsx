@@ -248,8 +248,9 @@ export default function AboutPage() {
               {/* Action Buttons */}
               <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 pt-2">
                 <a
-                  href="/resume/Kshitij_Resume.pdf"
-                  download
+                  href="/resume"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   data-cursor="interactive"
                   onMouseEnter={() => triggerDoubleBlink()}
                   onMouseLeave={() => resetMascotEmotion()}
