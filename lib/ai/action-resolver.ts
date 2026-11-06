@@ -55,10 +55,12 @@ export function resolveAction(action: RawActionInput): AIAction | null {
 
   // 2. Verified Dynamic Project Detail Route
   if (rawType === "show_project") {
-    // Extract slug whether model passed "codenarts" or "/projects/codenarts"
+    // Extract slug whether model passed "google-maps-scraper", "/project/google-maps-scraper", or "/projects/google-maps-scraper"
     let slug = rawTarget;
     if (slug.startsWith("/projects/")) {
       slug = slug.replace("/projects/", "");
+    } else if (slug.startsWith("/project/")) {
+      slug = slug.replace("/project/", "");
     }
     slug = slug.replace(/^\/+|\/+$/g, ""); // strip any slashes
 
@@ -70,7 +72,7 @@ export function resolveAction(action: RawActionInput): AIAction | null {
     return {
       type: "show_project",
       label: label || `View ${slug.toUpperCase()}`,
-      target: `/projects/${slug}`,
+      target: `/project/${slug}`,
       description: action.description,
     };
   }

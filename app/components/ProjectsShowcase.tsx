@@ -1,11 +1,12 @@
 "use client";
 
 import React, { useRef, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, ArrowUpRight } from "lucide-react";
 import FluidGlass from "@/app/components/ui/FluidGlass";
 
 if (typeof window !== "undefined") {
@@ -172,6 +173,32 @@ export default function ProjectsShowcase() {
       };
 
       /* ------------------------------------------------------------------
+         setWordsProgress — reveal words in descBlockRefs[idx] sequentially (one word at a time)
+         revealProgress: 0 = no words visible, 1 = all words visible
+      ------------------------------------------------------------------ */
+      const setWordsProgress = (idx: number, revealProgress: number) => {
+        const desc = descBlockRefs.current[idx];
+        if (!desc) return;
+        const words = desc.querySelectorAll<HTMLSpanElement>(".desc-word");
+        const count = words.length;
+        if (count === 0) return;
+
+        // Each word gets a staggered window across 0 -> 1 so they appear one by one
+        const spread = 0.82; // start times span 0 -> 0.82, each word takes 0.18 to fade/slide in
+        const wordDuration = 1 - spread;
+
+        words.forEach((word, wIdx) => {
+          const start = count > 1 ? (wIdx / (count - 1)) * spread : 0;
+          const rawW = (revealProgress - start) / wordDuration;
+          const w = clamp(rawW, 0, 1);
+          const eased = ss(w);
+          word.style.opacity = `${eased}`;
+          word.style.transform = `translateY(${(1 - eased) * 6}px)`;
+          word.style.filter = eased < 0.95 ? `blur(${((1 - eased) * 3).toFixed(1)}px)` : "none";
+        });
+      };
+
+      /* ------------------------------------------------------------------
          setTextBlock — show only the title/desc for project[idx]
       ------------------------------------------------------------------ */
       const setTextBlock = (idx: number) => {
@@ -181,10 +208,13 @@ export default function ProjectsShowcase() {
           if (title) {
             title.style.opacity = i === idx ? "1" : "0";
             title.style.transform = "translateY(0px)";
+            title.style.pointerEvents = i === idx ? "auto" : "none";
           }
           if (desc) {
             desc.style.opacity = i === idx ? "1" : "0";
             desc.style.transform = "translateY(0px)";
+            desc.style.pointerEvents = i === idx ? "auto" : "none";
+            setWordsProgress(i, i === idx ? 1 : 0);
           }
         }
       };
@@ -386,7 +416,7 @@ export default function ProjectsShowcase() {
           }
         }
 
-        /* ── 8. Text transition — simple fade + subtle Y shift ── */
+        /* ── 8. Text transition — outgoing whole sentence vanishes together; incoming appears one word at a time ── */
         const outTitle = titleBlockRefs.current[currentIndex];
         const outDesc = descBlockRefs.current[currentIndex];
         const inTitle = titleBlockRefs.current[nextIndex];
@@ -395,26 +425,44 @@ export default function ProjectsShowcase() {
         if (outTitle) {
           outTitle.style.opacity = `${1 - t}`;
           outTitle.style.transform = `translateY(${-t * 12}px)`;
+          outTitle.style.pointerEvents = t < 0.4 ? "auto" : "none";
         }
         if (outDesc) {
-          outDesc.style.opacity = `${1 - t}`;
+          // Whole sentence vanishes together as a single block (keeping all words at full opacity inside)
+          setWordsProgress(currentIndex, 1);
+          outDesc.style.opacity = `${Math.max(0, 1 - t * 1.4)}`;
           outDesc.style.transform = `translateY(${-t * 8}px)`;
+          outDesc.style.pointerEvents = t < 0.4 ? "auto" : "none";
         }
         if (inTitle) {
           inTitle.style.opacity = `${t}`;
           inTitle.style.transform = `translateY(${(1 - t) * 12}px)`;
+          inTitle.style.pointerEvents = t >= 0.4 ? "auto" : "none";
         }
         if (inDesc) {
-          inDesc.style.opacity = `${t}`;
-          inDesc.style.transform = `translateY(${(1 - t) * 8}px)`;
+          // Container stays visible while words appear one by one after the outgoing sentence starts vanishing
+          inDesc.style.opacity = "1";
+          inDesc.style.transform = "translateY(0px)";
+          inDesc.style.pointerEvents = t >= 0.4 ? "auto" : "none";
+          const wordAppearT = clamp((transitionProgress - 0.15) / 0.85, 0, 1);
+          setWordsProgress(nextIndex, wordAppearT);
         }
         // Hide other text blocks
         for (let i = 0; i < total; i++) {
           if (i !== currentIndex && i !== nextIndex) {
             const title = titleBlockRefs.current[i];
             const desc = descBlockRefs.current[i];
-            if (title) { title.style.opacity = "0"; title.style.transform = "translateY(0px)"; }
-            if (desc) { desc.style.opacity = "0"; desc.style.transform = "translateY(0px)"; }
+            if (title) {
+              title.style.opacity = "0";
+              title.style.transform = "translateY(0px)";
+              title.style.pointerEvents = "none";
+            }
+            if (desc) {
+              desc.style.opacity = "0";
+              desc.style.transform = "translateY(0px)";
+              desc.style.pointerEvents = "none";
+              setWordsProgress(i, 0);
+            }
           }
         }
       };
@@ -481,10 +529,8 @@ export default function ProjectsShowcase() {
 
   const router = useRouter();
 
-  const handleCardClick = (project: Project, index: number) => {
-    if (index === currentIndexRef.current) {
-      router.push(`/projects/${project.id}`);
-    }
+  const handleCardClick = (project: Project) => {
+    router.push(project.route);
   };
 
   return (
@@ -523,7 +569,7 @@ export default function ProjectsShowcase() {
 
 
 
-        {/* ── Left / Top-Left: title blocks — responsive for mobile & desktop ── */}
+        {/* ── Left / Top-Left: title blocks — responsive & clickable for mobile & desktop ── */}
         <div className="absolute left-5 sm:left-[5vw] top-20 sm:top-1/2 sm:-translate-y-1/2 z-25 pointer-events-none w-[88vw] sm:w-[22vw] sm:max-w-[260px] min-w-[140px]">
           <div className="relative w-full min-h-[4.5rem] sm:min-h-[10rem] flex items-center">
             {PROJECTS.map((project, i) => (
@@ -534,7 +580,7 @@ export default function ProjectsShowcase() {
                 style={{
                   opacity: i === 0 ? 1 : 0,
                   transform: "translateY(0px)",
-                  pointerEvents: "none",
+                  pointerEvents: i === 0 ? "auto" : "none",
                 }}
               >
                 <span className="text-[9px] sm:text-[10px] font-mono uppercase tracking-[0.22em] text-[#ff5500] mb-1 sm:mb-2 block leading-tight">
@@ -542,9 +588,19 @@ export default function ProjectsShowcase() {
                   <br className="hidden sm:block" />
                   <span className="hidden sm:inline"><span className="text-white/40">•</span> {project.year}</span>
                 </span>
-                <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight text-white leading-[1.08] drop-shadow-[0_8px_24px_rgba(0,0,0,0.85)]">
-                  {project.title}
-                </h1>
+                <Link
+                  href={project.route}
+                  data-cursor="interactive"
+                  className="group/title inline-flex flex-col items-start focus:outline-none"
+                >
+                  <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight text-white group-hover/title:text-[#ff5500] transition-colors leading-[1.08] drop-shadow-[0_8px_24px_rgba(0,0,0,0.85)]">
+                    {project.title}
+                  </h1>
+                  <span className="mt-2 inline-flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-widest text-white/70 group-hover/title:text-white transition-colors">
+                    <span>Open Project</span>
+                    <ArrowUpRight className="w-3 h-3 text-[#ff5500] group-hover/title:translate-x-0.5 group-hover/title:-translate-y-0.5 transition-transform" />
+                  </span>
+                </Link>
               </div>
             ))}
           </div>
@@ -557,7 +613,7 @@ export default function ProjectsShowcase() {
               key={project.id}
               ref={(el) => { cardRefs.current[index] = el; }}
               id={`project-card-${project.id}`}
-              onClick={() => handleCardClick(project, index)}
+              onClick={() => handleCardClick(project)}
               onMouseEnter={() => setHoveredIdx(index)}
               onMouseLeave={() => setHoveredIdx(null)}
               data-cursor="fluid-glass"
@@ -616,9 +672,14 @@ export default function ProjectsShowcase() {
           ))}
         </div>
 
-        {/* ── Right: description blocks ── */}
-        <div className="absolute top-1/2 -translate-y-1/2 z-25 pointer-events-none hidden md:block"
-          style={{ left: "calc(50% + min(22vw, 420px) + 3vw)", maxWidth: "clamp(180px, 18vw, 300px)" }}>
+        {/* ── Right: description blocks (clickable to project page) ── */}
+        <div
+          className="absolute top-1/2 -translate-y-1/2 z-25 pointer-events-none hidden md:block"
+          style={{
+            left: "calc(50% + min(22vw, 410px) + 2vw)",
+            width: "clamp(220px, 21vw, 340px)",
+          }}
+        >
           <div className="relative w-full min-h-[140px] flex items-center">
             {PROJECTS.map((project, i) => (
               <div
@@ -628,12 +689,33 @@ export default function ProjectsShowcase() {
                 style={{
                   opacity: i === 0 ? 1 : 0,
                   transform: "translateY(0px)",
-                  pointerEvents: "none",
+                  pointerEvents: i === 0 ? "auto" : "none",
                 }}
               >
-                <p className="text-[11px] sm:text-[12px] md:text-[13px] text-zinc-200 font-normal leading-[1.7] tracking-normal drop-shadow-[0_4px_16px_rgba(0,0,0,0.9)]">
-                  {project.desc}
-                </p>
+                <Link
+                  href={project.route}
+                  data-cursor="interactive"
+                  className="group/desc block focus:outline-none"
+                >
+                  <p className="text-[11px] sm:text-[12px] md:text-[13px] text-zinc-200 group-hover/desc:text-white font-normal leading-[1.65] tracking-normal drop-shadow-[0_4px_16px_rgba(0,0,0,0.9)] flex flex-wrap gap-x-[0.32em] gap-y-[0.1em]">
+                    {project.desc.split(" ").map((word, wIdx) => (
+                      <span
+                        key={wIdx}
+                        className="desc-word inline-block will-change-[opacity,transform,filter]"
+                        style={{
+                          opacity: i === 0 ? 1 : 0,
+                          transform: i === 0 ? "translateY(0px)" : "translateY(6px)",
+                        }}
+                      >
+                        {word}
+                      </span>
+                    ))}
+                  </p>
+                  <span className="mt-3 inline-flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-widest text-[#ff5500] group-hover/desc:underline underline-offset-4">
+                    <span>View Case Study</span>
+                    <ArrowUpRight className="w-3 h-3 group-hover/desc:translate-x-0.5 group-hover/desc:-translate-y-0.5 transition-transform" />
+                  </span>
+                </Link>
               </div>
             ))}
           </div>

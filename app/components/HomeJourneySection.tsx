@@ -10,14 +10,31 @@ if (typeof window !== "undefined") {
 
 // Architectural SVG Illustrations
 // All in crisp, fine white line-drawing style (stroke="#FFFFFF", strokeWidth="1" to "1.5", transparent fills)
-export interface MilestoneData {
-  number: string;
-  location: string;
+export interface MilestoneSubEntry {
+  subCode: string;
+  badgeType: "Academic" | "Internship" | "Training" | "Employment";
+  badgeLabel: string;
   dateLabel: string;
   title: string;
+  org: string;
+  statBadge?: string;
   description: string;
+  tags: string[];
+}
+
+export interface MilestoneData {
+  number: string;
+  yearWatermark: string;
+  location: string;
+  dateLabel: string;
+  badgeType: "Academic" | "Internship" | "Training" | "Employment" | "Present";
+  title: string;
+  org: string;
+  description: string;
+  tags: string[];
   illustrationTitle: string;
   svg: React.ReactNode;
+  subEntries?: MilestoneSubEntry[];
 }
 
 // 1. Malegaon: Bhuykot Castle (Bhuikot Fort) - fortress walls, bastions, ramparts & historic arched entrance
@@ -462,60 +479,137 @@ function FutureHorizonSvg() {
 const MILESTONES: MilestoneData[] = [
   {
     number: "01",
+    yearWatermark: "2021",
     location: "Malegaon",
-    dateLabel: "School Years",
-    title: "School Education",
-    description: "Completed my 10th and 12th education in Malegaon, Maharashtra.",
+    dateLabel: "2018 – 2021",
+    badgeType: "Academic",
+    title: "10th SSC & 12th Science · Dual Academic Chapter",
+    org: "Malegaon, Maharashtra",
+    description:
+      "Completed both 10th SSC (R. V. Shah High School, 87.40%) and 12th Science (M.S.G. Science College, 83.80%) in Malegaon.",
+    tags: ["10th SSC · 87.40%", "12th Science · 83.80%", "Mathematics & Science"],
     illustrationTitle: "Bhuykot Castle (Bhuikot Fort)",
     svg: <BhuykotCastleSvg />,
+    subEntries: [
+      {
+        subCode: "01.A",
+        badgeType: "Academic",
+        badgeLabel: "10TH SSC",
+        dateLabel: "2018 – 2019",
+        title: "Secondary School Certificate (10th)",
+        org: "R. V. Shah High School, Malegaon",
+        statBadge: "87.40%",
+        description:
+          "Completed 10th SSC board education in Malegaon with 87.40%, building strong analytical and mathematics fundamentals.",
+        tags: ["87.40% Score", "2018 – 2019"],
+      },
+      {
+        subCode: "01.B",
+        badgeType: "Academic",
+        badgeLabel: "12TH SCIENCE",
+        dateLabel: "2020 – 2021",
+        title: "Higher Secondary Certificate (12th Science)",
+        org: "M.S.G. Science College, Malegaon",
+        statBadge: "83.80%",
+        description:
+          "Completed 12th Science stream at M.S.G. Science College in Malegaon with 83.80% before transitioning into engineering.",
+        tags: ["83.80% Score", "2020 – 2021"],
+      },
+    ],
   },
   {
     number: "02",
+    yearWatermark: "2024",
     location: "Nashik",
-    dateLabel: "Engineering Years",
-    title: "Engineering",
+    dateLabel: "2021 – 2025",
+    badgeType: "Internship",
+    title: "B.E. AI & Data Science + Frontend Internship",
+    org: "Nashik, Maharashtra",
     description:
-      "Completed my engineering degree in Artificial Intelligence and Data Science in Nashik, Maharashtra.",
+      "Completed B.E. in AI & Data Science at Sandip Institute of Technology (7.88 CGPA) alongside a 6-month Frontend Internship at NerdTech Software Company in Nashik.",
+    tags: ["B.E. 7.88 CGPA", "NerdTech Internship", "React.js & Next.js"],
     illustrationTitle: "Nashik Ram Mandir",
     svg: <RamMandirSvg />,
+    subEntries: [
+      {
+        subCode: "02.A",
+        badgeType: "Academic",
+        badgeLabel: "COLLEGE · B.E.",
+        dateLabel: "2021 – 2025",
+        title: "B.E. in AI & Data Science",
+        org: "Sandip Institute of Technology & Research Centre",
+        statBadge: "7.88 CGPA",
+        description:
+          "Undergraduate engineering in Nashik covering Data Structures, DBMS, OOP, Machine Learning, and Full-Stack Web Engineering.",
+        tags: ["7.88 CGPA", "AI & Data Science"],
+      },
+      {
+        subCode: "02.B",
+        badgeType: "Internship",
+        badgeLabel: "INTERNSHIP",
+        dateLabel: "Nov 2023 – May 2024",
+        title: "Frontend Development Intern",
+        org: "NerdTech Software Company, Nashik",
+        statBadge: "~20% Perf Boost",
+        description:
+          "Built responsive UIs for 5+ product pages using React.js, Next.js, Tailwind CSS & Bootstrap with reusable modular components.",
+        tags: ["React.js & Next.js", "5+ Product Pages"],
+      },
+    ],
   },
   {
     number: "03",
+    yearWatermark: "2025",
     location: "Pune",
-    dateLabel: "Professional Training",
-    title: "Full Stack Development",
+    dateLabel: "2025 – Before Mar 2026",
+    badgeType: "Training",
+    title: "Full-Stack Development Trainee (Training — Not Employment)",
+    org: "SpeedUp Infotech · Pune, Maharashtra",
     description:
-      "Completed a Full Stack Development course in Pune, strengthening my practical web development skills.",
+      "Intensive hands-on Full-Stack training (≤ 8 months) in Node.js, Express.js, REST API architecture, PostgreSQL, MySQL, MongoDB, Redis caching, Prisma ORM, and Drizzle ORM.",
+    tags: ["Node.js & Express", "PostgreSQL & MySQL", "MongoDB & Redis", "Prisma & Drizzle"],
     illustrationTitle: "Development Workspace & Terminal",
     svg: <FullStackLaptopSvg />,
   },
   {
     number: "04",
-    location: "Bangalore",
-    dateLabel: "3 Months",
-    title: "Professional Experience",
+    yearWatermark: "2026",
+    location: "Bengaluru",
+    dateLabel: "March 2026 – May 2026",
+    badgeType: "Employment",
+    title: "Frontend Developer · Autonomous AI Sales Platform",
+    org: "Tvara · Bengaluru, India",
     description:
-      "Completed three months of professional work experience in Bangalore, gaining practical industry exposure.",
+      "Built frontend features for an autonomous AI sales platform supporting multi-channel workflows across email, WhatsApp, and telephony using Next.js App Router, TypeScript, and Tailwind CSS, integrated with backend microservices.",
+    tags: ["Next.js App Router", "TypeScript", "Tailwind CSS", "Multi-Channel AI", "REST APIs"],
     illustrationTitle: "Bangalore Modern Skyline",
     svg: <BangaloreSkylineSvg />,
   },
   {
     number: "05",
+    yearWatermark: "NOW",
     location: "Goa",
-    dateLabel: "3 Months",
-    title: "Professional Experience",
+    dateLabel: "May 2026 – Present",
+    badgeType: "Employment",
+    title: "Full-Stack Developer · Present Role",
+    org: "McFlyworld · Goa, India",
     description:
-      "Completed three months of professional work experience in Goa, continuing to develop my technical and professional skills.",
+      "Currently working as a Full-Stack Developer — developing and maintaining 25+ websites using React and Next.js, building 2 software applications using Electron (desktop) and React Native (mobile), and implementing backend services with PHP, Laravel, Node.js, and Express.js.",
+    tags: ["Present Role", "25+ React/Next.js Sites", "Electron & React Native", "Node.js & Laravel"],
     illustrationTitle: "Portuguese Architectural Heritage",
     svg: <GoanArchitectureSvg />,
   },
   {
     number: "06",
+    yearWatermark: "NEXT",
     location: "The Journey Continues",
-    dateLabel: "Present",
-    title: "What's Next",
+    dateLabel: "Horizon & Beyond",
+    badgeType: "Present",
+    title: "Still Writing the Next Chapters",
+    org: "Always Building · Evolving Every Day",
     description:
-      "Continuing to build, learn, and create meaningful software products while growing as a developer.",
+      "The journey is still unfolding — pushing forward with distributed full-stack architectures, asynchronous worker pipelines, AI-powered workflows, and ambitious new engineering milestones ahead.",
+    tags: ["Journey Continues", "Distributed Systems", "AI & Full-Stack Craft", "Onward →"],
     illustrationTitle: "Infinite Horizon & Path",
     svg: <FutureHorizonSvg />,
   },
@@ -524,14 +618,20 @@ const MILESTONES: MilestoneData[] = [
 export default function HomeJourneySection() {
   const sectionRef = useRef<HTMLElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
+  const bgYearsFarRef = useRef<HTMLDivElement>(null);
+  const bgSymbolsMidRef = useRef<HTMLDivElement>(null);
   const ledLineProgressRef = useRef<HTMLDivElement>(null);
   const [activeMilestoneIndex, setActiveMilestoneIndex] = useState(0);
+  const revealedNodesRef = useRef<Set<number>>(new Set([0]));
+  const [revealedNodes, setRevealedNodes] = useState<number[]>([0]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
 
     const sectionEl = sectionRef.current;
     const trackEl = trackRef.current;
+    const bgYearsFarEl = bgYearsFarRef.current;
+    const bgSymbolsMidEl = bgSymbolsMidRef.current;
     const ledLineProgressEl = ledLineProgressRef.current;
     if (!sectionEl || !trackEl) return;
 
@@ -545,8 +645,18 @@ export default function HomeJourneySection() {
     // DESKTOP & LARGE TABLET: Horizontal Scroll-Pinned Timeline
     // =========================================================================
     mm.add("(min-width: 1024px)", () => {
-      // Calculate total horizontal scroll delta
+      // Calculate total horizontal scroll delta (track moves right -> left, so negative X)
       const getScrollAmount = () => -(trackEl.scrollWidth - window.innerWidth + 120);
+
+      // Opposite direction parallax (left -> right, starting shifted left and moving right)
+      // Far Layer (Giant Years: 2021, 2024, 2025, 2026) — slower depth speed
+      // Mid Layer (Technical Symbols & Coordinates) — faster depth speed
+      if (bgYearsFarEl) {
+        gsap.set(bgYearsFarEl, { x: -950 });
+      }
+      if (bgSymbolsMidEl) {
+        gsap.set(bgSymbolsMidEl, { x: -1650 });
+      }
 
       const horizontalTimeline = gsap.timeline({
         scrollTrigger: {
@@ -565,6 +675,12 @@ export default function HomeJourneySection() {
             );
             setActiveMilestoneIndex(index);
 
+            // Unlock reveal state for any milestone reached so illustration drops from top -> location
+            if (!revealedNodesRef.current.has(index)) {
+              revealedNodesRef.current.add(index);
+              setRevealedNodes(Array.from(revealedNodesRef.current));
+            }
+
             // Progress the glowing LED line width
             if (ledLineProgressEl) {
               ledLineProgressEl.style.width = `${self.progress * 100}%`;
@@ -574,24 +690,39 @@ export default function HomeJourneySection() {
       });
 
       if (!prefersReducedMotion) {
-        // Slide track horizontally
-        horizontalTimeline.to(trackEl, {
-          x: getScrollAmount,
-          ease: "none",
-        });
+        // 1. Main Foreground Track: moves horizontally right-to-left (negative X)
+        horizontalTimeline.to(
+          trackEl,
+          {
+            x: getScrollAmount,
+            ease: "none",
+          },
+          0
+        );
 
-        // Stagger subtle parallax on illustrations
-        const illustrations = trackEl.querySelectorAll(".milestone-illustration");
-        illustrations.forEach((ill) => {
+        // 2. Far Background Layer (Giant Years 2021 • 2024 • 2025 • 2026): moves opposite direction (left-to-right) at slower far-object speed
+        if (bgYearsFarEl) {
           horizontalTimeline.to(
-            ill,
+            bgYearsFarEl,
             {
-              y: -8,
+              x: 220,
               ease: "none",
             },
             0
           );
-        });
+        }
+
+        // 3. Mid Background Layer (Tech Symbols & Coordinates): moves opposite direction (left-to-right) at faster closer-object speed
+        if (bgSymbolsMidEl) {
+          horizontalTimeline.to(
+            bgSymbolsMidEl,
+            {
+              x: 420,
+              ease: "none",
+            },
+            0
+          );
+        }
       }
 
       return () => {
@@ -608,9 +739,15 @@ export default function HomeJourneySection() {
       mobileNodes.forEach((node, idx) => {
         ScrollTrigger.create({
           trigger: node,
-          start: "top 70%",
-          end: "bottom 30%",
-          onEnter: () => setActiveMilestoneIndex(idx),
+          start: "top 75%",
+          end: "bottom 25%",
+          onEnter: () => {
+            setActiveMilestoneIndex(idx);
+            if (!revealedNodesRef.current.has(idx)) {
+              revealedNodesRef.current.add(idx);
+              setRevealedNodes(Array.from(revealedNodesRef.current));
+            }
+          },
           onEnterBack: () => setActiveMilestoneIndex(idx),
         });
       });
@@ -634,10 +771,6 @@ export default function HomeJourneySection() {
       {/* Editorial Header */}
       <div className="relative z-20 w-full pt-16 sm:pt-20 lg:pt-20 px-6 sm:px-12 md:px-16 max-w-7xl mx-auto flex flex-col md:flex-row md:items-end justify-between gap-6 pb-4 lg:pb-5 border-b border-white/10 shrink-0">
         <div>
-          <div className="inline-flex items-center gap-2 mb-3 px-3 py-1 rounded-full border border-white/20 bg-white/5 text-[11px] font-mono uppercase tracking-[0.2em] text-neutral-400">
-            <span className="w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_8px_#ffffff]" />
-            <span>Chronology // 01 — 06</span>
-          </div>
 
           <h2 className="text-[clamp(2.2rem,4.5vw,3.8rem)] font-extrabold tracking-tight uppercase leading-[0.95] text-white">
             The Journey<span className="text-white/40">.</span>
@@ -656,6 +789,46 @@ export default function HomeJourneySection() {
           DESKTOP: Continuous Horizontal Timeline (min-width: 1024px)
           ======================================================================= */}
       <div className="hidden lg:block relative w-full flex-1 min-h-0 overflow-hidden">
+        {/* ── PARALLAX LAYER 1 (FAR OBJECTS — Slower Reverse Drift): Giant Year Watermarks ── */}
+        <div className="absolute inset-0 pointer-events-none z-0 flex items-center overflow-hidden select-none">
+          <div
+            ref={bgYearsFarRef}
+            className="flex items-center gap-28 whitespace-nowrap font-black tracking-[-0.05em] text-white/[0.045] will-change-transform"
+            style={{ fontSize: "clamp(10rem, 21vw, 24rem)", lineHeight: 0.85 }}
+          >
+            <span>2021</span>
+            <span className="text-white/[0.025]">•</span>
+            <span>2024</span>
+            <span className="text-white/[0.025]">•</span>
+            <span>2025</span>
+            <span className="text-white/[0.025]">•</span>
+            <span>2026</span>
+            <span className="text-white/[0.025]">•</span>
+            <span>BEYOND</span>
+          </div>
+        </div>
+
+        {/* ── PARALLAX LAYER 2 (CLOSER MID-GROUND OBJECTS — Faster Reverse Drift): Symbols & Tech Telemetry ── */}
+        <div className="absolute inset-0 pointer-events-none z-1 flex flex-col justify-between py-12 overflow-hidden select-none">
+          {/* Upper telemetry symbol ribbon */}
+          <div
+            ref={bgSymbolsMidRef}
+            className="flex items-center gap-16 whitespace-nowrap font-mono text-xs sm:text-sm uppercase tracking-[0.35em] text-white/[0.13] will-change-transform"
+          >
+            <span>✦ [ 2021 // B.E. AI &amp; DS · 7.88 CGPA ]</span>
+            <span className="text-[#ff5500]/40">❖</span>
+            <span>⟪ NERDTECH INTERN · REACT &amp; NEXT.JS ⟫</span>
+            <span className="text-[#ff5500]/40">✦</span>
+            <span>[ 2025 // SPEEDUP INFOTECH · FULL-STACK TRAINING ]</span>
+            <span className="text-[#ff5500]/40">❖</span>
+            <span>⟪ 2026 // TVARA · BENGALURU · AI SALES PLATFORM ⟫</span>
+            <span className="text-[#ff5500]/40">✦</span>
+            <span>[ 2026 // MCFLYWORLD · GOA · 25+ SITES &amp; 2 APPS ]</span>
+            <span className="text-[#ff5500]/40">❖</span>
+            <span>⟪ PUNE · 18.5204° N, 73.8567° E ⟫</span>
+          </div>
+        </div>
+
         {/* Main Central Glowing LED Timeline Axis (Locked vertically at 50% viewport height) */}
         <div className="absolute top-1/2 left-0 right-0 h-[1px] -translate-y-1/2 z-10 pointer-events-none">
           {/* Base Background Track: Thin white rule */}
@@ -664,7 +837,7 @@ export default function HomeJourneySection() {
           {/* Active LED Light Strip with Diffusion Halo */}
           <div
             ref={ledLineProgressRef}
-            className="absolute top-0 left-0 h-full bg-white transition-[width] duration-75 ease-out shadow-[0_0_12px_rgba(255,255,255,0.9),0_0_24px_rgba(255,255,255,0.45)]"
+            className="absolute top-0 left-0 h-full bg-gradient-to-r from-white via-white to-[#ff5500] transition-[width] duration-75 ease-out shadow-[0_0_12px_rgba(255,255,255,0.9),0_0_24px_rgba(255,85,0,0.55)]"
             style={{ width: "16%" }}
           />
         </div>
@@ -672,84 +845,263 @@ export default function HomeJourneySection() {
         {/* Scrollable Track Container */}
         <div
           ref={trackRef}
-          className="absolute top-0 left-0 h-full flex items-center pl-16 pr-32 select-none"
+          className="absolute top-0 left-0 h-full flex items-center pl-16 pr-32 select-none z-15"
           style={{ width: "max-content" }}
         >
           {MILESTONES.map((item, idx) => {
             const isTop = idx % 2 === 0; // Alternating layout: even items above axis, odd items below
             const isActive = activeMilestoneIndex >= idx;
             const isCurrent = activeMilestoneIndex === idx;
+            const isRevealed = revealedNodes.includes(idx) || isActive;
+
+            const hasSubEntries = Boolean(item.subEntries && item.subEntries.length > 0);
+
+            const getBadgeStyle = (type: MilestoneData["badgeType"]) =>
+              type === "Employment"
+                ? "bg-emerald-500/15 text-emerald-300 border-emerald-500/30"
+                : type === "Internship"
+                ? "bg-sky-500/15 text-sky-300 border-sky-500/30"
+                : type === "Training"
+                ? "bg-amber-500/15 text-amber-300 border-amber-500/30"
+                : type === "Present"
+                ? "bg-[#ff5500]/20 text-[#ff5500] border-[#ff5500]/40"
+                : "bg-white/10 text-white/80 border-white/20";
+
+            const badgeColor = getBadgeStyle(item.badgeType);
 
             return (
               <div
                 key={item.number}
-                className="relative flex flex-col items-center justify-center w-[460px] h-full px-6 shrink-0"
+                className={`relative flex flex-col items-center justify-center h-full px-6 shrink-0 ${
+                  hasSubEntries ? "w-[680px]" : "w-[490px]"
+                }`}
               >
                 {/* 1. TOP POSITIONED CONTENT (When isTop === true) */}
                 {isTop ? (
-                  <div className="absolute bottom-[calc(50%+24px)] left-6 right-6 flex flex-col items-center text-center">
-                    {/* Architectural Pencil-Line Drawing Card */}
+                  <div className="absolute bottom-[calc(50%+20px)] left-4 right-4 flex flex-col items-center text-center">
+                    {/* Architectural Pencil-Line Drawing Card — Appears from opacity 0 and drops from top (-translate-y-12) to its location */}
                     <div
-                      className={`milestone-illustration w-[260px] h-[155px] mb-4 p-2.5 transition-all duration-500 ease-out ${
+                      className={`milestone-illustration ${
+                        hasSubEntries ? "w-[220px] h-[115px] mb-2" : "w-[240px] h-[135px] mb-3"
+                      } p-2 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
                         isCurrent
-                          ? "opacity-100 scale-100 filter drop-shadow-[0_0_16px_rgba(255,255,255,0.22)]"
-                          : isActive
-                          ? "opacity-75 scale-[0.98]"
-                          : "opacity-35 scale-95"
+                          ? "opacity-100 translate-y-0 scale-100 filter drop-shadow-[0_0_18px_rgba(255,85,0,0.28)]"
+                          : isRevealed
+                          ? "opacity-75 translate-y-0 scale-[0.97]"
+                          : "opacity-0 -translate-y-12 scale-90"
                       }`}
                     >
                       {item.svg}
                     </div>
 
-                    {/* Meta Label: Date & Milestone Number */}
-                    <div className="flex items-center gap-2 mb-1.5 text-[11px] font-mono tracking-widest uppercase text-neutral-400">
-                      <span className="text-white font-semibold">[{item.number}]</span>
-                      <span>&middot;</span>
-                      <span>{item.dateLabel}</span>
+                    {/* Shared City Header */}
+                    <div className="flex flex-wrap items-center justify-center gap-2 mb-1 text-[10px] font-mono tracking-widest uppercase">
+                      {hasSubEntries ? (
+                        <span
+                          className={`px-2.5 py-0.5 rounded-full border text-[9px] font-bold transition-colors duration-500 ${
+                            isCurrent
+                              ? "bg-[#ff5500]/20 text-[#ff5500] border-[#ff5500]/40"
+                              : "bg-white/10 text-white/80 border-white/20"
+                          }`}
+                        >
+                          SAME CITY &middot; {item.subEntries!.length} CHAPTERS
+                        </span>
+                      ) : (
+                        <span
+                          className={`px-2 py-0.5 rounded-full border text-[9px] font-bold transition-colors duration-500 ${badgeColor}`}
+                        >
+                          {item.badgeType === "Training"
+                            ? "TRAINING (NOT EMPLOYMENT)"
+                            : item.badgeType === "Present"
+                            ? "JOURNEY CONTINUES"
+                            : item.number === "05"
+                            ? "CURRENT ROLE · EMPLOYMENT"
+                            : item.badgeType}
+                        </span>
+                      )}
+                      <span
+                        className={`font-semibold transition-colors duration-500 ${
+                          isCurrent ? "text-[#ff5500]" : "text-white"
+                        }`}
+                      >
+                        [{item.number}]
+                      </span>
+                      <span className="text-neutral-500">&middot;</span>
+                      <span
+                        className={`transition-colors duration-500 ${
+                          isCurrent ? "text-white" : "text-neutral-400"
+                        }`}
+                      >
+                        {item.dateLabel}
+                      </span>
                     </div>
 
-                    {/* Location & Title */}
-                    <h3 className="text-xl font-bold tracking-tight text-white mb-1">
-                      {item.location}
+                    {/* Location & Organization with color animation */}
+                    <h3
+                      className={`text-lg font-bold tracking-tight mb-0.5 transition-colors duration-500 ${
+                        isCurrent
+                          ? "text-[#ff5500] drop-shadow-[0_0_12px_rgba(255,85,0,0.35)]"
+                          : isActive
+                          ? "text-white"
+                          : "text-neutral-500"
+                      }`}
+                    >
+                      {hasSubEntries ? item.location : `${item.location} — ${item.org}`}
                     </h3>
 
-                    <p className="text-xs font-medium uppercase tracking-wider text-neutral-400 mb-2">
-                      {item.title}
-                    </p>
+                    {hasSubEntries ? (
+                      <>
+                        {/* Two Separate Sub-Milestone Cards inside the Same City */}
+                        <div className="grid grid-cols-2 gap-3 w-full mt-2 text-left">
+                          {item.subEntries!.map((sub) => (
+                            <div
+                              key={sub.subCode}
+                              className={`relative rounded-xl border p-3 transition-all duration-500 backdrop-blur-sm ${
+                                isCurrent
+                                  ? "bg-white/[0.045] border-[#ff5500]/45 shadow-[0_0_24px_rgba(255,85,0,0.12)]"
+                                  : isActive
+                                  ? "bg-white/[0.025] border-white/15"
+                                  : "bg-white/[0.015] border-white/10"
+                              }`}
+                            >
+                              <div className="flex items-center justify-between gap-1.5 mb-1 font-mono text-[9px] uppercase tracking-wider">
+                                <span
+                                  className={`px-1.5 py-0.5 rounded border font-bold ${getBadgeStyle(
+                                    sub.badgeType
+                                  )}`}
+                                >
+                                  {sub.badgeLabel}
+                                </span>
+                                <span
+                                  className={
+                                    isCurrent ? "text-[#ff5500] font-semibold" : "text-neutral-400"
+                                  }
+                                >
+                                  {sub.dateLabel}
+                                </span>
+                              </div>
 
-                    {/* Concise Editorial Description */}
-                    <p className="text-xs text-neutral-400 font-light leading-relaxed max-w-[340px]">
-                      {item.description}
-                    </p>
+                              <h4
+                                className={`text-xs font-bold leading-snug transition-colors duration-500 ${
+                                  isCurrent ? "text-white" : "text-neutral-200"
+                                }`}
+                              >
+                                {sub.title}
+                              </h4>
+
+                              <p
+                                className={`text-[10px] font-mono mt-0.5 transition-colors duration-500 ${
+                                  isCurrent ? "text-[#ff5500]" : "text-neutral-400"
+                                }`}
+                              >
+                                {sub.org}
+                              </p>
+
+                              <p
+                                className={`text-[11px] font-light leading-relaxed mt-1.5 transition-colors duration-500 ${
+                                  isCurrent ? "text-zinc-200" : "text-neutral-400"
+                                }`}
+                              >
+                                {sub.description}
+                              </p>
+
+                              <div className="flex flex-wrap items-center gap-1 mt-2">
+                                {sub.tags.map((tag) => (
+                                  <span
+                                    key={tag}
+                                    className={`px-1.5 py-0.5 rounded font-mono text-[8.5px] border transition-colors duration-500 ${
+                                      isCurrent
+                                        ? "bg-[#ff5500]/15 border-[#ff5500]/40 text-white"
+                                        : "bg-white/5 border-white/10 text-neutral-400"
+                                    }`}
+                                  >
+                                    {tag}
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <p
+                          className={`text-[11px] font-mono font-semibold uppercase tracking-wider mb-1.5 transition-colors duration-500 ${
+                            isCurrent
+                              ? "text-white"
+                              : isActive
+                              ? "text-neutral-300"
+                              : "text-neutral-500"
+                          }`}
+                        >
+                          {item.title}
+                        </p>
+
+                        {/* Concise Editorial Description */}
+                        <p
+                          className={`text-xs font-light leading-relaxed max-w-[390px] transition-colors duration-500 ${
+                            isCurrent
+                              ? "text-zinc-200"
+                              : isActive
+                              ? "text-neutral-400"
+                              : "text-neutral-600"
+                          }`}
+                        >
+                          {item.description}
+                        </p>
+
+                        {/* Tech / Achievement Pills */}
+                        <div className="flex flex-wrap items-center justify-center gap-1.5 mt-2.5">
+                          {item.tags.map((tag) => (
+                            <span
+                              key={tag}
+                              className={`px-2 py-0.5 rounded-md font-mono text-[9px] border transition-all duration-500 ${
+                                isCurrent
+                                  ? "bg-[#ff5500]/15 border-[#ff5500]/40 text-white"
+                                  : "bg-white/5 border-white/10 text-neutral-400"
+                              }`}
+                            >
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      </>
+                    )}
 
                     {/* Thin Vertical LED Connector Line down to Axis */}
-                    <div className="w-[1px] h-6 mt-4 bg-gradient-to-b from-white/40 to-white/90" />
+                    <div
+                      className={`w-[1px] h-4 mt-2.5 transition-colors duration-500 ${
+                        isCurrent
+                          ? "bg-gradient-to-b from-[#ff5500] to-white"
+                          : "bg-gradient-to-b from-white/40 to-white/90"
+                      }`}
+                    />
                   </div>
                 ) : null}
 
                 {/* 2. CENTRAL MILESTONE NODE (Sits directly on the horizontal axis) */}
                 <div
                   className="relative z-20 flex items-center justify-center transition-transform duration-300"
-                  style={{ transform: isCurrent ? "scale(1.25)" : "scale(1)" }}
+                  style={{ transform: isCurrent ? "scale(1.3)" : "scale(1)" }}
                 >
                   {/* Outer Diffused Glow Ring */}
                   <div
                     className={`absolute w-8 h-8 rounded-full transition-opacity duration-500 pointer-events-none ${
                       isCurrent
-                        ? "opacity-100 bg-white/10 ring-1 ring-white/60 shadow-[0_0_18px_rgba(255,255,255,0.8)]"
+                        ? "opacity-100 bg-[#ff5500]/20 ring-1 ring-[#ff5500]/70 shadow-[0_0_20px_rgba(255,85,0,0.85)]"
                         : isActive
                         ? "opacity-40 bg-white/5"
                         : "opacity-0"
                     }`}
                   />
 
-                  {/* Core White Circular Node */}
+                  {/* Core Circular Node */}
                   <div
-                    className={`w-3.5 h-3.5 rounded-full border border-white transition-all duration-300 ${
+                    className={`w-3.5 h-3.5 rounded-full border transition-all duration-300 ${
                       isCurrent
-                        ? "bg-white shadow-[0_0_10px_#ffffff,0_0_20px_#ffffff]"
+                        ? "bg-[#ff5500] border-white shadow-[0_0_10px_#ff5500,0_0_20px_#ff5500]"
                         : isActive
-                        ? "bg-white/90"
+                        ? "bg-white border-white"
                         : "bg-black border-white/40"
                     }`}
                   />
@@ -757,39 +1109,200 @@ export default function HomeJourneySection() {
 
                 {/* 3. BOTTOM POSITIONED CONTENT (When isTop === false) */}
                 {!isTop ? (
-                  <div className="absolute top-[calc(50%+24px)] left-6 right-6 flex flex-col items-center text-center">
+                  <div className="absolute top-[calc(50%+20px)] left-4 right-4 flex flex-col items-center text-center">
                     {/* Thin Vertical LED Connector Line up from Axis */}
-                    <div className="w-[1px] h-6 mb-4 bg-gradient-to-t from-white/40 to-white/90" />
+                    <div
+                      className={`w-[1px] h-4 mb-2.5 transition-colors duration-500 ${
+                        isCurrent
+                          ? "bg-gradient-to-t from-[#ff5500] to-white"
+                          : "bg-gradient-to-t from-white/40 to-white/90"
+                      }`}
+                    />
 
-                    {/* Meta Label: Date & Milestone Number */}
-                    <div className="flex items-center gap-2 mb-1.5 text-[11px] font-mono tracking-widest uppercase text-neutral-400">
-                      <span className="text-white font-semibold">[{item.number}]</span>
-                      <span>&middot;</span>
-                      <span>{item.dateLabel}</span>
+                    {/* Shared City Header */}
+                    <div className="flex flex-wrap items-center justify-center gap-2 mb-1 text-[10px] font-mono tracking-widest uppercase">
+                      {hasSubEntries ? (
+                        <span
+                          className={`px-2.5 py-0.5 rounded-full border text-[9px] font-bold transition-colors duration-500 ${
+                            isCurrent
+                              ? "bg-[#ff5500]/20 text-[#ff5500] border-[#ff5500]/40"
+                              : "bg-white/10 text-white/80 border-white/20"
+                          }`}
+                        >
+                          SAME CITY &middot; {item.subEntries!.length} CHAPTERS
+                        </span>
+                      ) : (
+                        <span
+                          className={`px-2 py-0.5 rounded-full border text-[9px] font-bold transition-colors duration-500 ${badgeColor}`}
+                        >
+                          {item.badgeType === "Training"
+                            ? "TRAINING (NOT EMPLOYMENT)"
+                            : item.badgeType === "Present"
+                            ? "JOURNEY CONTINUES"
+                            : item.number === "05"
+                            ? "CURRENT ROLE · EMPLOYMENT"
+                            : item.badgeType}
+                        </span>
+                      )}
+                      <span
+                        className={`font-semibold transition-colors duration-500 ${
+                          isCurrent ? "text-[#ff5500]" : "text-white"
+                        }`}
+                      >
+                        [{item.number}]
+                      </span>
+                      <span className="text-neutral-500">&middot;</span>
+                      <span
+                        className={`transition-colors duration-500 ${
+                          isCurrent ? "text-white" : "text-neutral-400"
+                        }`}
+                      >
+                        {item.dateLabel}
+                      </span>
                     </div>
 
-                    {/* Location & Title */}
-                    <h3 className="text-xl font-bold tracking-tight text-white mb-1">
-                      {item.location}
+                    {/* Location & Organization with color animation */}
+                    <h3
+                      className={`text-lg font-bold tracking-tight mb-0.5 transition-colors duration-500 ${
+                        isCurrent
+                          ? "text-[#ff5500] drop-shadow-[0_0_12px_rgba(255,85,0,0.35)]"
+                          : isActive
+                          ? "text-white"
+                          : "text-neutral-500"
+                      }`}
+                    >
+                      {hasSubEntries ? item.location : `${item.location} — ${item.org}`}
                     </h3>
 
-                    <p className="text-xs font-medium uppercase tracking-wider text-neutral-400 mb-2">
-                      {item.title}
-                    </p>
+                    {hasSubEntries ? (
+                      <>
+                        {/* Two Separate Sub-Milestone Cards inside the Same City */}
+                        <div className="grid grid-cols-2 gap-3 w-full mt-2 mb-2.5 text-left">
+                          {item.subEntries!.map((sub) => (
+                            <div
+                              key={sub.subCode}
+                              className={`relative rounded-xl border p-3 transition-all duration-500 backdrop-blur-sm ${
+                                isCurrent
+                                  ? "bg-white/[0.045] border-[#ff5500]/45 shadow-[0_0_24px_rgba(255,85,0,0.12)]"
+                                  : isActive
+                                  ? "bg-white/[0.025] border-white/15"
+                                  : "bg-white/[0.015] border-white/10"
+                              }`}
+                            >
+                              <div className="flex items-center justify-between gap-1.5 mb-1 font-mono text-[9px] uppercase tracking-wider">
+                                <span
+                                  className={`px-1.5 py-0.5 rounded border font-bold ${getBadgeStyle(
+                                    sub.badgeType
+                                  )}`}
+                                >
+                                  {sub.badgeLabel}
+                                </span>
+                                <span
+                                  className={
+                                    isCurrent ? "text-[#ff5500] font-semibold" : "text-neutral-400"
+                                  }
+                                >
+                                  {sub.dateLabel}
+                                </span>
+                              </div>
 
-                    {/* Concise Editorial Description */}
-                    <p className="text-xs text-neutral-400 font-light leading-relaxed max-w-[340px] mb-4">
-                      {item.description}
-                    </p>
+                              <h4
+                                className={`text-xs font-bold leading-snug transition-colors duration-500 ${
+                                  isCurrent ? "text-white" : "text-neutral-200"
+                                }`}
+                              >
+                                {sub.title}
+                              </h4>
 
-                    {/* Architectural Pencil-Line Drawing Card */}
+                              <p
+                                className={`text-[10px] font-mono mt-0.5 transition-colors duration-500 ${
+                                  isCurrent ? "text-[#ff5500]" : "text-neutral-400"
+                                }`}
+                              >
+                                {sub.org}
+                              </p>
+
+                              <p
+                                className={`text-[11px] font-light leading-relaxed mt-1.5 transition-colors duration-500 ${
+                                  isCurrent ? "text-zinc-200" : "text-neutral-400"
+                                }`}
+                              >
+                                {sub.description}
+                              </p>
+
+                              <div className="flex flex-wrap items-center gap-1 mt-2">
+                                {sub.tags.map((tag) => (
+                                  <span
+                                    key={tag}
+                                    className={`px-1.5 py-0.5 rounded font-mono text-[8.5px] border transition-colors duration-500 ${
+                                      isCurrent
+                                        ? "bg-[#ff5500]/15 border-[#ff5500]/40 text-white"
+                                        : "bg-white/5 border-white/10 text-neutral-400"
+                                    }`}
+                                  >
+                                    {tag}
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <p
+                          className={`text-[11px] font-mono font-semibold uppercase tracking-wider mb-1.5 transition-colors duration-500 ${
+                            isCurrent
+                              ? "text-white"
+                              : isActive
+                              ? "text-neutral-300"
+                              : "text-neutral-500"
+                          }`}
+                        >
+                          {item.title}
+                        </p>
+
+                        {/* Concise Editorial Description */}
+                        <p
+                          className={`text-xs font-light leading-relaxed max-w-[390px] transition-colors duration-500 ${
+                            isCurrent
+                              ? "text-zinc-200"
+                              : isActive
+                              ? "text-neutral-400"
+                              : "text-neutral-600"
+                          }`}
+                        >
+                          {item.description}
+                        </p>
+
+                        {/* Tech / Achievement Pills */}
+                        <div className="flex flex-wrap items-center justify-center gap-1.5 mt-2.5 mb-3">
+                          {item.tags.map((tag) => (
+                            <span
+                              key={tag}
+                              className={`px-2 py-0.5 rounded-md font-mono text-[9px] border transition-all duration-500 ${
+                                isCurrent
+                                  ? "bg-[#ff5500]/15 border-[#ff5500]/40 text-white"
+                                  : "bg-white/5 border-white/10 text-neutral-400"
+                              }`}
+                            >
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      </>
+                    )}
+
+                    {/* Architectural Pencil-Line Drawing Card — Appears from opacity 0 and drops from top (-translate-y-12) to its location */}
                     <div
-                      className={`milestone-illustration w-[260px] h-[155px] p-2.5 transition-all duration-500 ease-out ${
+                      className={`milestone-illustration ${
+                        hasSubEntries ? "w-[220px] h-[115px]" : "w-[240px] h-[135px]"
+                      } p-2 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
                         isCurrent
-                          ? "opacity-100 scale-100 filter drop-shadow-[0_0_16px_rgba(255,255,255,0.22)]"
-                          : isActive
-                          ? "opacity-75 scale-[0.98]"
-                          : "opacity-35 scale-95"
+                          ? "opacity-100 translate-y-0 scale-100 filter drop-shadow-[0_0_18px_rgba(255,85,0,0.28)]"
+                          : isRevealed
+                          ? "opacity-75 translate-y-0 scale-[0.97]"
+                          : "opacity-0 -translate-y-12 scale-90"
                       }`}
                     >
                       {item.svg}
@@ -839,18 +1352,42 @@ export default function HomeJourneySection() {
         <div className="flex flex-col space-y-12 sm:space-y-16">
           {MILESTONES.map((item, idx) => {
             const isCurrent = activeMilestoneIndex === idx;
+            const isRevealed = revealedNodes.includes(idx) || activeMilestoneIndex >= idx;
+
+            const hasSubEntries = Boolean(item.subEntries && item.subEntries.length > 0);
+
+            const getBadgeStyle = (type: MilestoneData["badgeType"]) =>
+              type === "Employment"
+                ? "bg-emerald-500/15 text-emerald-300 border-emerald-500/30"
+                : type === "Internship"
+                ? "bg-sky-500/15 text-sky-300 border-sky-500/30"
+                : type === "Training"
+                ? "bg-amber-500/15 text-amber-300 border-amber-500/30"
+                : type === "Present"
+                ? "bg-[#ff5500]/20 text-[#ff5500] border-[#ff5500]/40"
+                : "bg-white/10 text-white/80 border-white/20";
+
+            const badgeColor = getBadgeStyle(item.badgeType);
 
             return (
               <div
                 key={item.number}
-                className="mobile-milestone-node relative flex items-start gap-4 sm:gap-8 pl-1 sm:pl-4 group"
+                className="mobile-milestone-node relative flex items-start gap-4 sm:gap-8 pl-1 sm:pl-4 group overflow-hidden"
               >
+                {/* Subtle Background Year Watermark on Mobile */}
+                <span
+                  aria-hidden="true"
+                  className="pointer-events-none select-none absolute right-2 top-0 text-6xl sm:text-7xl font-black tracking-tighter text-white/[0.04]"
+                >
+                  {item.yearWatermark}
+                </span>
+
                 {/* Node circle on the vertical axis */}
                 <div className="relative z-10 mt-1 shrink-0 flex items-center justify-center">
                   <div
-                    className={`w-3.5 h-3.5 rounded-full border border-white transition-all duration-300 ${
+                    className={`w-3.5 h-3.5 rounded-full border transition-all duration-300 ${
                       isCurrent
-                        ? "bg-white shadow-[0_0_12px_#ffffff,0_0_20px_#ffffff] scale-125"
+                        ? "bg-[#ff5500] border-white shadow-[0_0_12px_#ff5500,0_0_20px_#ff5500] scale-125"
                         : "bg-black border-white/50"
                     }`}
                   />
@@ -859,29 +1396,152 @@ export default function HomeJourneySection() {
                 {/* Content Group (To the right of the timeline) */}
                 <div className="flex flex-col space-y-2.5 w-full">
                   {/* Meta Label */}
-                  <div className="flex items-center gap-2 text-[10px] sm:text-[11px] font-mono tracking-widest uppercase text-neutral-400">
-                    <span className="text-white font-semibold">[{item.number}]</span>
-                    <span>&middot;</span>
-                    <span>{item.dateLabel}</span>
+                  <div className="flex flex-wrap items-center gap-2 text-[10px] sm:text-[11px] font-mono tracking-widest uppercase">
+                    {hasSubEntries ? (
+                      <span
+                        className={`px-2.5 py-0.5 rounded-full border text-[9px] font-bold ${
+                          isCurrent
+                            ? "bg-[#ff5500]/20 text-[#ff5500] border-[#ff5500]/40"
+                            : "bg-white/10 text-white/80 border-white/20"
+                        }`}
+                      >
+                        SAME CITY &middot; {item.subEntries!.length} CHAPTERS
+                      </span>
+                    ) : (
+                      <span
+                        className={`px-2 py-0.5 rounded-full border text-[9px] font-bold ${badgeColor}`}
+                      >
+                        {item.badgeType === "Training"
+                          ? "TRAINING (NOT EMPLOYMENT)"
+                          : item.badgeType === "Present"
+                          ? "JOURNEY CONTINUES"
+                          : item.number === "05"
+                          ? "CURRENT ROLE · EMPLOYMENT"
+                          : item.badgeType}
+                      </span>
+                    )}
+                    <span className={isCurrent ? "text-[#ff5500] font-semibold" : "text-white font-semibold"}>
+                      [{item.number}]
+                    </span>
+                    <span className="text-neutral-500">&middot;</span>
+                    <span className={isCurrent ? "text-white" : "text-neutral-400"}>
+                      {item.dateLabel}
+                    </span>
                   </div>
 
                   {/* Heading & Subtitle */}
                   <div>
-                    <h3 className="text-lg sm:text-2xl font-bold tracking-tight text-white">
-                      {item.location}
+                    <h3
+                      className={`text-lg sm:text-2xl font-bold tracking-tight transition-colors duration-500 ${
+                        isCurrent ? "text-[#ff5500]" : "text-white"
+                      }`}
+                    >
+                      {hasSubEntries ? item.location : `${item.location} — ${item.org}`}
                     </h3>
-                    <p className="text-[11px] sm:text-xs uppercase tracking-wider text-neutral-400 mt-0.5">
+                    <p
+                      className={`text-[11px] sm:text-xs font-mono uppercase tracking-wider mt-0.5 transition-colors duration-500 ${
+                        isCurrent ? "text-white" : "text-neutral-400"
+                      }`}
+                    >
                       {item.title}
                     </p>
                   </div>
 
-                  {/* Description */}
-                  <p className="text-xs sm:text-sm text-neutral-400 font-light leading-relaxed max-w-xl">
-                    {item.description}
-                  </p>
+                  {hasSubEntries ? (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1 max-w-2xl">
+                      {item.subEntries!.map((sub) => (
+                        <div
+                          key={sub.subCode}
+                          className={`rounded-xl border p-3.5 transition-all duration-500 ${
+                            isCurrent
+                              ? "bg-white/[0.045] border-[#ff5500]/45 shadow-[0_0_20px_rgba(255,85,0,0.1)]"
+                              : "bg-white/[0.02] border-white/10"
+                          }`}
+                        >
+                          <div className="flex items-center justify-between gap-2 mb-1.5 font-mono text-[9px] uppercase tracking-wider">
+                            <span
+                              className={`px-1.5 py-0.5 rounded border font-bold ${getBadgeStyle(
+                                sub.badgeType
+                              )}`}
+                            >
+                              {sub.badgeLabel}
+                            </span>
+                            <span
+                              className={
+                                isCurrent ? "text-[#ff5500] font-semibold" : "text-neutral-400"
+                              }
+                            >
+                              {sub.dateLabel}
+                            </span>
+                          </div>
 
-                  {/* Architectural Illustration */}
-                  <div className="w-full max-w-[280px] h-[150px] pt-2 pb-1 transition-opacity duration-300">
+                          <h4 className="text-sm font-bold text-white leading-snug">
+                            {sub.title}
+                          </h4>
+                          <p
+                            className={`text-[11px] font-mono mt-0.5 ${
+                              isCurrent ? "text-[#ff5500]" : "text-neutral-400"
+                            }`}
+                          >
+                            {sub.org}
+                          </p>
+                          <p className="text-xs font-light text-zinc-300 leading-relaxed mt-1.5">
+                            {sub.description}
+                          </p>
+                          <div className="flex flex-wrap gap-1.5 mt-2">
+                            {sub.tags.map((tag) => (
+                              <span
+                                key={tag}
+                                className={`px-1.5 py-0.5 rounded font-mono text-[9px] border ${
+                                  isCurrent
+                                    ? "bg-[#ff5500]/15 border-[#ff5500]/40 text-white"
+                                    : "bg-white/5 border-white/10 text-neutral-400"
+                                }`}
+                              >
+                                {tag}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <>
+                      {/* Description */}
+                      <p
+                        className={`text-xs sm:text-sm font-light leading-relaxed max-w-xl transition-colors duration-500 ${
+                          isCurrent ? "text-zinc-200" : "text-neutral-400"
+                        }`}
+                      >
+                        {item.description}
+                      </p>
+
+                      {/* Tech / Achievement Pills */}
+                      <div className="flex flex-wrap gap-1.5 pt-1">
+                        {item.tags.map((tag) => (
+                          <span
+                            key={tag}
+                            className={`px-2 py-0.5 rounded-md font-mono text-[9px] border transition-colors duration-500 ${
+                              isCurrent
+                                ? "bg-[#ff5500]/15 border-[#ff5500]/40 text-white"
+                                : "bg-white/5 border-white/10 text-neutral-400"
+                            }`}
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    </>
+                  )}
+
+                  {/* Architectural Illustration — Appears from opacity 0 and drops from top to location */}
+                  <div
+                    className={`w-full max-w-[280px] h-[150px] pt-2 pb-1 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                      isRevealed
+                        ? "opacity-100 translate-y-0"
+                        : "opacity-0 -translate-y-10"
+                    }`}
+                  >
                     {item.svg}
                   </div>
                 </div>

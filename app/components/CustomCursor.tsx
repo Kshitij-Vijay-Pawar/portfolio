@@ -42,6 +42,9 @@ export default function CustomCursor() {
     const lerpFactor = prefersReducedMotion ? 1 : 0.22;
 
     const render = () => {
+      if (document.documentElement.dataset.contextMenuOpen === "true") {
+        cursorEl.style.opacity = "0";
+      }
       if (isVisible) {
         currentX += (targetX - currentX) * lerpFactor;
         currentY += (targetY - currentY) * lerpFactor;
@@ -66,7 +69,10 @@ export default function CustomCursor() {
         cursorEl.style.visibility = "visible";
       }
 
-      if (e.target instanceof Element && e.target.closest('[data-cursor="hide"]')) {
+      if (
+        document.documentElement.dataset.contextMenuOpen === "true" ||
+        (e.target instanceof Element && e.target.closest('[data-cursor="hide"]'))
+      ) {
         cursorEl.style.opacity = "0";
       } else {
         cursorEl.style.opacity = "1";

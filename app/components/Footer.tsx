@@ -1,28 +1,19 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import Link from "next/link";
 import { Globe } from "./ui/Globe";
-import Mascot from "@/app/components/Mascot";
 import {
   Mail,
+  Phone,
   MapPin,
   UserCheck,
   Sparkles,
-  ArrowRight,
   ArrowUpRight,
-  Check,
+  Globe2,
 } from "lucide-react";
 
 export default function Footer() {
-  const [copied, setCopied] = useState(false);
-
-  const copyEmail = () => {
-    navigator.clipboard.writeText("kshitij.vijay.pawar@gmail.com");
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
   return (
     <footer
       id="contact"
@@ -54,10 +45,10 @@ export default function Footer() {
             </div>
 
             <p className="text-xs sm:text-[13px] text-neutral-600 leading-relaxed font-light max-w-sm mb-6">
-              Building digital products, exploring new technologies, and turning ideas into real experiences.
+              Full-Stack Developer building responsive web applications, asynchronous worker pipelines, and relational database systems.
             </p>
 
-            {/* Social Icons row */}
+            {/* Verified Links row */}
             <div className="flex items-center gap-2.5">
               {/* GitHub */}
               <a
@@ -66,6 +57,7 @@ export default function Footer() {
                 rel="noopener noreferrer"
                 data-cursor="interactive"
                 aria-label="GitHub"
+                title="GitHub: Kshitij-Vijay-Pawar"
                 className="w-10 h-10 rounded-xl bg-white border border-neutral-200/90 flex items-center justify-center text-neutral-700 hover:text-white hover:bg-neutral-900 hover:border-neutral-900 transition-all shadow-xs"
               >
                 <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
@@ -77,46 +69,39 @@ export default function Footer() {
                 </svg>
               </a>
 
-              {/* LinkedIn */}
+              {/* Email */}
               <a
-                href="https://linkedin.com"
-                target="_blank"
-                rel="noopener noreferrer"
+                href="mailto:kshitij.vijay.pawar@gmail.com"
                 data-cursor="interactive"
-                aria-label="LinkedIn"
-                className="w-10 h-10 rounded-xl bg-white border border-neutral-200/90 flex items-center justify-center text-neutral-700 hover:text-white hover:bg-[#0077b5] hover:border-[#0077b5] transition-all shadow-xs"
+                aria-label="Email Kshitij Pawar"
+                title="kshitij.vijay.pawar@gmail.com"
+                className="w-10 h-10 rounded-xl bg-white border border-neutral-200/90 flex items-center justify-center text-neutral-700 hover:text-white hover:bg-[#ff4400] hover:border-[#ff4400] transition-all shadow-xs"
               >
-                <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                  <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z" />
-                </svg>
+                <Mail className="w-4 h-4" />
               </a>
 
-              {/* Twitter / X */}
+              {/* Phone */}
               <a
-                href="https://twitter.com"
-                target="_blank"
-                rel="noopener noreferrer"
+                href="tel:+918149661601"
                 data-cursor="interactive"
-                aria-label="Twitter / X"
+                aria-label="Call Kshitij Pawar"
+                title="+91 8149661601"
                 className="w-10 h-10 rounded-xl bg-white border border-neutral-200/90 flex items-center justify-center text-neutral-700 hover:text-white hover:bg-neutral-900 hover:border-neutral-900 transition-all shadow-xs"
               >
-                <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
-                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-                </svg>
+                <Phone className="w-4 h-4" />
               </a>
 
-              {/* YouTube */}
+              {/* Portfolio Domain */}
               <a
-                href="https://youtube.com"
+                href="https://kshitij-pawar.is-a.dev"
                 target="_blank"
                 rel="noopener noreferrer"
                 data-cursor="interactive"
-                aria-label="YouTube"
-                className="w-10 h-10 rounded-xl bg-white border border-neutral-200/90 flex items-center justify-center text-neutral-700 hover:text-white hover:bg-[#ff0000] hover:border-[#ff0000] transition-all shadow-xs"
+                aria-label="Portfolio Website"
+                title="https://kshitij-pawar.is-a.dev"
+                className="w-10 h-10 rounded-xl bg-white border border-neutral-200/90 flex items-center justify-center text-neutral-700 hover:text-white hover:bg-neutral-900 hover:border-neutral-900 transition-all shadow-xs"
               >
-                <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                  <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
-                </svg>
+                <Globe2 className="w-4 h-4" />
               </a>
             </div>
           </div>
@@ -150,6 +135,11 @@ export default function Footer() {
                   Contact
                 </Link>
               </li>
+              <li>
+                <Link href="/ai" className="hover:text-neutral-950 transition-colors">
+                  AI Companion
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -163,8 +153,12 @@ export default function Footer() {
             </div>
             <ul className="flex flex-col gap-2.5 text-xs sm:text-sm font-sans text-neutral-700">
               <li>
-                <a href="#" className="hover:text-neutral-950 transition-colors">
-                  Resume
+                <a
+                  href="/resume/Kshitij_Resume.pdf"
+                  download
+                  className="hover:text-neutral-950 transition-colors"
+                >
+                  Resume (PDF)
                 </a>
               </li>
               <li>
@@ -174,22 +168,17 @@ export default function Footer() {
                   rel="noopener noreferrer"
                   className="hover:text-neutral-950 transition-colors"
                 >
-                  GitHub
+                  GitHub Profile
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-neutral-950 transition-colors">
-                  Now
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-neutral-950 transition-colors">
-                  Uses
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-neutral-950 transition-colors">
-                  Sitemap
+                <a
+                  href="https://kshitij-pawar.is-a.dev"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-neutral-950 transition-colors"
+                >
+                  kshitij-pawar.is-a.dev
                 </a>
               </li>
             </ul>
@@ -216,12 +205,21 @@ export default function Footer() {
                   </a>
                 </li>
                 <li className="flex items-center gap-2.5">
+                  <Phone className="w-3.5 h-3.5 text-neutral-400 shrink-0" />
+                  <a
+                    href="tel:+918149661601"
+                    className="hover:text-neutral-950 transition-colors font-mono text-[11px] sm:text-xs"
+                  >
+                    +91 8149661601
+                  </a>
+                </li>
+                <li className="flex items-center gap-2.5">
                   <MapPin className="w-3.5 h-3.5 text-neutral-400 shrink-0" />
                   <span>Pune, Maharashtra, India</span>
                 </li>
                 <li className="flex items-center gap-2.5">
                   <UserCheck className="w-3.5 h-3.5 text-neutral-400 shrink-0" />
-                  <span>Open to opportunities</span>
+                  <span>Open to Full-Stack opportunities</span>
                 </li>
                 <li className="flex items-center gap-2.5">
                   <Sparkles className="w-3.5 h-3.5 text-[#ff4400] shrink-0" />

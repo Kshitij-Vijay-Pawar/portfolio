@@ -9,24 +9,27 @@ import {
   Sparkles,
   Code2,
   Cpu,
-  Layers,
   Terminal,
-  Database,
-  Globe2,
   GraduationCap,
-
+  Briefcase,
   Flame,
   Zap,
-  Compass,
+  CheckCircle2,
 } from "lucide-react";
-import Mascot from "@/app/components/Mascot";
 import HomeJourneySection from "@/app/components/HomeJourneySection";
 import ProjectsCtaTransition from "@/app/components/ProjectsCtaTransition";
 import { useNav } from "@/app/context/NavContext";
 import ArchitecturalBackground from "@/app/components/ui/ArchitecturalBackground";
+import { PROFILE } from "@/data/profile";
 
 // Tech stack categories
-type SkillTab = "all" | "frontend" | "backend" | "database" | "ai_3d" | "tools";
+type SkillTab =
+  | "all"
+  | "frontend"
+  | "backend"
+  | "database"
+  | "queues_ai"
+  | "languages_tools";
 
 interface Skill {
   name: string;
@@ -36,50 +39,138 @@ interface Skill {
 }
 
 const SKILLS: Skill[] = [
-  { name: "React 19 / Next.js", category: "frontend", level: 98, highlight: "App Router & Server Actions" },
-  { name: "TypeScript", category: "frontend", level: 95, highlight: "Strict Type Safety" },
-  { name: "Three.js & WebGL", category: "ai_3d", level: 88, highlight: "3D Shaders & Canvas" },
-  { name: "GSAP & Motion", category: "frontend", level: 96, highlight: "ScrollTrigger & Timelines" },
-  { name: "Tailwind CSS", category: "frontend", level: 96, highlight: "Custom Tokens & Modern CSS" },
-  { name: "Node.js & Express", category: "backend", level: 94, highlight: "REST & Realtime APIs" },
-  { name: "PostgreSQL & SQL", category: "database", level: 92, highlight: "Relational Modeling" },
-  { name: "MongoDB", category: "database", level: 86, highlight: "Document Store" },
-  { name: "Redis & Caching", category: "backend", level: 84, highlight: "In-memory Pub/Sub" },
-  { name: "Docker & Linux", category: "tools", level: 88, highlight: "Containers & Environments" },
-  { name: "Gemini / GenAI APIs", category: "ai_3d", level: 92, highlight: "Structured Output & Tool Calling" },
-  { name: "Git & GitHub Actions", category: "tools", level: 95, highlight: "CI/CD & Versioning" },
-  { name: "React Native & Electron", category: "frontend", level: 82, highlight: "Cross-platform Apps" },
-  { name: "WebSockets & WebRTC", category: "backend", level: 85, highlight: "Realtime Bidirectional Data" },
+  {
+    name: "React.js & Next.js",
+    category: "frontend",
+    level: 95,
+    highlight: "App Router, Server Actions & SSR",
+  },
+  {
+    name: "TypeScript & JavaScript (ES6+)",
+    category: "frontend",
+    level: 95,
+    highlight: "Type-Safe Full-Stack Contracts",
+  },
+  {
+    name: "Tailwind CSS, Bootstrap & Radix UI",
+    category: "frontend",
+    level: 95,
+    highlight: "Responsive UI & Accessible Primitives",
+  },
+  {
+    name: "Redux Toolkit, Zustand & Context API",
+    category: "frontend",
+    level: 90,
+    highlight: "Client State Management",
+  },
+  {
+    name: "React Native (Expo) & Electron",
+    category: "frontend",
+    level: 85,
+    highlight: "Mobile & Desktop Applications",
+  },
+  {
+    name: "GSAP Animations",
+    category: "frontend",
+    level: 88,
+    highlight: "ScrollTrigger & Interactive Timelines",
+  },
+  {
+    name: "Node.js & Express.js",
+    category: "backend",
+    level: 95,
+    highlight: "RESTful APIs, Middleware & MVC",
+  },
+  {
+    name: "PHP & Laravel",
+    category: "backend",
+    level: 82,
+    highlight: "Server-Side Web Applications & APIs",
+  },
+  {
+    name: "JWT, bcryptjs, Clerk & Stripe",
+    category: "backend",
+    level: 92,
+    highlight: "Authentication, Security & Subscriptions",
+  },
+  {
+    name: "PostgreSQL & MySQL (SQL)",
+    category: "database",
+    level: 94,
+    highlight: "Relational Schema Design & Queries",
+  },
+  {
+    name: "Drizzle ORM & Prisma ORM",
+    category: "database",
+    level: 92,
+    highlight: "Type-Safe Migrations & Transactions",
+  },
+  {
+    name: "MongoDB & Mongoose",
+    category: "database",
+    level: 88,
+    highlight: "Document Data Modeling",
+  },
+  {
+    name: "BullMQ & Redis",
+    category: "queues_ai",
+    level: 90,
+    highlight: "Asynchronous Job Queues & Caching",
+  },
+  {
+    name: "Playwright, Puppeteer & Cheerio",
+    category: "queues_ai",
+    level: 90,
+    highlight: "Headless Browser Scraping & PDF Generation",
+  },
+  {
+    name: "Google Gemini & Anthropic Claude APIs",
+    category: "queues_ai",
+    level: 88,
+    highlight: "Structured LLM Outputs & AI Workflows",
+  },
+  {
+    name: "Docker, Git, GitHub & Linux",
+    category: "languages_tools",
+    level: 90,
+    highlight: "Containerized Dev, Bun, Vite & Postman",
+  },
+  {
+    name: "Python, C, C++ & C#",
+    category: "languages_tools",
+    level: 80,
+    highlight: "Programming Foundations, DSA & OOP",
+  },
 ];
 
 const PHILOSOPHIES = [
   {
     num: "01",
-    title: "Performance & Fluid Motion",
-    desc: "A great digital experience must feel instantaneous and alive. I obsess over 60fps micro-animations, layout stability, and zero-jank transitions.",
+    title: "Asynchronous Reliability",
+    desc: "Long-running tasks like Playwright browser scraping, multi-step SEO crawls, and PDF generation belong in resilient BullMQ + Redis worker pipelines so HTTP APIs remain fast.",
     icon: Zap,
-    tag: "AESTHETICS",
+    tag: "SYSTEMS",
   },
   {
     num: "02",
-    title: "Resilient System Architecture",
-    desc: "Scalable software begins with clean TypeScript contracts, well-structured database schemas, and modular components that stand the test of time.",
+    title: "Type-Safe Data Modeling",
+    desc: "Clean TypeScript contracts paired with relational PostgreSQL schemas via Drizzle ORM and Prisma prevent runtime bugs and keep full-stack codebases maintainable.",
     icon: Terminal,
-    tag: "ENGINEERING",
+    tag: "ARCHITECTURE",
   },
   {
     num: "03",
-    title: "AI-Augmented Interfaces",
-    desc: "AI isn't just a chatbot; it's a creative primitive. I integrate intelligent generative features directly into modern web workflows.",
+    title: "Practical AI Integration",
+    desc: "Integrating LLMs like Google Gemini and Anthropic Claude where they solve real problems—structured SEO audit synthesis, interactive grammar coaching, and multi-channel sales workflows.",
     icon: Cpu,
-    tag: "INNOVATION",
+    tag: "AI WORKFLOWS",
   },
   {
     num: "04",
-    title: "Craft & Detail Obsession",
-    desc: "From custom cursor mechanics to tactile feedback, every pixel, bezier curve, and typography choice is designed intentionally.",
+    title: "Responsive Product Craft",
+    desc: "Across 25+ websites and cross-platform apps, I focus on clean component hierarchies, accessible UI primitives, and smooth GSAP interactions.",
     icon: Sparkles,
-    tag: "QUALITY",
+    tag: "FRONTEND",
   },
 ];
 
@@ -102,54 +193,54 @@ export default function AboutPage() {
             SECTION 1: HERO & EDITORIAL INTRO
             ================================================================= */}
         <section className="flex flex-col">
-
-
           {/* Main Hero Headline & Portrait Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
             {/* Left Column (Headline + Bio + Action CTAs) */}
             <div className="lg:col-span-7 flex flex-col space-y-6">
               <div className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-[#ff5500] font-bold">
                 <Flame className="w-4 h-4 text-[#ff5500]" />
-                Full-Stack Engineer &amp; Creative Technologist
+                Full-Stack Developer &middot; Pune, Maharashtra, India
               </div>
 
               <h1 className="text-[clamp(2.4rem,5vw,4.4rem)] font-black uppercase tracking-[-0.04em] leading-[0.92] text-neutral-950">
-                CRAFTING MODERN <br />
-                WEB EXPERIENCES <br />
-                WITH PURPOSE<span className="text-[#ff5500]">.</span>
+                BUILDING FULL-STACK <br />
+                WEB SYSTEMS &amp; <br />
+                ASYNC PIPELINES<span className="text-[#ff5500]">.</span>
               </h1>
 
               <p className="text-base sm:text-lg text-neutral-600 font-light leading-relaxed max-w-2xl">
-                Hi, I&apos;m <strong className="font-semibold text-neutral-900">Kshitij Pawar</strong>. 
-                I bridge the gap between creative visual design and robust software engineering. 
-                With an engineering degree in <strong className="font-semibold text-neutral-900">Artificial Intelligence &amp; Data Science</strong>, 
-                I build high-performance web applications, interactive 3D environments, and intelligent AI tools that leave a lasting impression.
+                Hi, I&apos;m <strong className="font-semibold text-neutral-900">Kshitij Pawar</strong>, a{" "}
+                <strong className="font-semibold text-neutral-900">Full-Stack Developer</strong> based in Pune, India.
+                With a <strong className="font-semibold text-neutral-900">B.E. in Artificial Intelligence and Data Science (7.88 CGPA)</strong> and hands-on industry experience across{" "}
+                <strong className="font-semibold text-neutral-900">McFlyworld</strong>,{" "}
+                <strong className="font-semibold text-neutral-900">Tvara</strong>, and{" "}
+                <strong className="font-semibold text-neutral-900">NerdTech Software Company</strong>, I build responsive React &amp; Next.js applications, Node.js/Express &amp; PHP/Laravel APIs, relational PostgreSQL systems, and BullMQ + Redis worker pipelines.
               </p>
 
               {/* Stat Badges Grid */}
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 sm:gap-3 py-2">
                 <div className="p-3 sm:p-3.5 rounded-2xl bg-white/80 border border-neutral-200/90 shadow-xs flex flex-col">
                   <span className="text-xl sm:text-2xl md:text-3xl font-black text-neutral-950 font-sans tracking-tight">
-                    3+
+                    25+
                   </span>
                   <span className="text-[10px] sm:text-[11px] font-mono text-neutral-500 uppercase tracking-wider mt-0.5">
-                    Years Coding
+                    Websites Delivered
                   </span>
                 </div>
                 <div className="p-3 sm:p-3.5 rounded-2xl bg-white/80 border border-neutral-200/90 shadow-xs flex flex-col">
                   <span className="text-xl sm:text-2xl md:text-3xl font-black text-neutral-950 font-sans tracking-tight">
-                    100%
+                    2 Apps
                   </span>
                   <span className="text-[10px] sm:text-[11px] font-mono text-neutral-500 uppercase tracking-wider mt-0.5">
-                    Type-Safe Code
+                    Electron &amp; React Native
                   </span>
                 </div>
                 <div className="col-span-2 sm:col-span-1 p-3 sm:p-3.5 rounded-2xl bg-white/80 border border-neutral-200/90 shadow-xs flex flex-col">
                   <span className="text-xl sm:text-2xl md:text-3xl font-black text-[#ff5500] font-sans tracking-tight">
-                    60 FPS
+                    7.88
                   </span>
                   <span className="text-[10px] sm:text-[11px] font-mono text-neutral-500 uppercase tracking-wider mt-0.5">
-                    Smooth Motion
+                    B.E. AI &amp; DS CGPA
                   </span>
                 </div>
               </div>
@@ -196,19 +287,19 @@ export default function AboutPage() {
               <div className="relative w-full max-w-[420px] aspect-[4/5] rounded-3xl bg-neutral-100 border border-neutral-200/90 p-3 shadow-xl overflow-hidden group">
                 {/* Background Pattern */}
                 <div className="absolute inset-0 bg-dot-grid-fine opacity-70" />
-                
+
                 {/* Corner Technical Crosshairs */}
                 <div className="absolute top-4 left-4 font-mono text-[9px] text-neutral-400 z-20">
-                  SYS // P-01
+                  PUNE // IN
                 </div>
                 <div className="absolute top-4 right-4 font-mono text-[9px] text-neutral-400 z-20">
-                  [DEV_PORTRAIT]
+                  [FULL_STACK_DEV]
                 </div>
                 <div className="absolute bottom-4 left-4 font-mono text-[9px] text-neutral-400 z-20">
-                  43.978° N &middot; 15.383° E
+                  18.5204° N &middot; 73.8567° E
                 </div>
                 <div className="absolute bottom-4 right-4 font-mono text-[9px] text-neutral-400 z-20">
-                  KSHITIJ // 2026
+                  KSHITIJ // PAWAR
                 </div>
 
                 {/* Inner Image Container */}
@@ -229,10 +320,10 @@ export default function AboutPage() {
                   <div className="absolute bottom-4 left-4 right-4 z-20 flex items-center justify-between p-3 rounded-xl bg-white/15 backdrop-blur-md border border-white/20 text-white">
                     <div className="flex flex-col">
                       <span className="text-[10px] font-mono uppercase tracking-widest text-neutral-300">
-                        PRIMARY FOCUS
+                        ROLE &amp; FOCUS
                       </span>
                       <span className="text-xs font-semibold tracking-wide">
-                        Full-Stack &amp; Creative Dev
+                        Full-Stack Developer
                       </span>
                     </div>
                     <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center">
@@ -244,9 +335,18 @@ export default function AboutPage() {
             </div>
           </div>
         </section>
+      </div>
 
+      {/* =================================================================
+          SECTION 2: FULL-BLEED CHRONOLOGICAL JOURNEY TIMELINE
+          ================================================================= */}
+      <div className="relative z-10 w-full mt-24 sm:mt-32">
+        <HomeJourneySection />
+      </div>
+
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-8 md:px-12 lg:px-16 mt-24 sm:mt-32 pb-24 sm:pb-32 flex flex-col space-y-24 sm:space-y-32">
         {/* =================================================================
-            SECTION 2: CORE PHILOSOPHY & HOW I WORK (BENTO GRID)
+            SECTION 3: CORE PHILOSOPHY & HOW I WORK (BENTO GRID)
             ================================================================= */}
         <section className="flex flex-col space-y-8">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-4 border-b border-neutral-200/80">
@@ -260,7 +360,7 @@ export default function AboutPage() {
               </h2>
             </div>
             <p className="text-xs sm:text-sm text-neutral-500 font-mono max-w-sm">
-              Standards I follow to deliver scalable, delightful, and high-impact digital solutions.
+              Standards I follow to deliver scalable, reliable, and well-structured full-stack applications.
             </p>
           </div>
 
@@ -301,7 +401,7 @@ export default function AboutPage() {
         </section>
 
         {/* =================================================================
-            SECTION 3: TECHNICAL ARSENAL & SKILL MATRIX
+            SECTION 4: TECHNICAL ARSENAL & SKILL MATRIX
             ================================================================= */}
         <section className="flex flex-col space-y-8">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-4 border-b border-neutral-200/80">
@@ -320,11 +420,11 @@ export default function AboutPage() {
               {(
                 [
                   { id: "all", label: "ALL" },
-                  { id: "frontend", label: "FRONTEND" },
+                  { id: "frontend", label: "FRONTEND & APPS" },
                   { id: "backend", label: "BACKEND" },
-                  { id: "database", label: "DATABASE" },
-                  { id: "ai_3d", label: "AI & 3D" },
-                  { id: "tools", label: "TOOLS" },
+                  { id: "database", label: "DATABASES & ORMS" },
+                  { id: "queues_ai", label: "QUEUES, SCRAPING & AI" },
+                  { id: "languages_tools", label: "LANGUAGES & TOOLS" },
                 ] as const
               ).map((tab) => (
                 <button
@@ -379,47 +479,67 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* Academic Degree Highlights Card */}
-        <section className="p-6 sm:p-8 md:p-10 rounded-3xl bg-white border border-neutral-200/90 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6 md:gap-8">
-          <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-5">
-            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-neutral-100 border border-neutral-200 flex items-center justify-center text-neutral-900 shrink-0">
-              <GraduationCap className="w-6 h-6 sm:w-7 sm:h-7 text-[#ff5500]" />
-            </div>
-            <div className="space-y-1.5">
-              <span className="font-mono text-[11px] sm:text-xs text-[#ff5500] font-semibold uppercase tracking-wider">
-                UNDERGRADUATE DEGREE &middot; 2022 — 2026
-              </span>
-              <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-neutral-950">
-                B.Tech in Artificial Intelligence &amp; Data Science
-              </h3>
-              <p className="text-xs sm:text-sm text-neutral-500 font-light max-w-xl">
-                Rigorous curriculum covering Data Structures, Machine Learning, Deep Neural Networks, Cloud Systems, and Advanced Distributed Engineering.
-              </p>
+        {/* =================================================================
+            SECTION 5: ACADEMIC EDUCATION RECORD
+            ================================================================= */}
+        <section className="flex flex-col space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-4 border-b border-neutral-200/80">
+            <div>
+              <div className="inline-flex items-center gap-2 mb-2 text-xs font-mono uppercase tracking-widest text-neutral-500">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#ff5500]" />
+                Academic Credentials
+              </div>
+              <h2 className="text-3xl sm:text-4xl font-black uppercase tracking-tight text-neutral-950">
+                Education<span className="text-[#ff5500]">.</span>
+              </h2>
             </div>
           </div>
 
-          <div className="flex items-center gap-3 shrink-0 self-start md:self-center">
-            <Link
-              href="/ai"
-              data-cursor="interactive"
-              className="px-4 sm:px-5 py-2.5 sm:py-3 rounded-xl bg-orange-50 border border-orange-200 text-[#ff5500] font-mono text-xs uppercase tracking-wider flex items-center gap-2 hover:bg-orange-100 transition-colors"
-            >
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>Ask AI Mascot</span>
-            </Link>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {PROFILE.education.history.map((edu, idx) => (
+              <div
+                key={edu.qualification}
+                className="p-6 rounded-3xl bg-white border border-neutral-200/90 shadow-sm flex flex-col justify-between"
+              >
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="w-11 h-11 rounded-2xl bg-neutral-100 border border-neutral-200 flex items-center justify-center">
+                      <GraduationCap className="w-5 h-5 text-[#ff5500]" />
+                    </div>
+                    <span className="font-mono text-xs font-semibold text-neutral-500">
+                      {edu.period}
+                    </span>
+                  </div>
+                  <h3 className="text-base sm:text-lg font-bold text-neutral-950 mb-1">
+                    {edu.qualification}
+                  </h3>
+                  <p className="text-xs text-neutral-600 font-medium">
+                    {edu.institution}
+                  </p>
+                  <p className="text-[11px] font-mono text-neutral-400 mt-0.5">
+                    {edu.location}
+                  </p>
+                </div>
+
+                <div className="pt-4 mt-6 border-t border-neutral-100 flex items-center justify-between text-xs font-mono">
+                  <span className="text-neutral-400">
+                    {idx === 0 ? "FINAL GRADE" : "PERCENTAGE"}
+                  </span>
+                  <span className="font-bold text-[#ff5500]">{edu.score}</span>
+                </div>
+              </div>
+            ))}
           </div>
         </section>
       </div>
 
       {/* =================================================================
-          SECTION 4: CHRONOLOGICAL CINEMATIC TIMELINE COMPONENT
+          SECTION 6: CHRONOLOGICAL CINEMATIC TIMELINE COMPONENT
           ================================================================= */}
-      <div className="w-full mt-24">
-        <HomeJourneySection />
-      </div>
+
 
       {/* =================================================================
-          SECTION 5: CINEMATIC TRANSITION CTA SECTION
+          SECTION 7: CINEMATIC TRANSITION CTA SECTION
           ================================================================= */}
       <div className="w-full">
         <ProjectsCtaTransition />

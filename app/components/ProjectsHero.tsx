@@ -14,10 +14,10 @@ if (typeof window !== "undefined") {
 
 const CATEGORIES = [
   "ALL WORKS",
-  "CREATIVE DEV",
-  "3D / WEBGL",
-  "INTERACTION",
-  "SYSTEMS",
+  "FULL-STACK",
+  "ASYNC WORKERS",
+  "AI PLATFORMS",
+  "WEB & MOBILE",
 ];
 
 export default function ProjectsHero() {
@@ -141,7 +141,7 @@ export default function ProjectsHero() {
         <div className="flex items-center gap-3">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-neutral-200 bg-white/80 text-[11px] font-mono text-neutral-600 shadow-sm">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span>05 FEATURED WORKS</span>
+            <span>07 VERIFIED BUILDS</span>
           </div>
         </div>
       </div>
@@ -152,7 +152,7 @@ export default function ProjectsHero() {
           {/* Top Label with Icon */}
           <div className="mb-4 inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-neutral-300 bg-neutral-100/80 text-xs font-mono tracking-widest uppercase text-neutral-600">
             <Sparkles className="w-3.5 h-3.5 text-[#ff5500]" />
-            <span>Archive & Interactive Experiments</span>
+            <span>Full-Stack Systems &amp; Product Builds</span>
           </div>
 
           {/* Main Giant Headline */}
@@ -176,7 +176,7 @@ export default function ProjectsHero() {
           className="mt-8 sm:mt-10 max-w-xl flex flex-col sm:flex-row sm:items-center justify-between gap-6 pt-6 border-t border-neutral-200/80"
         >
           <p className="text-sm sm:text-base text-neutral-600 font-light leading-relaxed">
-            An exploration of interactive design, bespoke 3D WebGL visuals, and conversion-focused web engineering crafted for award-winning digital experiences.
+            Real-world full-stack platforms, asynchronous BullMQ + Redis worker pipelines, AI-powered SaaS applications, and cross-platform web &amp; mobile engineering.
           </p>
 
           <button

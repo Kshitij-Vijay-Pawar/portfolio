@@ -23,27 +23,27 @@ import ArchitecturalBackground from "@/app/components/ui/ArchitecturalBackground
 const PRESET_PROMPTS = [
   {
     label: "🚀 Tech Stack & Engineering",
-    query: "What are Kshitij's core engineering skills and tech stack?",
+    query: "What are Kshitij's core full-stack skills, databases, and backend tools?",
   },
   {
-    label: "💼 Featured Projects",
-    query: "Can you tell me about the featured projects in this portfolio?",
+    label: "🗺️ Google Maps Lead Scraper",
+    query: "How does Kshitij's Google Maps Lead Scraper & Enrichment platform work?",
+  },
+  {
+    label: "💼 Work Experience & Roles",
+    query: "Tell me about Kshitij's experience at McFlyworld, Tvara, and NerdTech.",
+  },
+  {
+    label: "🧠 Accentra & Edgelink AI",
+    query: "How are Google Gemini and Anthropic Claude used in Accentra and Edgelink?",
   },
   {
     label: "📄 Download Resume",
     query: "Where can I download Kshitij's resume?",
   },
   {
-    label: "🔥 Roast the Portfolio",
-    query: "Give me a playful, witty roast of this portfolio!",
-  },
-  {
     label: "📫 Is Kshitij available to hire?",
-    query: "Is Kshitij currently open for full-time or freelance engineering work?",
-  },
-  {
-    label: "🎨 3D & WebGL Shaders",
-    query: "How are 3D WebGL shaders and 60fps animations engineered here?",
+    query: "Is Kshitij currently open for full-stack or frontend developer roles?",
   },
 ];
 

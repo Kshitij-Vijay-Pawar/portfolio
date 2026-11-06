@@ -36,43 +36,43 @@ export const SKILL_CATEGORIES: SkillCategory[] = [
 
 export const SKILLS_DATA: Record<SkillCategory, SkillItem[]> = {
   Frontend: [
-    { name: "HTML & CSS", level: 100 },
-    { name: "React", level: 100 },
-    { name: "Next.js", level: 100 },
-    { name: "React Native", level: 90 },
-    { name: "Electron", level: 75 },
+    { name: "React & Next.js", level: 95 },
+    { name: "TypeScript & JS", level: 95 },
+    { name: "Tailwind CSS", level: 95 },
+    { name: "React Native", level: 88 },
+    { name: "Electron & GSAP", level: 82 },
   ],
   Backend: [
-    { name: "Node.js", level: 100 },
-    { name: "Express", level: 100 },
-    { name: "JavaScript", level: 100 },
-    { name: "TypeScript", level: 100 },
+    { name: "Node.js & Express", level: 95 },
+    { name: "BullMQ & Workers", level: 90 },
+    { name: "PHP & Laravel", level: 80 },
+    { name: "REST APIs & JWT", level: 95 },
   ],
   Database: [
-    { name: "PostgreSQL", level: 100 },
-    { name: "MySQL", level: 90 },
-    { name: "MongoDB", level: 80 },
-    { name: "SQL", level: 100 },
+    { name: "PostgreSQL & SQL", level: 95 },
+    { name: "Drizzle & Prisma", level: 92 },
+    { name: "MySQL", level: 88 },
+    { name: "MongoDB & Redis", level: 88 },
   ],
   "Cloud & Tools": [
-    { name: "Docker", level: 90 },
-    { name: "Redis", level: 80 },
+    { name: "Docker & Linux", level: 88 },
+    { name: "Playwright & Puppeteer", level: 90 },
     { name: "Git & GitHub", level: 95 },
-    { name: "Postman", level: 100 },
-    { name: "Linux", level: 85 },
+    { name: "Bun, Vite & Postman", level: 92 },
   ],
   Languages: [
-    { name: "Hindi", level: 100 },
-    { name: "Marathi", level: 100 },
-    { name: "English", level: 100 },
+    { name: "JavaScript (ES6+)", level: 95 },
+    { name: "TypeScript", level: 95 },
+    { name: "Python", level: 82 },
+    { name: "C, C++ & C#", level: 78 },
   ],
   Concepts: [
-    { name: "Authentication" },
-    { name: "Authorization" },
-    { name: "API Security" },
-    { name: "Database Design" },
-    { name: "Microservices" },
-    { name: "Asynchronous" },
+    { name: "Async Job Queues" },
+    { name: "Authentication & JWT" },
+    { name: "Relational Modeling" },
+    { name: "RESTful Architecture" },
+    { name: "Web Scraping & AI" },
+    { name: "Data Structures & OOP" },
   ],
 };
 
@@ -294,15 +294,15 @@ export default function HeroSection() {
       <div className="relative z-20 w-full flex items-center justify-center sm:justify-between pointer-events-none px-2 sm:px-0">
         {/* Left Sub-Header Detail: On mobile centered with no bg and no border */}
         <div className="hero-corner-item flex items-center gap-2">
-          <span className="font-mono text-[10px] sm:text-xs text-neutral-400">LOC</span>
+          <span className="font-mono text-[10px] sm:text-xs text-neutral-400">PUNE, IN</span>
           <a
-            href="https://www.google.com/maps/search/?api=1&query=43.978412,15.383477"
+            href="https://www.google.com/maps/search/?api=1&query=18.5204,73.8567"
             target="_blank"
             rel="noopener noreferrer"
             data-cursor="interactive"
             className="font-mono text-[10px] sm:text-xs font-semibold text-neutral-800 tracking-wider cursor-pointer pointer-events-auto hover:opacity-75 transition-opacity"
           >
-            [43.978412° N, 15.383477° E]
+            [18.5204° N, 73.8567° E]
           </a>
         </div>
 
@@ -310,7 +310,7 @@ export default function HeroSection() {
         <div className="hero-corner-item hidden sm:flex items-center gap-2 sm:gap-3">
           <span className="font-mono text-xs text-neutral-400">STACK</span>
           <span className="font-mono text-xs font-semibold text-neutral-800 tracking-wider">
-            NEXT.JS // GSAP // THREE
+            NEXT.JS // NODE.JS // POSTGRESQL
           </span>
         </div>
       </div>

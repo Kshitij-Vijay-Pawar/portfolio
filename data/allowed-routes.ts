@@ -8,22 +8,32 @@ export const ALLOWED_STATIC_ROUTES = [
   "/projects",
   "/contact",
   "/ai",
+  "/project/google-maps-scraper",
+  "/project/accentra",
+  "/project/edgelink",
+  "/project/mcfly-pos-website",
+  "/project/authentication-system",
+  "/project/aharaflow",
+  "/project/movie-discovery-app",
 ] as const;
 
 export type AllowedStaticRoute = (typeof ALLOWED_STATIC_ROUTES)[number];
 
 export const VERIFIED_PROJECT_IDS = [
-  "codenarts",
-  "az-digital",
-  "amron",
-  "chatone",
-  "finance",
+  "google-maps-scraper",
+  "accentra",
+  "edgelink",
+  "mcfly-pos-website",
+  "authentication-system",
+  "aharaflow",
+  "movie-discovery-app",
 ] as const;
 
 export type VerifiedProjectId = (typeof VERIFIED_PROJECT_IDS)[number];
 
 export const ALLOWED_EXTERNAL_HOSTNAMES = [
   "github.com",
+  "kshitij-pawar.is-a.dev",
   "linkedin.com",
 ] as const;
 
