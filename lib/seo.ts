@@ -9,11 +9,11 @@ export const SITE_URL = (
 export const SITE_NAME = "Kshitij Pawar | Full-Stack Developer";
 export const SITE_TITLE_DEFAULT = "Kshitij Pawar | Full-Stack Developer";
 export const SITE_DESCRIPTION_DEFAULT =
-  "Full-Stack Developer in Pune, India building scalable React & Next.js web applications, Node.js & Express APIs, PostgreSQL databases (Drizzle & Prisma), and asynchronous BullMQ + Redis worker systems.";
+  "Full-Stack Developer in Nashik, India building scalable React, Next.js, Node.js, PostgreSQL & BullMQ/Redis systems.";
 export const DEFAULT_OG_IMAGE_PATH = "/og-image.png";
 export const DEFAULT_OG_IMAGE_URL = `${SITE_URL}${DEFAULT_OG_IMAGE_PATH}`;
 export const DEFAULT_OG_IMAGE_ALT =
-  "Kshitij Pawar | Full-Stack Developer — React, Next.js, Node.js, PostgreSQL & BullMQ Portfolio Preview";
+  "Kshitij Pawar — Full-Stack Developer in Nashik, India | React, Next.js, TypeScript, Node.js, PostgreSQL, Redis, BullMQ";
 
 export const VERIFIED_SAME_AS = [
   "https://github.com/Kshitij-Vijay-Pawar",
@@ -24,7 +24,8 @@ export const VERIFIED_SAME_AS = [
 export const CORE_KEYWORDS = [
   "Kshitij Pawar",
   "Full-Stack Developer",
-  "Full-Stack Developer Pune",
+  "Full-Stack Developer Nashik",
+  "Full-Stack Developer India",
   "React Developer India",
   "Next.js Developer",
   "TypeScript Developer",
@@ -153,7 +154,7 @@ export function getPersonJsonLd() {
     image: `${SITE_URL}/images/Hero.png`,
     address: {
       "@type": "PostalAddress",
-      addressLocality: "Pune",
+      addressLocality: "Nashik",
       addressRegion: "Maharashtra",
       addressCountry: "IN",
     },

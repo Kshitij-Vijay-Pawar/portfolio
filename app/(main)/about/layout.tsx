@@ -7,9 +7,9 @@ import {
 } from "@/lib/seo";
 
 export const metadata: Metadata = constructMetadata({
-  title: "About & Engineering Journey | Kshitij Pawar — Full-Stack Developer",
+  title: "About & Engineering Journey | Kshitij Pawar",
   description:
-    "Learn about Kshitij Pawar, a Full-Stack Developer in Pune, India (B.E. in AI & Data Science, 7.88 CGPA) with professional experience at McFlyworld, Tvara, and NerdTech.",
+    "Full-Stack Developer in Nashik, India with experience at McFlyworld, Tvara, and NerdTech building web & AI systems.",
   path: "/about",
   type: "profile",
   keywords: [
