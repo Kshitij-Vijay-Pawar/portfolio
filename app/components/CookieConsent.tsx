@@ -1,40 +1,82 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { GoogleAnalytics } from "@next/third-parties/google";
+import { useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
+import { GoogleAnalytics, sendGAEvent } from "@next/third-parties/google";
+import {
+  ANALYTICS_CONSENT_EVENT,
+  ANALYTICS_CONSENT_KEY,
+  disableClarity,
+  enableClarity,
+} from "@/lib/clarity";
 
-const STORAGE_KEY = "portfolio-analytics-consent";
 const GA_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 
 type Consent = "accepted" | "rejected" | null;
 
 export default function CookieConsent() {
+  const pathname = usePathname();
+  const prevPathnameRef = useRef<string | null>(null);
   const [ready, setReady] = useState(false);
   const [consent, setConsent] = useState<Consent>(null);
   const [customize, setCustomize] = useState(false);
   const [analyticsEnabled, setAnalyticsEnabled] = useState(false);
 
+  // Track client-side route changes in GA4 (skip initial mount since @next/third-parties/google fires initial page_view)
   useEffect(() => {
-    const saved = localStorage.getItem(STORAGE_KEY);
+    if (!ready || !analyticsEnabled || !GA_ID) return;
+    if (prevPathnameRef.current === null) {
+      prevPathnameRef.current = pathname;
+      return;
+    }
+    if (prevPathnameRef.current !== pathname) {
+      prevPathnameRef.current = pathname;
+      try {
+        sendGAEvent("event", "page_view", {
+          page_path: pathname,
+          page_location: window.location.href,
+          page_title: document.title,
+        });
+      } catch {
+        // Ignore if gtag is blocked by extension
+      }
+    }
+  }, [pathname, ready, analyticsEnabled]);
+
+  useEffect(() => {
+    const saved = localStorage.getItem(ANALYTICS_CONSENT_KEY);
 
     if (saved === "accepted") {
       setConsent("accepted");
       setAnalyticsEnabled(true);
+      enableClarity();
     } else if (saved === "rejected") {
       setConsent("rejected");
       setAnalyticsEnabled(false);
+      disableClarity();
     }
 
     setReady(true);
   }, []);
 
   function saveChoice(enabled: boolean) {
-    localStorage.setItem(STORAGE_KEY, enabled ? "accepted" : "rejected");
+    localStorage.setItem(
+      ANALYTICS_CONSENT_KEY,
+      enabled ? "accepted" : "rejected"
+    );
     setConsent(enabled ? "accepted" : "rejected");
     setCustomize(false);
 
+    if (enabled) {
+      enableClarity();
+    } else {
+      disableClarity();
+    }
+
+    window.dispatchEvent(new Event(ANALYTICS_CONSENT_EVENT));
+
     // Reload when revoking previously granted consent.
-    // This prevents the existing Analytics instance from
+    // This prevents existing Google Analytics / Microsoft Clarity instances from
     // continuing to run on the current page.
     if (consent === "accepted" && !enabled) {
       window.location.reload();
@@ -72,9 +114,9 @@ export default function CookieConsent() {
           <h2 className="text-lg font-semibold">Your privacy matters</h2>
 
           <p className="mt-2 text-sm leading-6 text-neutral-300">
-            This website uses Google Analytics to understand visitor traffic and
-            improve the experience. Analytics stays disabled unless you allow
-            it.
+            This website uses Google Analytics and Microsoft Clarity to
+            understand visitor traffic, session interactions, and improve the
+            experience. Analytics stays disabled unless you allow it.
           </p>
 
           {customize && (
@@ -91,9 +133,11 @@ export default function CookieConsent() {
                 className="mt-4 flex cursor-pointer items-center justify-between gap-4 text-sm"
               >
                 <span>
-                  <span className="block font-medium">Analytics</span>
+                  <span className="block font-medium">
+                    Analytics (Google Analytics &amp; Microsoft Clarity)
+                  </span>
                   <span className="text-xs text-neutral-400">
-                    Helps measure visits and website usage.
+                    Helps measure visits, heatmaps, and website usage.
                   </span>
                 </span>
 

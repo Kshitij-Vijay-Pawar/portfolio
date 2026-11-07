@@ -7,13 +7,8 @@ import {
   ArrowLeft, 
   Home, 
   Terminal, 
-  RefreshCw, 
   Radio, 
-  Zap, 
-  Compass, 
-  Search,
   Sparkles,
-  Command,
   FileCode2,
   Cpu
 } from "lucide-react";

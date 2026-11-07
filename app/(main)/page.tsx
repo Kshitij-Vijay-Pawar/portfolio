@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import HeroSection from "../components/HeroSection";
 import ScrollReveal from "../components/ui/ScrollReveal";
 import ProjectsShowcase from "../components/ProjectsShowcase";
@@ -5,10 +6,22 @@ import HomeAboutSection from "../components/HomeAboutSection";
 import HomeJourneySection from "../components/HomeJourneySection";
 import ProjectsCtaTransition from "../components/ProjectsCtaTransition";
 import ArchitecturalBackground from "../components/ui/ArchitecturalBackground";
+import JsonLd from "../components/JsonLd";
+import { constructMetadata, getProfilePageJsonLd } from "@/lib/seo";
+
+export const metadata: Metadata = constructMetadata({
+  title: "Kshitij Pawar | Full-Stack Developer",
+  description:
+    "Full-Stack Developer in Pune, India building scalable React & Next.js web applications, Node.js & Express APIs, PostgreSQL databases (Drizzle & Prisma), and asynchronous BullMQ + Redis worker systems.",
+  path: "/",
+  type: "website",
+});
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-[#fafaf9] text-zinc-900 selection:bg-zinc-900 selection:text-white">
+    <div className="min-h-screen bg-[#fafaf9] text-zinc-900 selection:bg-zinc-900 selection:text-white">
+      <JsonLd data={getProfilePageJsonLd("/")} />
+
       {/* 1. Modern Hero Section */}
       <HeroSection />
 
@@ -52,6 +65,6 @@ export default function Home() {
 
       {/* 6. Cinematic Projects CTA Transition Section */}
       <ProjectsCtaTransition />
-    </main>
+    </div>
   );
 }

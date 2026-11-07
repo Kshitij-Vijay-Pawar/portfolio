@@ -4,14 +4,11 @@ import React, { useRef, useState, useEffect } from "react";
 import Link from "next/link";
 import {
   ArrowUpRight,
-  Mail,
   Sparkles,
   Download,
   Copy,
   Check,
   Flame,
-  Globe2,
-  Terminal,
 } from "lucide-react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -168,9 +165,8 @@ export default function HomeCtaSection() {
               </button>
 
               <a
-                href="/resume"
-                target="_blank"
-                rel="noopener noreferrer"
+                href="/api/resume"
+                download="Kshitij_Pawar_Resume.pdf"
                 data-cursor="interactive"
                 className="px-5 py-4 rounded-2xl bg-white/5 border border-white/10 text-neutral-300 font-mono text-xs uppercase tracking-widest flex items-center gap-2 hover:bg-white/10 hover:text-white transition-all cursor-pointer"
               >

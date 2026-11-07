@@ -4,7 +4,7 @@ import React, { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { ArrowDown, Sparkles, Layers, ArrowUpRight } from "lucide-react";
+import { ArrowDown, Sparkles, Layers } from "lucide-react";
 import Link from "next/link";
 import ArchitecturalBackground from "./ui/ArchitecturalBackground";
 
@@ -22,8 +22,8 @@ const CATEGORIES = [
 
 export default function ProjectsHero() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const titleLine1Ref = useRef<HTMLHeadingElement>(null);
-  const titleLine2Ref = useRef<HTMLHeadingElement>(null);
+  const titleLine1Ref = useRef<HTMLSpanElement>(null);
+  const titleLine2Ref = useRef<HTMLSpanElement>(null);
   const metaRef = useRef<HTMLDivElement>(null);
   const chipsRef = useRef<HTMLDivElement>(null);
   const scrollIndicatorRef = useRef<HTMLDivElement>(null);
@@ -156,17 +156,19 @@ export default function ProjectsHero() {
           </div>
 
           {/* Main Giant Headline */}
-          <h1
-            ref={titleLine1Ref}
-            className="text-[clamp(2.8rem,8.5vw,7.5rem)] font-black tracking-[-0.04em] text-neutral-950 uppercase leading-[0.92] will-change-transform"
-          >
-            SELECTED
-          </h1>
-          <h1
-            ref={titleLine2Ref}
-            className="text-[clamp(2.8rem,8.5vw,7.5rem)] font-black tracking-[-0.04em] text-transparent bg-clip-text bg-gradient-to-r from-neutral-900 via-neutral-700 to-neutral-400 uppercase leading-[0.92] will-change-transform"
-          >
-            PROJECTS<span className="text-[#ff5500]">.</span>
+          <h1>
+            <span
+              ref={titleLine1Ref}
+              className="block text-[clamp(2.8rem,8.5vw,7.5rem)] font-black tracking-[-0.04em] text-neutral-950 uppercase leading-[0.92] will-change-transform"
+            >
+              SELECTED
+            </span>
+            <span
+              ref={titleLine2Ref}
+              className="block text-[clamp(2.8rem,8.5vw,7.5rem)] font-black tracking-[-0.04em] text-transparent bg-clip-text bg-gradient-to-r from-neutral-900 via-neutral-700 to-neutral-400 uppercase leading-[0.92] will-change-transform"
+            >
+              PROJECTS<span className="text-[#ff5500]">.</span>
+            </span>
           </h1>
         </div>
 

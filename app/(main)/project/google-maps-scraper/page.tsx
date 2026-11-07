@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowLeft,
@@ -12,12 +13,28 @@ import {
   Code2,
 } from "lucide-react";
 import ProjectsCtaTransition from "@/app/components/ProjectsCtaTransition";
+import JsonLd from "@/app/components/JsonLd";
+import { PROJECTS } from "@/app/data/projects";
+import {
+  constructMetadata,
+  getBreadcrumbJsonLd,
+  getProjectCaseStudyJsonLd,
+} from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Google Maps Lead Scraper | Projects | Kshitij Pawar",
+const projectData = PROJECTS.find((p) => p.id === "google-maps-scraper")!;
+
+export const metadata: Metadata = constructMetadata({
+  title: "Google Maps Lead Scraper & Enrichment API | Kshitij Pawar",
   description:
-    "Async Google Maps lead scraper & enrichment platform built with Bun, Express 5, Playwright, BullMQ, Redis, PostgreSQL, and Next.js.",
-};
+    "Async Google Maps lead scraper & enrichment platform built with Bun, Express 5, Playwright, BullMQ, Redis, PostgreSQL, Drizzle ORM, and Next.js.",
+  path: "/project/google-maps-scraper",
+  keywords: [
+    "Google Maps Lead Scraper",
+    "Playwright BullMQ Redis Scraper",
+    "Lead Generation Enrichment API",
+    "Drizzle ORM PostgreSQL",
+  ],
+});
 
 const ARCHITECTURAL_HIGHLIGHTS = [
   "Separated API request handling from browser automation using BullMQ and Redis so long-running Playwright scraping jobs never block HTTP responses.",
@@ -50,6 +67,17 @@ const TAGS = [
 export default function GoogleMapsScraperProjectPage() {
   return (
     <div className="w-full min-h-screen bg-[#09090b] text-white pt-24 sm:pt-28 pb-20 selection:bg-[#ff5500] selection:text-white">
+      <JsonLd
+        data={[
+          getProjectCaseStudyJsonLd(projectData),
+          getBreadcrumbJsonLd([
+            { name: "Home", path: "/" },
+            { name: "Projects", path: "/projects" },
+            { name: "Google Maps Lead Scraper", path: "/project/google-maps-scraper" },
+          ]),
+        ]}
+      />
+
       {/* Top back navigation */}
       <div className="max-w-6xl mx-auto px-6 sm:px-8 mb-8 flex items-center justify-between">
         <Link
@@ -137,11 +165,13 @@ export default function GoogleMapsScraperProjectPage() {
       {/* Hero Visual Image */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 mb-12 sm:mb-16">
         <div className="relative w-full aspect-[16/10] sm:aspect-[16/9] rounded-2xl sm:rounded-3xl overflow-hidden border border-white/10 bg-zinc-900 shadow-2xl">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          <Image
             src="/assets/images/projects/cod-1.avif"
-            alt="Google Maps Lead Scraper"
-            className="w-full h-full object-cover"
+            alt="Google Maps Lead Scraper & Enrichment Platform Architecture and Dashboard Preview"
+            fill
+            priority
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1152px"
+            className="object-cover"
           />
         </div>
       </section>

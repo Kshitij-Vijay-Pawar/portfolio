@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowLeft,
@@ -12,12 +13,27 @@ import {
   Code2,
 } from "lucide-react";
 import ProjectsCtaTransition from "@/app/components/ProjectsCtaTransition";
+import JsonLd from "@/app/components/JsonLd";
+import { PROJECTS } from "@/app/data/projects";
+import {
+  constructMetadata,
+  getBreadcrumbJsonLd,
+  getProjectCaseStudyJsonLd,
+} from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "McFly POS Website | Projects | Kshitij Pawar",
+const projectData = PROJECTS.find((p) => p.id === "mcfly-pos-website")!;
+
+export const metadata: Metadata = constructMetadata({
+  title: "McFly POS Product Marketing Website | Kshitij Pawar",
   description:
     "Responsive product marketing website for McFly POS built with Next.js 16, React 19, TypeScript, Tailwind CSS 4, and GSAP animations.",
-};
+  path: "/project/mcfly-pos-website",
+  keywords: [
+    "McFly POS Marketing Website",
+    "Next.js 16 GSAP Landing Page",
+    "Restaurant POS Product Website",
+  ],
+});
 
 const ARCHITECTURAL_HIGHLIGHTS = [
   "Modular component architecture in Next.js App Router separating hero showcase, feature bento grid, POS workflow walkthroughs, testimonials, FAQ accordion, and contact sections.",
@@ -44,6 +60,17 @@ const TAGS = [
 export default function McflyPosWebsiteProjectPage() {
   return (
     <div className="w-full min-h-screen bg-[#09090b] text-white pt-24 sm:pt-28 pb-20 selection:bg-[#ff5500] selection:text-white">
+      <JsonLd
+        data={[
+          getProjectCaseStudyJsonLd(projectData),
+          getBreadcrumbJsonLd([
+            { name: "Home", path: "/" },
+            { name: "Projects", path: "/projects" },
+            { name: "McFly POS Website", path: "/project/mcfly-pos-website" },
+          ]),
+        ]}
+      />
+
       {/* Top back navigation */}
       <div className="max-w-6xl mx-auto px-6 sm:px-8 mb-8 flex items-center justify-between">
         <Link
@@ -119,11 +146,13 @@ export default function McflyPosWebsiteProjectPage() {
       {/* Hero Visual Image */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 mb-12 sm:mb-16">
         <div className="relative w-full aspect-[16/10] sm:aspect-[16/9] rounded-2xl sm:rounded-3xl overflow-hidden border border-white/10 bg-zinc-900 shadow-2xl">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          <Image
             src="/assets/images/projects/chat-1.avif"
-            alt="McFly POS Website"
-            className="w-full h-full object-cover"
+            alt="McFly POS Product Marketing Website Interface Preview"
+            fill
+            priority
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1152px"
+            className="object-cover"
           />
         </div>
       </section>

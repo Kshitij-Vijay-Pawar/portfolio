@@ -280,8 +280,12 @@ export default function HeroSection() {
   return (
     <section
       ref={containerRef}
+      aria-label="Kshitij Pawar — Full-Stack Developer Hero"
       className="relative w-full h-[100svh] min-h-[660px] max-h-[1200px] flex flex-col justify-between overflow-hidden bg-[#fafaf9] pt-16 sm:pt-20 md:pt-24 pb-0 sm:pb-2 px-3 sm:px-6 md:px-12 lg:px-14 select-none"
     >
+      <h1 className="sr-only">
+        Kshitij Pawar — Full-Stack Developer in Pune, India building React, Next.js, Node.js, PostgreSQL, and BullMQ/Redis applications
+      </h1>
       {/* 1. Background Grid & Dot Matrix Layer with Parallax */}
       <div
         ref={dotsRef}
@@ -391,7 +395,7 @@ export default function HeroSection() {
           <div className="relative w-full sm:w-[540px] md:w-[700px] lg:w-[820px] xl:w-[940px] h-[62svh] sm:h-[82svh] md:h-[86svh] max-h-[960px] min-h-[400px]">
             <Image
               src={heroImage}
-              alt="Kshitij - Creative Developer"
+              alt="Kshitij Pawar — Full-Stack Developer based in Pune, India"
               priority
               fill
               sizes="(max-width: 640px) 100vw, (max-width: 768px) 80vw, (max-width: 1200px) 820px, 940px"

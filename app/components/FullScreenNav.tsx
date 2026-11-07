@@ -274,9 +274,8 @@ const FullScreenNav = () => {
           {/* Top Right Actions: Resume Download & Email */}
           <div className="flex items-center gap-2.5 sm:gap-6 pointer-events-auto">
             <a
-              href="/resume"
-              target="_blank"
-              rel="noopener noreferrer"
+              href="/api/resume"
+              download="Kshitij_Pawar_Resume.pdf"
               data-cursor="interactive"
               onMouseEnter={() => {
                 playNavSubtleTick();
@@ -289,7 +288,7 @@ const FullScreenNav = () => {
               }}
               onClick={() => playNavSelectClick()}
               className="email-tag flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-1.5 rounded-full border border-zinc-900/15 bg-white/70 hover:bg-zinc-950 hover:text-white transition-all text-[11px] sm:text-xs md:text-sm font-mono tracking-tight text-zinc-900 shadow-xs opacity-0"
-              title="Preview & Download Resume / CV"
+              title="Download Resume / CV"
             >
               <Download className="w-3 sm:w-3.5 h-3 sm:h-3.5" />
               <span>Resume</span>

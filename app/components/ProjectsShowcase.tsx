@@ -1,13 +1,18 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
+import dynamic from "next/dynamic";
 import { useNav } from "@/app/context/NavContext";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { ExternalLink, ArrowUpRight } from "lucide-react";
-import FluidGlass from "@/app/components/ui/FluidGlass";
+
+const FluidGlass = dynamic(() => import("@/app/components/ui/FluidGlass"), {
+  ssr: false,
+});
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -81,6 +86,15 @@ export default function ProjectsShowcase() {
   const currentIndexRef = useRef(0);
   const [activeIdx, setActiveIdx] = useState(0);
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
+  const [hasFinePointer, setHasFinePointer] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(pointer: fine)");
+    setHasFinePointer(mq.matches);
+    const onChange = (e: MediaQueryListEvent) => setHasFinePointer(e.matches);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
 
   useGSAP(
     () => {
@@ -539,11 +553,15 @@ export default function ProjectsShowcase() {
       className="relative w-full max-w-none bg-[#0a0a0d] select-none text-white"
     >
       {/* ── Pinned Showcase Viewport ── */}
-      <div
+      <section
         ref={containerRef}
         id="work"
+        aria-label="Featured Full-Stack and AI Engineering Projects"
         className="relative w-full h-screen overflow-hidden bg-[#09090b] m-0"
       >
+        <h2 className="sr-only">
+          Featured Full-Stack &amp; AI Engineering Projects
+        </h2>
         {/* ── Blurred full-screen backgrounds ── */}
         <div className="absolute inset-0 w-full h-full pointer-events-none z-0 overflow-hidden">
           {PROJECTS.map((project, i) => (
@@ -593,9 +611,9 @@ export default function ProjectsShowcase() {
                   data-cursor="interactive"
                   className="group/title inline-flex flex-col items-start focus:outline-none"
                 >
-                  <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight text-white group-hover/title:text-[#ff5500] transition-colors leading-[1.08] drop-shadow-[0_8px_24px_rgba(0,0,0,0.85)]">
+                  <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight text-white group-hover/title:text-[#ff5500] transition-colors leading-[1.08] drop-shadow-[0_8px_24px_rgba(0,0,0,0.85)]">
                     {project.title}
-                  </h1>
+                  </h3>
                   <span className="mt-2 inline-flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-widest text-white/70 group-hover/title:text-white transition-colors">
                     <span>Open Project</span>
                     <ArrowUpRight className="w-3 h-3 text-[#ff5500] group-hover/title:translate-x-0.5 group-hover/title:-translate-y-0.5 transition-transform" />
@@ -632,12 +650,13 @@ export default function ProjectsShowcase() {
             >
               <div className="w-full h-full relative overflow-hidden shadow-[0_30px_80px_rgba(0,0,0,0.9)] group">
                 <div className="relative w-full h-full overflow-hidden bg-black">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
+                  <Image
                     src={project.image}
-                    alt={project.title}
-                    className="w-full h-full object-cover object-center transition-[filter] duration-700 ease-out group-hover:brightness-105"
-                    loading="eager"
+                    alt={`${project.title} — ${project.category}`}
+                    fill
+                    priority={index === 0}
+                    sizes="(max-width: 640px) 82vw, (max-width: 1024px) 62vw, 820px"
+                    className="object-cover object-center transition-[filter] duration-700 ease-out group-hover:brightness-105"
                   />
                   {/* Hover overlay for inactive cards */}
                   {activeIdx !== index && (
@@ -650,8 +669,8 @@ export default function ProjectsShowcase() {
                   )}
                 </div>
               </div>
-              {/* Interactive 3D Fluid Glass Lens Cursor (active card) */}
-              {activeIdx === index && (
+              {/* Interactive 3D Fluid Glass Lens Cursor (active card, desktop fine pointer only) */}
+              {hasFinePointer && activeIdx === index && (
                 <FluidGlass
                   mode="lens"
                   lensProps={{
@@ -776,7 +795,7 @@ export default function ProjectsShowcase() {
           <span>IMPACT</span>
           <span className="text-white/30 font-light">✕</span>
         </div>
-      </div>
+      </section>
     </div>
   );
 }

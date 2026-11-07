@@ -37,14 +37,13 @@ export default function ActionRenderer({ actions }: ActionRendererProps) {
       </div>
 
       {actions.map((act, index) => {
-        // 1. Resume download button (opens /resume in a new tab which previews & auto-downloads)
+        // 1. Resume download button (directly downloads the PDF file)
         if (act.type === "download_resume") {
           return (
             <a
               key={`${act.type}-${index}`}
-              href="/resume"
-              target="_blank"
-              rel="noopener noreferrer"
+              href="/api/resume"
+              download="Kshitij_Pawar_Resume.pdf"
               data-cursor="interactive"
               className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-neutral-900 text-white hover:bg-neutral-800 text-xs font-mono font-medium shadow-2xs hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer"
             >

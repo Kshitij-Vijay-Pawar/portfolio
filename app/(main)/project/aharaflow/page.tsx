@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowLeft,
@@ -12,12 +13,27 @@ import {
   Code2,
 } from "lucide-react";
 import ProjectsCtaTransition from "@/app/components/ProjectsCtaTransition";
+import JsonLd from "@/app/components/JsonLd";
+import { PROJECTS } from "@/app/data/projects";
+import {
+  constructMetadata,
+  getBreadcrumbJsonLd,
+  getProjectCaseStudyJsonLd,
+} from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "AharaFlow POS | Projects | Kshitij Pawar",
+const projectData = PROJECTS.find((p) => p.id === "aharaflow")!;
+
+export const metadata: Metadata = constructMetadata({
+  title: "AharaFlow Multi-Tenant Restaurant POS (In Progress) | Kshitij Pawar",
   description:
     "Multi-tenant restaurant POS & kitchen operations platform in active development with Node.js, Express.js, PostgreSQL, Redis, and Next.js.",
-};
+  path: "/project/aharaflow",
+  keywords: [
+    "AharaFlow POS",
+    "Multi-Tenant Restaurant POS PostgreSQL",
+    "Node.js Express Redis POS Architecture",
+  ],
+});
 
 const ARCHITECTURAL_HIGHLIGHTS = [
   "Multi-tenant PostgreSQL schema with Row-Level Security (RLS) isolating tenant, outlet, menu, order, and billing records.",
@@ -46,6 +62,17 @@ const TAGS = [
 export default function AharaFlowProjectPage() {
   return (
     <div className="w-full min-h-screen bg-[#09090b] text-white pt-24 sm:pt-28 pb-20 selection:bg-[#ff5500] selection:text-white">
+      <JsonLd
+        data={[
+          getProjectCaseStudyJsonLd(projectData),
+          getBreadcrumbJsonLd([
+            { name: "Home", path: "/" },
+            { name: "Projects", path: "/projects" },
+            { name: "AharaFlow POS", path: "/project/aharaflow" },
+          ]),
+        ]}
+      />
+
       {/* Top back navigation */}
       <div className="max-w-6xl mx-auto px-6 sm:px-8 mb-8 flex items-center justify-between">
         <Link
@@ -112,11 +139,13 @@ export default function AharaFlowProjectPage() {
       {/* Hero Visual Image */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 mb-12 sm:mb-16">
         <div className="relative w-full aspect-[16/10] sm:aspect-[16/9] rounded-2xl sm:rounded-3xl overflow-hidden border border-white/10 bg-zinc-900 shadow-2xl">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          <Image
             src="/assets/images/projects/cod-1.avif"
-            alt="AharaFlow POS"
-            className="w-full h-full object-cover"
+            alt="AharaFlow — Multi-Tenant Restaurant POS & Operations System"
+            fill
+            priority
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1152px"
+            className="object-cover"
           />
         </div>
       </section>

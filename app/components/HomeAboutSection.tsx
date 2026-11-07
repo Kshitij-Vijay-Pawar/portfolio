@@ -2,19 +2,13 @@
 
 import React, { useRef, useState, useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import {
   Sparkles,
   ArrowUpRight,
-  Code2,
   Terminal,
   Cpu,
   Flame,
   CheckCircle2,
-  Zap,
-  Globe2,
-  Compass,
-  Layers,
 } from "lucide-react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";

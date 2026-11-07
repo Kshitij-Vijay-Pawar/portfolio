@@ -9,7 +9,6 @@ import {
   PlusCircle,
   Bot,
   Terminal,
-  ArrowDown,
   ArrowUpRight,
   Database,
   Lock,

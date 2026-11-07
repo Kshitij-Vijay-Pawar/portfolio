@@ -46,6 +46,7 @@ export function Globe({
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const phiRef = useRef(0)
   const widthRef = useRef(0)
+  const isVisibleRef = useRef(true)
   const pointerInteracting = useRef<number | null>(null)
   const pointerInteractionMovement = useRef(0)
 
@@ -81,11 +82,22 @@ export function Globe({
     window.addEventListener("resize", onResize)
     onResize()
 
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isVisibleRef.current = entry.isIntersecting
+      },
+      { threshold: 0.05 }
+    )
+    if (canvasRef.current) {
+      observer.observe(canvasRef.current)
+    }
+
     const globe = createGlobe(canvasRef.current!, {
       ...config,
       width: widthRef.current * 2,
       height: widthRef.current * 2,
       onRender: (state) => {
+        if (!isVisibleRef.current) return
         if (!pointerInteracting.current) phiRef.current += 0.005
         state.phi = phiRef.current + rs.get()
         state.width = widthRef.current * 2
@@ -93,8 +105,11 @@ export function Globe({
       },
     })
 
-    setTimeout(() => (canvasRef.current!.style.opacity = "1"), 0)
+    setTimeout(() => {
+      if (canvasRef.current) canvasRef.current.style.opacity = "1"
+    }, 0)
     return () => {
+      observer.disconnect()
       globe.destroy()
       window.removeEventListener("resize", onResize)
     }
@@ -112,6 +127,7 @@ export function Globe({
           "size-full opacity-0 transition-opacity duration-500 contain-[layout_paint_size]"
         )}
         ref={canvasRef}
+        aria-label="Interactive 3D globe showing Pune, India and global collaboration"
         onPointerDown={(e) => {
           pointerInteracting.current = e.clientX
           updatePointerInteraction(e.clientX)
