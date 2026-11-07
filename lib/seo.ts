@@ -6,12 +6,19 @@ export const SITE_URL = (
   process.env.NEXT_PUBLIC_SITE_URL || "https://kshitij.is-a.dev"
 ).replace(/\/+$/, "");
 
+export const METADATA_BASE_URL = (
+  process.env.NEXT_PUBLIC_SITE_URL ||
+  (process.env.NODE_ENV === "development"
+    ? "http://localhost:3000"
+    : "https://kshitij.is-a.dev")
+).replace(/\/+$/, "");
+
 export const SITE_NAME = "Kshitij Pawar | Full-Stack Developer";
 export const SITE_TITLE_DEFAULT = "Kshitij Pawar | Full-Stack Developer";
 export const SITE_DESCRIPTION_DEFAULT =
   "Full-Stack Developer in Nashik, India building scalable React, Next.js, Node.js, PostgreSQL & BullMQ/Redis systems.";
 export const DEFAULT_OG_IMAGE_PATH = "/og-image.png";
-export const DEFAULT_OG_IMAGE_URL = `${SITE_URL}${DEFAULT_OG_IMAGE_PATH}`;
+export const DEFAULT_OG_IMAGE_URL = `${METADATA_BASE_URL}${DEFAULT_OG_IMAGE_PATH}`;
 export const DEFAULT_OG_IMAGE_ALT =
   "Kshitij Pawar — Full-Stack Developer in Nashik, India | React, Next.js, TypeScript, Node.js, PostgreSQL, Redis, BullMQ";
 
@@ -66,7 +73,7 @@ export function constructMetadata({
   const canonicalUrl = `${SITE_URL}${normalizedPath || "/"}`;
   const resolvedImageUrl = image.startsWith("http")
     ? image
-    : `${SITE_URL}${image.startsWith("/") ? image : `/${image}`}`;
+    : `${METADATA_BASE_URL}${image.startsWith("/") ? image : `/${image}`}`;
   const fullTitle = title
     ? title.includes("Kshitij Pawar")
       ? title
@@ -76,7 +83,7 @@ export function constructMetadata({
   const mergedKeywords = Array.from(new Set([...CORE_KEYWORDS, ...keywords]));
 
   return {
-    metadataBase: new URL(SITE_URL),
+    metadataBase: new URL(METADATA_BASE_URL),
     title: fullTitle,
     description,
     keywords: mergedKeywords,
