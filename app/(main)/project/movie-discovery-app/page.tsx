@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowLeft,
@@ -12,12 +13,27 @@ import {
   Code2,
 } from "lucide-react";
 import ProjectsCtaTransition from "@/app/components/ProjectsCtaTransition";
+import JsonLd from "@/app/components/JsonLd";
+import { PROJECTS } from "@/app/data/projects";
+import {
+  constructMetadata,
+  getBreadcrumbJsonLd,
+  getProjectCaseStudyJsonLd,
+} from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Movie Discovery App | Projects | Kshitij Pawar",
+const projectData = PROJECTS.find((p) => p.id === "movie-discovery-app")!;
+
+export const metadata: Metadata = constructMetadata({
+  title: "React Native & Expo Movie Discovery App | Kshitij Pawar",
   description:
     "Cross-platform mobile movie discovery and search app built with React Native, Expo Router, TypeScript, TMDB API, NativeWind, and Appwrite.",
-};
+  path: "/project/movie-discovery-app",
+  keywords: [
+    "React Native Movie Discovery App",
+    "Expo Router TypeScript NativeWind",
+    "TMDB API Appwrite Mobile App",
+  ],
+});
 
 const ARCHITECTURAL_HIGHLIGHTS = [
   "File-based mobile navigation using Expo Router with bottom tab navigation (Home, Search, Saved, Profile) and dynamic movie detail routes (movies/[id]).",
@@ -45,6 +61,17 @@ const TAGS = [
 export default function MovieDiscoveryAppProjectPage() {
   return (
     <div className="w-full min-h-screen bg-[#09090b] text-white pt-24 sm:pt-28 pb-20 selection:bg-[#ff5500] selection:text-white">
+      <JsonLd
+        data={[
+          getProjectCaseStudyJsonLd(projectData),
+          getBreadcrumbJsonLd([
+            { name: "Home", path: "/" },
+            { name: "Projects", path: "/projects" },
+            { name: "Movie Discovery App", path: "/project/movie-discovery-app" },
+          ]),
+        ]}
+      />
+
       {/* Top back navigation */}
       <div className="max-w-6xl mx-auto px-6 sm:px-8 mb-8 flex items-center justify-between">
         <Link
@@ -120,11 +147,13 @@ export default function MovieDiscoveryAppProjectPage() {
       {/* Hero Visual Image */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 mb-12 sm:mb-16">
         <div className="relative w-full aspect-[16/10] sm:aspect-[16/9] rounded-2xl sm:rounded-3xl overflow-hidden border border-white/10 bg-zinc-900 shadow-2xl">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          <Image
             src="/assets/images/projects/az-1.avif"
-            alt="Movie Discovery App"
-            className="w-full h-full object-cover"
+            alt="Movie Discovery Mobile App — React Native & TMDB API Search Interface"
+            fill
+            priority
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1152px"
+            className="object-cover"
           />
         </div>
       </section>

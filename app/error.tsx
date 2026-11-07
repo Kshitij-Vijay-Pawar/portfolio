@@ -3,14 +3,10 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { 
-  AlertTriangle, 
-  RefreshCw, 
   Home, 
-  Terminal, 
   Bug, 
   ShieldAlert, 
   RotateCcw,
-  Sparkles,
   LifeBuoy,
   FileTerminal,
   Activity

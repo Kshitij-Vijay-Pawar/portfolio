@@ -16,7 +16,26 @@ export default function ContactPage() {
 
     const form = event.currentTarget;
     const formData = new FormData(form);
-    const accessKey = process.env.PUBLIC_WEB3FORMS_ACCESS_KEY || "";
+    const name = String(formData.get("name") || "").trim();
+    const email = String(formData.get("email") || "").trim();
+    const subject = String(formData.get("subject") || "").trim();
+    const message = String(formData.get("message") || "").trim();
+
+    if (!name || !email || !message) {
+      setStatus("error");
+      setResult("Please fill in your name, email, and message.");
+      return;
+    }
+
+    formData.set("name", name);
+    formData.set("email", email);
+    if (subject) formData.set("subject", subject);
+    formData.set("message", message);
+
+    const accessKey =
+      process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY ||
+      process.env.PUBLIC_WEB3FORMS_ACCESS_KEY ||
+      "";
     formData.append("access_key", accessKey);
 
     try {
@@ -180,17 +199,22 @@ export default function ContactPage() {
               SEND A MESSAGE
             </span>
 
-            <form onSubmit={onSubmit} className="flex flex-col gap-3.5">
+            <form onSubmit={onSubmit} className="flex flex-col gap-3.5" aria-label="Contact Kshitij Pawar">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                 {/* Name */}
                 <div className="flex flex-col px-3.5 py-2.5 bg-white border border-neutral-200/90 rounded-2xl focus-within:border-neutral-900 focus-within:ring-2 focus-within:ring-neutral-900/5 transition-all shadow-2xs">
-                  <div className="flex items-center justify-between text-[10px] font-mono text-neutral-500 uppercase tracking-wider mb-1">
+                  <label
+                    htmlFor="contact-name"
+                    className="flex items-center justify-between text-[10px] font-mono text-neutral-500 uppercase tracking-wider mb-1 cursor-pointer"
+                  >
                     <span>NAME</span>
-                    <span className="text-[#ff5500] font-bold">*</span>
-                  </div>
+                    <span className="text-[#ff5500] font-bold" aria-hidden="true">*</span>
+                  </label>
                   <input
+                    id="contact-name"
                     type="text"
                     name="name"
+                    autoComplete="name"
                     required
                     placeholder="Your name"
                     className="w-full bg-transparent text-sm text-neutral-900 placeholder:text-neutral-400 focus:outline-none font-medium"
@@ -199,13 +223,18 @@ export default function ContactPage() {
 
                 {/* Email */}
                 <div className="flex flex-col px-3.5 py-2.5 bg-white border border-neutral-200/90 rounded-2xl focus-within:border-neutral-900 focus-within:ring-2 focus-within:ring-neutral-900/5 transition-all shadow-2xs">
-                  <div className="flex items-center justify-between text-[10px] font-mono text-neutral-500 uppercase tracking-wider mb-1">
+                  <label
+                    htmlFor="contact-email"
+                    className="flex items-center justify-between text-[10px] font-mono text-neutral-500 uppercase tracking-wider mb-1 cursor-pointer"
+                  >
                     <span>EMAIL</span>
-                    <span className="text-[#ff5500] font-bold">*</span>
-                  </div>
+                    <span className="text-[#ff5500] font-bold" aria-hidden="true">*</span>
+                  </label>
                   <input
+                    id="contact-email"
                     type="email"
                     name="email"
+                    autoComplete="email"
                     required
                     placeholder="your@email.com"
                     className="w-full bg-transparent text-sm text-neutral-900 placeholder:text-neutral-400 focus:outline-none font-medium"
@@ -215,8 +244,14 @@ export default function ContactPage() {
 
               {/* Subject */}
               <div className="flex flex-col px-3.5 py-2.5 bg-white border border-neutral-200/90 rounded-2xl focus-within:border-neutral-900 focus-within:ring-2 focus-within:ring-neutral-900/5 transition-all shadow-2xs">
-                <span className="text-[10px] font-mono text-neutral-500 uppercase tracking-wider mb-1">SUBJECT</span>
+                <label
+                  htmlFor="contact-subject"
+                  className="text-[10px] font-mono text-neutral-500 uppercase tracking-wider mb-1 cursor-pointer"
+                >
+                  SUBJECT
+                </label>
                 <input
+                  id="contact-subject"
                   type="text"
                   name="subject"
                   placeholder="Project, Job Opportunity, Collaboration..."
@@ -226,11 +261,15 @@ export default function ContactPage() {
 
               {/* Message */}
               <div className="flex flex-col px-3.5 py-2.5 bg-white border border-neutral-200/90 rounded-2xl focus-within:border-neutral-900 focus-within:ring-2 focus-within:ring-neutral-900/5 transition-all shadow-2xs">
-                <div className="flex items-center justify-between text-[10px] font-mono text-neutral-500 uppercase tracking-wider mb-1">
+                <label
+                  htmlFor="contact-message"
+                  className="flex items-center justify-between text-[10px] font-mono text-neutral-500 uppercase tracking-wider mb-1 cursor-pointer"
+                >
                   <span>MESSAGE</span>
-                  <span className="text-[#ff5500] font-bold">*</span>
-                </div>
+                  <span className="text-[#ff5500] font-bold" aria-hidden="true">*</span>
+                </label>
                 <textarea
+                  id="contact-message"
                   name="message"
                   required
                   rows={4}
@@ -257,6 +296,8 @@ export default function ContactPage() {
               {/* Status Feedback Message */}
               {result && (
                 <div
+                  role="status"
+                  aria-live="polite"
                   className={`p-3 rounded-xl text-xs font-mono text-center transition-all ${status === "success"
                       ? "bg-emerald-50 border border-emerald-200 text-emerald-800"
                       : status === "error"

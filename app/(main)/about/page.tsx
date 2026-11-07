@@ -11,10 +11,8 @@ import {
   Cpu,
   Terminal,
   GraduationCap,
-  Briefcase,
   Flame,
   Zap,
-  CheckCircle2,
 } from "lucide-react";
 import HomeJourneySection from "@/app/components/HomeJourneySection";
 import ProjectsCtaTransition from "@/app/components/ProjectsCtaTransition";
@@ -248,9 +246,8 @@ export default function AboutPage() {
               {/* Action Buttons */}
               <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 pt-2">
                 <a
-                  href="/resume"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  href="/api/resume"
+                  download="Kshitij_Pawar_Resume.pdf"
                   data-cursor="interactive"
                   onMouseEnter={() => triggerDoubleBlink()}
                   onMouseLeave={() => resetMascotEmotion()}

@@ -154,9 +154,8 @@ export default function Footer() {
             <ul className="flex flex-col gap-2.5 text-xs sm:text-sm font-sans text-neutral-700">
               <li>
                 <a
-                  href="/resume"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  href="/api/resume"
+                  download="Kshitij_Pawar_Resume.pdf"
                   className="hover:text-neutral-950 transition-colors"
                 >
                   Resume (PDF)

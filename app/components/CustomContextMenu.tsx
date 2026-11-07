@@ -340,8 +340,13 @@ export default function CustomContextMenu({
 
   const handleDownloadResume = useCallback(() => {
     closeMenu();
-    window.open("/resume", "_blank", "noopener,noreferrer");
-    showToast("Opened Resume Preview & Download");
+    const link = document.createElement("a");
+    link.href = "/api/resume";
+    link.download = "Kshitij_Pawar_Resume.pdf";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    showToast("Resume download started");
   }, [closeMenu, showToast]);
 
   // Build ordered list of interactive menu items with number shortcuts 1..8 and ESC at the end

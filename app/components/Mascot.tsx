@@ -8,7 +8,7 @@ import React, {
   forwardRef,
   useCallback,
 } from "react";
-import { useNav, MascotEmotion } from "../context/NavContext";
+import { useOptionalNav, MascotEmotion } from "../context/NavContext";
 
 export interface MascotRef {
   doubleBlink: () => void;
@@ -44,12 +44,7 @@ const Mascot = forwardRef<MascotRef, MascotProps>(function Mascot(
   const eyesGroupRef = useRef<SVGGElement>(null);
 
   // Nav context connection (safe fallback if used outside NavProvider)
-  let navContext: ReturnType<typeof useNav> | null = null;
-  try {
-    navContext = useNav();
-  } catch {
-    navContext = null;
-  }
+  const navContext = useOptionalNav();
 
   // Active emotion state
   const [currentEmotion, setCurrentEmotion] = useState<MascotEmotion>("normal");

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowLeft,
@@ -12,12 +13,27 @@ import {
   Code2,
 } from "lucide-react";
 import ProjectsCtaTransition from "@/app/components/ProjectsCtaTransition";
+import JsonLd from "@/app/components/JsonLd";
+import { PROJECTS } from "@/app/data/projects";
+import {
+  constructMetadata,
+  getBreadcrumbJsonLd,
+  getProjectCaseStudyJsonLd,
+} from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Authentication System | Projects | Kshitij Pawar",
+const projectData = PROJECTS.find((p) => p.id === "authentication-system")!;
+
+export const metadata: Metadata = constructMetadata({
+  title: "Node.js, Express 5 & MongoDB Authentication System | Kshitij Pawar",
   description:
     "Node.js, Express 5, and MongoDB auth backend featuring bcrypt password hashing, HTTP-only JWT cookies, and Nodemailer OTP verification.",
-};
+  path: "/project/authentication-system",
+  keywords: [
+    "Node.js Express Authentication System",
+    "JWT HTTP-only Cookie Auth MongoDB",
+    "Nodemailer OTP Verification Backend",
+  ],
+});
 
 const ARCHITECTURAL_HIGHLIGHTS = [
   "Layered MVC backend structure separating Express routers, authentication controllers, JWT middleware, MongoDB connection management, and Mongoose user models.",
@@ -46,6 +62,17 @@ const TAGS = [
 export default function AuthenticationSystemProjectPage() {
   return (
     <div className="w-full min-h-screen bg-[#09090b] text-white pt-24 sm:pt-28 pb-20 selection:bg-[#ff5500] selection:text-white">
+      <JsonLd
+        data={[
+          getProjectCaseStudyJsonLd(projectData),
+          getBreadcrumbJsonLd([
+            { name: "Home", path: "/" },
+            { name: "Projects", path: "/projects" },
+            { name: "Authentication System", path: "/project/authentication-system" },
+          ]),
+        ]}
+      />
+
       {/* Top back navigation */}
       <div className="max-w-6xl mx-auto px-6 sm:px-8 mb-8 flex items-center justify-between">
         <Link
@@ -121,11 +148,13 @@ export default function AuthenticationSystemProjectPage() {
       {/* Hero Visual Image */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 mb-12 sm:mb-16">
         <div className="relative w-full aspect-[16/10] sm:aspect-[16/9] rounded-2xl sm:rounded-3xl overflow-hidden border border-white/10 bg-zinc-900 shadow-2xl">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          <Image
             src="/assets/images/projects/fi-1.avif"
-            alt="Authentication System"
-            className="w-full h-full object-cover"
+            alt="Production-Grade Authentication System — Express.js, JWT, OTP Email & Role-Based Security"
+            fill
+            priority
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1152px"
+            className="object-cover"
           />
         </div>
       </section>

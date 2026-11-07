@@ -24,7 +24,7 @@ export function sanitizeInput(raw: unknown): SanitizedInputResult {
   }
 
   // Remove zero-width spaces, invisible formatting, null bytes, and non-printable control characters
-  let cleaned = raw
+  const cleaned = raw
     .replace(/[\u200B-\u200D\uFEFF\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, "")
     // Normalize excessive multiple whitespace/newlines
     .replace(/[ \t]+/g, " ")

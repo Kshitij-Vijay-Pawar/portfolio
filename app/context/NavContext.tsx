@@ -302,8 +302,12 @@ export const NavProvider = ({ children }: { children: React.ReactNode }) => {
 
       if (url.origin !== window.location.origin) return;
 
-      // Let /resume open normally if linked directly
-      if (url.pathname === "/resume" || url.pathname.endsWith(".pdf")) {
+      // Let resume downloads or API routes proceed without page transition
+      if (
+        url.pathname === "/api/resume" ||
+        url.pathname.startsWith("/api/") ||
+        url.pathname.endsWith(".pdf")
+      ) {
         return;
       }
 
@@ -386,3 +390,5 @@ export const useNav = () => {
   }
   return context;
 };
+
+export const useOptionalNav = () => useContext(NavContext) ?? null;

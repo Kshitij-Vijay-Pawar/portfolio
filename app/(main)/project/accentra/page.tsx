@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowLeft,
@@ -12,12 +13,28 @@ import {
   Code2,
 } from "lucide-react";
 import ProjectsCtaTransition from "@/app/components/ProjectsCtaTransition";
+import JsonLd from "@/app/components/JsonLd";
+import { PROJECTS } from "@/app/data/projects";
+import {
+  constructMetadata,
+  getBreadcrumbJsonLd,
+  getProjectCaseStudyJsonLd,
+} from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Accentra | Projects | Kshitij Pawar",
+const projectData = PROJECTS.find((p) => p.id === "accentra")!;
+
+export const metadata: Metadata = constructMetadata({
+  title: "Accentra — AI Language Learning Platform | Kshitij Pawar",
   description:
-    "Gamified AI language learning platform with interactive lessons, Clerk auth, Stripe subscriptions, and a Google Gemini grammar coach.",
-};
+    "Gamified AI language learning web application built with Next.js 15, PostgreSQL (Neon), Drizzle ORM, Clerk auth, Stripe subscriptions, and Google Gemini AI.",
+  path: "/project/accentra",
+  keywords: [
+    "Accentra Language Learning",
+    "Next.js Drizzle ORM Neon PostgreSQL",
+    "Google Gemini AI Grammar Coach",
+    "Clerk Stripe SaaS App",
+  ],
+});
 
 const ARCHITECTURAL_HIGHLIGHTS = [
   "Relational schema designed with Drizzle ORM and Neon PostgreSQL modeling courses, units, lessons, challenges, challengeOptions, challengeProgress, userProgress, and userSubscription.",
@@ -49,6 +66,17 @@ const TAGS = [
 export default function AccentraProjectPage() {
   return (
     <div className="w-full min-h-screen bg-[#09090b] text-white pt-24 sm:pt-28 pb-20 selection:bg-[#ff5500] selection:text-white">
+      <JsonLd
+        data={[
+          getProjectCaseStudyJsonLd(projectData),
+          getBreadcrumbJsonLd([
+            { name: "Home", path: "/" },
+            { name: "Projects", path: "/projects" },
+            { name: "Accentra", path: "/project/accentra" },
+          ]),
+        ]}
+      />
+
       {/* Top back navigation */}
       <div className="max-w-6xl mx-auto px-6 sm:px-8 mb-8 flex items-center justify-between">
         <Link
@@ -124,11 +152,13 @@ export default function AccentraProjectPage() {
       {/* Hero Visual Image */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 mb-12 sm:mb-16">
         <div className="relative w-full aspect-[16/10] sm:aspect-[16/9] rounded-2xl sm:rounded-3xl overflow-hidden border border-white/10 bg-zinc-900 shadow-2xl">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          <Image
             src="/assets/images/projects/az-1.avif"
-            alt="Accentra"
-            className="w-full h-full object-cover"
+            alt="Accentra AI-Powered Language Learning Platform Interface Preview"
+            fill
+            priority
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1152px"
+            className="object-cover"
           />
         </div>
       </section>
