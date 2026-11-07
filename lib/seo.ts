@@ -3,14 +3,19 @@ import { PROFILE } from "@/data/profile";
 import { PROJECTS, type Project } from "@/app/data/projects";
 
 export const SITE_URL = (
-  process.env.NEXT_PUBLIC_SITE_URL || "https://kshitij.is-a.dev"
+  process.env.NEXT_PUBLIC_SITE_URL ||
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : "https://kshitij-pawar.is-a.dev")
 ).replace(/\/+$/, "");
 
 export const METADATA_BASE_URL = (
   process.env.NEXT_PUBLIC_SITE_URL ||
-  (process.env.NODE_ENV === "development"
-    ? "http://localhost:3000"
-    : "https://kshitij.is-a.dev")
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : process.env.NODE_ENV === "development"
+      ? "http://localhost:3000"
+      : "https://kshitij-pawar.is-a.dev")
 ).replace(/\/+$/, "");
 
 export const SITE_NAME = "Kshitij Pawar | Full-Stack Developer";
@@ -24,7 +29,6 @@ export const DEFAULT_OG_IMAGE_ALT =
 
 export const VERIFIED_SAME_AS = [
   "https://github.com/Kshitij-Vijay-Pawar",
-  "https://kshitij.is-a.dev",
   "https://kshitij-pawar.is-a.dev",
 ];
 
