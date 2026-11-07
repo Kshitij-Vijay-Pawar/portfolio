@@ -36,7 +36,7 @@ export const metadata: Metadata = {
   ...constructMetadata({
     title: "Kshitij Pawar | Full-Stack Developer",
     description:
-      "Full-Stack Developer in Pune, India building scalable React & Next.js web applications, Node.js & Express APIs, PostgreSQL databases (Drizzle & Prisma), and asynchronous BullMQ + Redis worker systems.",
+      "Full-Stack Developer in Nashik, India building scalable React, Next.js, Node.js, PostgreSQL & BullMQ/Redis systems.",
     path: "/",
     type: "website",
   }),

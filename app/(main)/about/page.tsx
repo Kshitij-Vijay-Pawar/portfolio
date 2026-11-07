@@ -308,7 +308,7 @@ export default function AboutPage() {
                     fill
                     priority
                     sizes="(max-width: 768px) 100vw, 420px"
-                    className="object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
+                    className="object-cover object-[center_top] group-hover:scale-105 transition-transform duration-700 ease-out"
                   />
 
                   {/* Gradient Overlay for Text Readability */}
