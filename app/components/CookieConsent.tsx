@@ -6,6 +6,7 @@ import { GoogleAnalytics, sendGAEvent } from "@next/third-parties/google";
 import {
   ANALYTICS_CONSENT_EVENT,
   ANALYTICS_CONSENT_KEY,
+  OPEN_PRIVACY_SETTINGS_EVENT,
   disableClarity,
   enableClarity,
 } from "@/lib/clarity";
@@ -57,6 +58,12 @@ export default function CookieConsent() {
     }
 
     setReady(true);
+
+    const handleOpenPrivacy = () => setCustomize(true);
+    window.addEventListener(OPEN_PRIVACY_SETTINGS_EVENT, handleOpenPrivacy);
+    return () => {
+      window.removeEventListener(OPEN_PRIVACY_SETTINGS_EVENT, handleOpenPrivacy);
+    };
   }, []);
 
   function saveChoice(enabled: boolean) {
@@ -90,18 +97,6 @@ export default function CookieConsent() {
     <>
       {/* Mount GA only when consent is explicitly granted */}
       {ready && analyticsEnabled && GA_ID && <GoogleAnalytics gaId={GA_ID} />}
-
-      {/* "Privacy settings" pill — visible after a decision has been made */}
-      {ready && consent !== null && !customize && (
-        <button
-          type="button"
-          id="privacy-settings-btn"
-          onClick={() => setCustomize(true)}
-          className="fixed bottom-4 left-4 z-[100] cursor-pointer rounded-full border border-white/20 bg-black px-4 py-2 text-sm text-white shadow-lg transition-opacity hover:opacity-80"
-        >
-          Privacy settings
-        </button>
-      )}
 
       {/* Consent banner — shown on first visit or when customising */}
       {ready && (consent === null || customize) && (

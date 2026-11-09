@@ -3,6 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { Globe } from "./ui/Globe";
+import { openPrivacySettings } from "@/lib/clarity";
 import {
   Mail,
   Phone,
@@ -252,8 +253,17 @@ export default function Footer() {
             SUB-FOOTER: COPYRIGHT & ATTRIBUTION
             ======================================================== */}
         <div className="w-full flex flex-col sm:flex-row items-center justify-between pt-5 border-t border-neutral-200/80 text-[11px] font-mono text-neutral-400 gap-3">
-          <div>
-            © 2026 Kshitij Pawar. All rights reserved.
+          <div className="flex flex-wrap items-center justify-center sm:justify-start gap-x-3 gap-y-1">
+            <span>© 2026 Kshitij Pawar. All rights reserved.</span>
+            <span className="text-neutral-300 hidden sm:inline">•</span>
+            <button
+              type="button"
+              id="privacy-settings-btn"
+              onClick={openPrivacySettings}
+              className="hover:text-neutral-700 transition-colors cursor-pointer underline-offset-4 hover:underline"
+            >
+              Privacy settings
+            </button>
           </div>
           <div className="flex items-center gap-3">
             <span className="w-8 h-[1px] bg-neutral-300 hidden sm:block" />

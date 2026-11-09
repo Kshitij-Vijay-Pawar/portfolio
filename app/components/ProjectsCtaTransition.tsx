@@ -407,13 +407,13 @@ export default function ProjectsCtaTransition() {
             style={{ fontSize: "clamp(8rem, 19vw, 22rem)", lineHeight: 0.85 }}
           >
             <span>ARCHITECT</span>
-            <span className="text-white/[0.025]">•</span>
+            <span className="text-white/[0.225]">•</span>
             <span>ENGINEER</span>
-            <span className="text-white/[0.025]">•</span>
+            <span className="text-white/[0.225]">•</span>
             <span>COLLABORATE</span>
-            <span className="text-white/[0.025]">•</span>
+            <span className="text-white/[0.225]">•</span>
             <span>LAUNCH</span>
-            <span className="text-white/[0.025]">•</span>
+            <span className="text-white/[0.225]">•</span>
             <span>BEYOND</span>
           </div>
         </div>
