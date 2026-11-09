@@ -17,7 +17,7 @@ export default function Footer() {
   return (
     <footer
       id="contact"
-      className="relative w-full overflow-hidden bg-[#fafaf9] text-zinc-900 border-t border-neutral-200/90 pt-14 sm:pt-20 pb-10 px-5 sm:px-10 md:px-14 lg:px-16 selection:bg-[#ff4400] selection:text-white"
+      className="relative w-full overflow-hidden bg-[#fafaf9] text-zinc-900 border-t border-neutral-200/90 pt-8 sm:pt-12 pb-6 sm:pb-8 px-5 sm:px-10 md:px-14 lg:px-16 selection:bg-[#ff4400] selection:text-white"
     >
       {/* Background Architectural Grid Lines & Dot Matrix */}
       <div className="absolute inset-0 w-full h-full pointer-events-none z-0">
@@ -32,10 +32,10 @@ export default function Footer() {
         {/* ========================================================
             BOTTOM SECTION: 4-COLUMN FOOTER NAVIGATION & GLOBE
             ======================================================== */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-10 py-12 sm:py-16 items-start">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-8 py-6 sm:py-10 items-start">
 
-          {/* Col 1 (span 4): Brand K Logo, Description & Social Icons */}
-          <div className="lg:col-span-4 flex flex-col">
+          {/* Col 1 (span 3): Brand K Logo, Description & Social Icons */}
+          <div className="lg:col-span-3 flex flex-col">
             {/* Logo K. */}
             <div className="flex items-baseline mb-4">
               <span className="text-4xl sm:text-5xl font-black text-neutral-950 font-sans tracking-tighter">
@@ -184,10 +184,10 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Col 4 (span 4): Contact Meta & Interactive 3D Globe with based in indicator */}
-          <div className="lg:col-span-4 flex flex-col sm:flex-row lg:flex-row gap-6 items-start justify-between">
+          {/* Col 4 (span 5): Contact Meta & Interactive 3D Globe with based in indicator */}
+          <div className="md:col-span-2 lg:col-span-5 flex flex-col sm:flex-row lg:flex-row gap-6 lg:gap-5 items-center sm:items-start justify-between">
             {/* Direct Connect details */}
-            <div className="flex flex-col min-w-0">
+            <div className="flex flex-col min-w-0 w-full sm:w-auto">
               <div className="inline-flex items-center gap-1.5 mb-4">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#ff4400]" />
                 <span className="font-mono text-[11px] text-neutral-500 uppercase tracking-widest font-semibold">
@@ -229,14 +229,14 @@ export default function Footer() {
             </div>
 
             {/* Interactive 3D Globe Display */}
-            <div className="flex flex-col items-center self-center sm:self-start shrink-0">
-              <div className="relative w-32 h-32 sm:w-36 sm:h-36 rounded-2xl overflow-hidden flex items-center justify-center">
-                <Globe className="scale-100" />
+            <div className="flex flex-col items-center self-center sm:self-start shrink-0 -mt-2 sm:-mt-4">
+              <div className="relative w-44 h-44 sm:w-52 sm:h-52 md:w-56 md:h-56 lg:w-56 lg:h-56 rounded-2xl overflow-hidden flex items-center justify-center">
+                <Globe className="scale-[1.15]" />
               </div>
 
               {/* Based in India / Working Globally text with arrow */}
-              <div className="flex items-center justify-between gap-2 w-full pt-1 border-t border-neutral-200/80">
-                <div className="flex flex-col text-[9px] font-mono uppercase tracking-wider text-neutral-500 leading-tight">
+              <div className="flex items-center justify-between gap-2 w-full pt-1.5 -mt-2 border-t border-neutral-200/80">
+                <div className="flex flex-col text-[10px] font-mono uppercase tracking-wider text-neutral-500 leading-tight">
                   <span>BASED IN INDIA</span>
                   <span>WORKING GLOBALLY</span>
                 </div>
@@ -251,7 +251,7 @@ export default function Footer() {
         {/* ========================================================
             SUB-FOOTER: COPYRIGHT & ATTRIBUTION
             ======================================================== */}
-        <div className="w-full flex flex-col sm:flex-row items-center justify-between pt-8 border-t border-neutral-200/80 text-[11px] font-mono text-neutral-400 gap-3">
+        <div className="w-full flex flex-col sm:flex-row items-center justify-between pt-5 border-t border-neutral-200/80 text-[11px] font-mono text-neutral-400 gap-3">
           <div>
             © 2026 Kshitij Pawar. All rights reserved.
           </div>

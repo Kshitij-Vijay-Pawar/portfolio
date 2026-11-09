@@ -658,36 +658,14 @@ export default function HomeJourneySection() {
         gsap.set(bgSymbolsMidEl, { x: -1650 });
       }
 
-      const horizontalTimeline = gsap.timeline({
-        scrollTrigger: {
-          trigger: sectionEl,
-          pin: true,
-          scrub: 1,
-          refreshPriority: 3,
-          start: "top top",
-          end: () => `+=${Math.max(trackEl.scrollWidth - window.innerWidth + 800, 1800)}`,
-          invalidateOnRefresh: true,
-          onUpdate: (self) => {
-            // Update active node index based on scroll progress (0 to 5)
-            const index = Math.min(
-              Math.floor(self.progress * MILESTONES.length),
-              MILESTONES.length - 1
-            );
-            setActiveMilestoneIndex(index);
+      // Velocity-clamped progress state so no matter how fast the user scrolls the mouse wheel,
+      // the horizontal timeline and opposite-direction parallax layers advance at a controlled max speed
+      let targetProgress = 0;
+      let smoothedProgress = 0;
+      const MAX_PROGRESS_SPEED_PER_SEC = 0.28; // Hard velocity cap across the 6 milestones
+      const MAX_WHEEL_DELTA_PX = 44;
 
-            // Unlock reveal state for any milestone reached so illustration drops from top -> location
-            if (!revealedNodesRef.current.has(index)) {
-              revealedNodesRef.current.add(index);
-              setRevealedNodes(Array.from(revealedNodesRef.current));
-            }
-
-            // Progress the glowing LED line width
-            if (ledLineProgressEl) {
-              ledLineProgressEl.style.width = `${self.progress * 100}%`;
-            }
-          },
-        },
-      });
+      const horizontalTimeline = gsap.timeline({ paused: true });
 
       if (!prefersReducedMotion) {
         // 1. Main Foreground Track: moves horizontally right-to-left (negative X)
@@ -725,7 +703,90 @@ export default function HomeJourneySection() {
         }
       }
 
+      const applyVisualProgress = (progress: number) => {
+        horizontalTimeline.progress(progress);
+
+        // Update active node index based on clamped scroll progress (0 to 5)
+        const index = Math.min(
+          Math.floor(progress * MILESTONES.length),
+          MILESTONES.length - 1
+        );
+        setActiveMilestoneIndex(index);
+
+        // Unlock reveal state for any milestone reached so illustration drops from top -> location
+        if (!revealedNodesRef.current.has(index)) {
+          revealedNodesRef.current.add(index);
+          setRevealedNodes(Array.from(revealedNodesRef.current));
+        }
+
+        // Progress the glowing LED line width
+        if (ledLineProgressEl) {
+          ledLineProgressEl.style.width = `${progress * 100}%`;
+        }
+      };
+
+      const st = ScrollTrigger.create({
+        trigger: sectionEl,
+        pin: true,
+        scrub: true,
+        refreshPriority: 3,
+        start: "top top",
+        end: () => `+=${Math.max(trackEl.scrollWidth - window.innerWidth + 800, 1800)}`,
+        invalidateOnRefresh: true,
+        onRefresh: (self) => {
+          horizontalTimeline.invalidate();
+          targetProgress = self.progress;
+          smoothedProgress = self.progress;
+          applyVisualProgress(smoothedProgress);
+        },
+        onUpdate: (self) => {
+          targetProgress = self.progress;
+        },
+      });
+
+      const handleWheelClamp = (e: WheelEvent) => {
+        if (!st.isActive) return;
+        if (
+          (e.deltaY < 0 && st.progress <= 0.002 && smoothedProgress <= 0.01) ||
+          (e.deltaY > 0 && st.progress >= 0.998 && smoothedProgress >= 0.99)
+        ) {
+          return;
+        }
+        e.preventDefault();
+        const clampedDelta =
+          Math.sign(e.deltaY) * Math.min(Math.abs(e.deltaY), MAX_WHEEL_DELTA_PX);
+        window.scrollBy({ top: clampedDelta, left: 0, behavior: "instant" });
+      };
+
+      const tickProgress = () => {
+        const diff = targetProgress - smoothedProgress;
+        if (Math.abs(diff) < 0.0004) {
+          if (smoothedProgress !== targetProgress) {
+            smoothedProgress = targetProgress;
+            applyVisualProgress(smoothedProgress);
+          }
+          return;
+        }
+
+        const dt = Math.min(gsap.ticker.deltaRatio(60) / 60, 0.05);
+        const maxStep = MAX_PROGRESS_SPEED_PER_SEC * dt;
+        const dampedStep = diff * Math.min(1, dt * 8);
+        const step =
+          Math.abs(dampedStep) > maxStep
+            ? Math.sign(diff) * maxStep
+            : dampedStep;
+
+        smoothedProgress = Math.max(0, Math.min(1, smoothedProgress + step));
+        applyVisualProgress(smoothedProgress);
+      };
+
+      gsap.ticker.add(tickProgress);
+      sectionEl.addEventListener("wheel", handleWheelClamp, { passive: false });
+
       return () => {
+        gsap.ticker.remove(tickProgress);
+        sectionEl.removeEventListener("wheel", handleWheelClamp);
+        st.kill();
         horizontalTimeline.kill();
       };
     });
