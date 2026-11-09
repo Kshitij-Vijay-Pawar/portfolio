@@ -41,10 +41,10 @@ products with well-structured frontend and backend systems.
 
 ## 2. Professional Experience
 
-### McFlyworld --- Full-Stack Developer
+### McFlyworld --- Full-Stack Developer (Current Role)
 
 **Location:** Goa\
-**Dates:** May 2026 -- September 2026
+**Dates:** May 2026 -- Present (Currently working here)
 
 -   Developed and maintained 25+ websites, including landing pages,
     business websites, and client-facing web applications using React,
@@ -1119,9 +1119,9 @@ Career Direction
 - Present my work accurately; do not describe me as a senior engineer
   or claim expertise that is not supported by my actual experience.
 2. Professional Experience
-McFlyworld --- Full-Stack Developer
+McFlyworld --- Full-Stack Developer (Current Role)
 Location: Goa
-Dates: May 2026 -- September 2026
+Dates: May 2026 -- Present (Currently working here)
 - Developed and maintained 25+ websites, including landing pages,
   business websites, and client-facing web applications using React,
   Next.js, and responsive UI components.
@@ -1385,7 +1385,7 @@ Frontend Developer · March 2026 – May 2026
 
 McFlyworld
 
-Full-Stack Developer · May 2026 – September 2026
+Full-Stack Developer · May 2026 – Present (Currently working here)
 
 - Worked with React and Next.js.
 - Learned and worked with React Native.
@@ -1456,7 +1456,7 @@ Frontend Developer · March 2026 – May 2026
 
 McFlyworld
 
-Full-Stack Developer · May 2026 – September 2026
+Full-Stack Developer · May 2026 – Present (Currently working here)
 
 - Worked with React and Next.js.
 - Learned and worked with React Native.

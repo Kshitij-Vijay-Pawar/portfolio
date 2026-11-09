@@ -15,20 +15,20 @@ export const PROJECTS_SUPPLEMENTAL: Record<string, ProjectSupplementalInfo> = {
   "google-maps-scraper": {
     projectId: "google-maps-scraper",
     architecturalHighlights: [
-      "Asynchronous job queue pipeline using BullMQ and Redis to decouple HTTP API requests from long-running Playwright browser scraping.",
-      "Multi-priority deduplication strategy matching business records by website URL, phone number, email, or normalized name + address.",
-      "Controlled website enrichment worker (concurrency = 2) using Axios and Cheerio to fill missing emails, phones, and social profiles without overwriting verified Google Maps source fields.",
+      "Asynchronous job queue pipeline using BullMQ and Redis (ioredis) with Express 5 and Zod validation to decouple HTTP API requests from long-running Playwright Chromium scraping.",
+      "Multi-priority deduplication strategy matching business records by 1) website URL, 2) phone number, 3) email address, or 4) normalized business name + address using in-memory sets and batch PostgreSQL/Drizzle queries.",
+      "Separate BullMQ website enrichment worker (capped at 500 leads per job, processed in batches of 5 with concurrency = 5, supporting progress tracking and cancellation) using Axios and Cheerio to extract mailto:/page emails (prioritizing sales, contact, info, support, admin) and Facebook/Instagram/LinkedIn/X links without overwriting original Google Maps data.",
     ],
     keyChallengesSolved: [
-      "Prevented HTTP request timeouts during multi-minute Google Maps feed scrolling by offloading Playwright browser automation to background BullMQ workers.",
-      "Eliminated duplicate business listings across overlapping search queries using a deterministic priority matching hierarchy in PostgreSQL with Drizzle ORM.",
+      "Prevented HTTP request timeouts during multi-minute Google Maps feed scrolling by creating a PostgreSQL search record first and offloading Playwright browser automation to background BullMQ workers with graceful shutdown handling.",
+      "Enforced search ownership checks, user + API-key authentication middleware, and audit logging across search, enrichment, and CSV/Excel (.xlsx) export endpoints.",
     ],
     engineeringStackDetails: [
-      "Bun, TypeScript & Express 5 API",
-      "Playwright Chromium Automation",
-      "BullMQ & Redis Async Job Queue",
+      "Bun, TypeScript, Express 5 & Zod",
+      "Playwright Chromium, Axios & Cheerio",
+      "BullMQ & Redis (ioredis) Async Job Queues",
       "PostgreSQL & Drizzle ORM",
-      "Next.js Frontend Dashboard & ExcelJS/CSV Export",
+      "Next.js 16 (scraper-ui), React 19, Tailwind CSS 4, Zustand & xlsx/CSV Export",
     ],
   },
   accentra: {

@@ -101,16 +101,16 @@ export const PROFILE: Profile = {
   experience: [
     {
       company: "McFlyworld",
-      role: "Full-Stack Developer",
+      role: "Full-Stack Developer (Current Role)",
       type: "Employment",
-      period: "May 2026 – September 2026",
+      period: "May 2026 – Present",
       location: "Goa, India",
       summary:
-        "Worked on client and internal web, desktop, and mobile deliverables across frontend, backend, and deployment workflows.",
+        "Currently working at McFlyworld as a Full-Stack Developer on client and internal web, desktop, and mobile deliverables across frontend, backend, and deployment workflows.",
       highlights: [
-        "Developed and maintained 25+ websites using React and Next.js with responsive UI and clean component structure.",
-        "Built 2 software applications using Electron (desktop) and React Native (mobile).",
-        "Implemented backend services and REST APIs using PHP, Laravel, Node.js, and Express.js, handling database integration and deployment.",
+        "Currently employed at McFlyworld (May 2026 – Present) building and maintaining 25+ websites, including landing pages, business websites, and client-facing web applications using React, Next.js, and responsive UI components.",
+        "Built and delivered 2 software applications using Electron (desktop) and React Native (mobile), integrating REST APIs and production-ready workflows.",
+        "Managing end-to-end development including frontend engineering, backend services (Node.js, Express.js, PHP, Laravel), API integration, debugging, and deployment.",
       ],
       technologies: [
         "React",
@@ -133,9 +133,9 @@ export const PROFILE: Profile = {
       summary:
         "Built frontend product features for an Autonomous AI Sales Platform supporting multi-channel outreach workflows.",
       highlights: [
-        "Built frontend features for an autonomous AI sales platform supporting multi-channel workflows across email, WhatsApp, and telephony.",
-        "Developed responsive interfaces using Next.js (App Router), TypeScript, and Tailwind CSS.",
-        "Integrated frontend components with backend microservices and APIs for real-time data handling and workflow automation.",
+        "Built frontend features for an AI-enabled sales automation platform supporting multi-channel workflows across email, WhatsApp, and telephony.",
+        "Built responsive user interfaces using Next.js (App Router), TypeScript, and Tailwind CSS with a reusable component architecture.",
+        "Integrated frontend workflows with multiple backend microservices for telephony, lead management, and campaign automation, with some involvement in backend development.",
       ],
       technologies: [
         "Next.js (App Router)",
@@ -180,8 +180,8 @@ export const PROFILE: Profile = {
         "Frontend engineering internship focused on building responsive product pages and reusable UI components.",
       highlights: [
         "Developed responsive user interfaces for 5+ product pages using React.js, Next.js, Tailwind CSS, and Bootstrap.",
-        "Improved application performance by ~20% through code optimization and reusable component design.",
-        "Collaborated with backend developers and designers to deliver production-ready features.",
+        "Improved application performance by approximately 20% through reusable component architecture and frontend optimization.",
+        "Participated in code reviews, debugging, and UI improvements while collaborating with senior developers.",
       ],
       technologies: [
         "React.js",
@@ -208,24 +208,24 @@ export const PROFILE: Profile = {
       "GSAP Animations, React Native (Expo) & Electron",
     ],
     backend: [
-      "Node.js & Express.js (RESTful APIs & MVC)",
+      "Node.js & Express.js (REST APIs & Microservices)",
       "PHP & Laravel",
       "BullMQ & Redis (Asynchronous Job Queues & Workers)",
-      "JWT Auth, bcryptjs, Clerk & Stripe Webhooks",
+      "JWT Authentication, Role-Based Access Control (RBAC), WebSockets, Clerk & Stripe Webhooks",
     ],
     database: [
-      "PostgreSQL, MySQL & SQL",
+      "PostgreSQL (Neon), MySQL & SQL",
       "MongoDB & Mongoose",
       "Prisma ORM & Drizzle ORM",
-      "Redis (Caching & Queue Backing)",
+      "Redis (Caching & Queue Backing) & Appwrite",
     ],
     creative3d: [
-      "Google Gemini API (@google/generative-ai)",
+      "Google Gemini API (@google/genai & @google/generative-ai)",
       "Anthropic Claude API (Structured Analysis)",
       "Playwright, Puppeteer & Cheerio (Browser Automation & Crawling)",
     ],
     tools: [
-      "Git, GitHub, Docker & Linux",
+      "Docker, AWS EC2, Cloudinary, Git, GitHub & Linux",
       "Bun, Vite, Postman & Vercel",
       "Languages: JavaScript, TypeScript, Python, C, C++, C#",
     ],

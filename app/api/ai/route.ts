@@ -68,6 +68,7 @@ export async function POST(req: Request) {
   const trimmedMessage = sanitized.sanitized;
 
   // 2. Untrusted History Validation: Max 10 items, structure check, cap text at 400 chars each
+  // Ensure history starts with "user" and alternates roles (required by Vertex AI / Gemini multi-turn)
   const validatedHistory: Array<{ role: "user" | "model"; text: string }> = [];
   if (Array.isArray(history)) {
     const recentHistory = history.slice(-10) as IncomingHistoryItem[];
@@ -75,10 +76,26 @@ export async function POST(req: Request) {
       if (item && typeof item === "object") {
         const itemRole = item.role === "model" ? "model" : "user";
         const itemText = typeof item.text === "string" ? item.text.trim().slice(0, 400) : "";
-        if (itemText) {
+        if (!itemText) continue;
+
+        // Skip leading "model" messages (e.g. client greeting) so first turn is always "user"
+        if (validatedHistory.length === 0 && itemRole === "model") {
+          continue;
+        }
+
+        const prev = validatedHistory[validatedHistory.length - 1];
+        if (prev && prev.role === itemRole) {
+          // Replace consecutive duplicate role turn with the latest one
+          prev.text = itemText;
+        } else {
           validatedHistory.push({ role: itemRole, text: itemText });
         }
       }
+    }
+
+    // Since we append the current "user" message next, drop any trailing "user" turn from history
+    if (validatedHistory.length > 0 && validatedHistory[validatedHistory.length - 1].role === "user") {
+      validatedHistory.pop();
     }
   }
 

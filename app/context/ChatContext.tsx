@@ -396,10 +396,13 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
         timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
       };
 
-      const contextWindow = messages.slice(-10).map((m) => ({
-        role: m.sender === "ai" ? "model" : "user",
-        text: m.text,
-      }));
+      const contextWindow = messages
+        .filter((m) => !m.isError && !m.id.startsWith("initial-ai") && m.text.trim().length > 0)
+        .slice(-10)
+        .map((m) => ({
+          role: m.sender === "ai" ? "model" : "user",
+          text: m.text,
+        }));
 
       // Immediately append user message to UI and persist
       setMessages((prev) => [...prev, userMsg]);

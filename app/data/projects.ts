@@ -51,9 +51,9 @@ export const PROJECTS: Project[] = [
     status: "Completed",
     architecturalHighlights: [
       "Separated API request handling from browser automation using BullMQ and Redis so long-running Playwright scraping jobs never block HTTP responses.",
-      "Multi-priority deduplication hierarchy matching existing business records by website domain, phone number, email address, or normalized name + address.",
-      "Controlled concurrency and enrichment pipeline (concurrency = 2) that crawls business websites and contact pages via Axios/Cheerio to fill missing emails, phones, and social links without overwriting verified Google Maps fields.",
-      "Multi-format data export supporting raw JSON, flattened CSV, and styled Excel (.xlsx) workbooks via ExcelJS.",
+      "Multi-priority deduplication hierarchy matching existing business records by website domain, phone number, email address, or normalized name + address (using in-memory sets and batch DB queries).",
+      "Controlled enrichment worker (max 500 leads per job, processed in batches of 5 with worker concurrency = 5) that crawls business websites and contact/about/team/support pages via Axios/Cheerio to fill missing emails, phones, and social links without overwriting verified Google Maps source fields.",
+      "User authentication, API-key middleware, audit logging, and search-ownership checks protecting lead records and CSV/Excel (.xlsx) exports.",
     ],
     keyFeatures: [
       "POST /api/v1/scrape/google-maps job enqueueing with Zod request validation",

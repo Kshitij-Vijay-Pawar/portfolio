@@ -8,6 +8,7 @@ export const ALLOWED_STATIC_ROUTES = [
   "/projects",
   "/contact",
   "/ai",
+  "/cube",
   "/project/google-maps-scraper",
   "/project/accentra",
   "/project/edgelink",
