@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import Mascot from "@/app/components/Mascot";
+import ContactCube from "@/app/components/ContactCube";
 import { Mail, Phone, Globe2, ArrowUpRight } from "lucide-react";
 import ArchitecturalBackground from "@/app/components/ui/ArchitecturalBackground";
 
@@ -70,7 +70,7 @@ export default function ContactPage() {
       {/* 3. Central Canvas: Smooth natural flow with responsive layout */}
       <div className="relative z-10 w-full max-w-7xl mx-auto flex-1 flex flex-col justify-center my-auto py-2 sm:py-8">
 
-        {/* Top Section: Headline + Description + Mascot on Top Right */}
+        {/* Top Section: Headline + Description + 3D Cube on Top Right */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-10 items-center mb-6 sm:mb-12">
 
           {/* Left Column: Big Headline */}
@@ -93,26 +93,10 @@ export default function ContactPage() {
             </p>
           </div>
 
-          {/* Right Column: Narrative Callout + Interactive Mascot */}
-          <div className="lg:col-span-5 flex items-center justify-center lg:justify-end gap-6 sm:gap-10 relative">
-            {/* Mascot with orbit and cursor pupil tracking */}
-            <div className="relative flex flex-col items-center shrink-0 pr-0 lg:pr-8 py-2">
-              {/* Elliptical Orbit Ring */}
-              <div className="absolute -inset-4 sm:-inset-8 rounded-full border border-neutral-300/70 pointer-events-none transform -rotate-12 scale-y-45" />
-              <div className="absolute -top-2 right-4 w-2 h-2 rounded-full bg-[#ff5500]" />
-
-              <Mascot
-                sizeClassName="w-24 h-24 sm:w-36 sm:h-36 md:w-44 md:h-44 lg:w-48 lg:h-48"
-                className="drop-shadow-lg"
-              />
-
-              {/* Annotation labels */}
-              <div className="absolute -right-6 -top-2 hidden md:flex flex-col text-[9px] font-mono uppercase tracking-wider text-neutral-400 rotate-6 leading-tight">
-                <span>IDEAS</span>
-                <span>COLLABORATIONS</span>
-                <span>OPPORTUNITIES</span>
-                <span>JUST HI</span>
-              </div>
+          {/* Right Column: Interactive 3D Rubik's Cube */}
+          <div className="lg:col-span-5 flex items-center justify-center lg:justify-end relative">
+            <div className="w-full max-w-sm sm:max-w-md lg:max-w-none">
+              <ContactCube />
             </div>
           </div>
         </div>

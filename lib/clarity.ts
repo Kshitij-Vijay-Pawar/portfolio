@@ -5,6 +5,12 @@ import Clarity from "@microsoft/clarity";
 
 export const ANALYTICS_CONSENT_KEY = "portfolio-analytics-consent";
 export const ANALYTICS_CONSENT_EVENT = "portfolio-analytics-consent-change";
+export const OPEN_PRIVACY_SETTINGS_EVENT = "portfolio-open-privacy-settings";
+
+export function openPrivacySettings() {
+  if (typeof window === "undefined") return;
+  window.dispatchEvent(new Event(OPEN_PRIVACY_SETTINGS_EVENT));
+}
 
 const CLARITY_PROJECT_ID =
   process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID || "z9rlx3gh6r";

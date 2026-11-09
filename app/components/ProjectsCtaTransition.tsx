@@ -23,6 +23,9 @@ export default function ProjectsCtaTransition() {
   const bgOverlayRef = useRef<HTMLDivElement>(null);
   const detailsRef = useRef<HTMLDivElement>(null);
   const percentCounterRef = useRef<HTMLSpanElement>(null);
+  const bgLayerFarRef = useRef<HTMLDivElement>(null);
+  const bgLayerMidTopRef = useRef<HTMLDivElement>(null);
+  const bgLayerMidBottomRef = useRef<HTMLDivElement>(null);
 
   useGSAP(
     () => {
@@ -37,6 +40,9 @@ export default function ProjectsCtaTransition() {
       const bgOverlay = bgOverlayRef.current;
       const details = detailsRef.current;
       const percentCounter = percentCounterRef.current;
+      const bgLayerFar = bgLayerFarRef.current;
+      const bgLayerMidTop = bgLayerMidTopRef.current;
+      const bgLayerMidBottom = bgLayerMidBottomRef.current;
 
       if (
         !wrapper ||
@@ -56,6 +62,12 @@ export default function ProjectsCtaTransition() {
       let xStart = 0;
       let xEnd = 0;
 
+      // Initial opposite-direction parallax offsets (move left -> right while main text moves right -> left)
+      const FAR_START_X = -880;
+      const FAR_END_X = 240;
+      const MID_START_X = -1550;
+      const MID_END_X = 420;
+
       const measureLayout = () => {
         // Reset transform to measure accurately
         gsap.set(sentence, { clearProps: "transform" });
@@ -63,7 +75,7 @@ export default function ProjectsCtaTransition() {
 
         const sRect = sentence.getBoundingClientRect();
         const hRect = firstLetter.getBoundingClientRect();
-        const aRect = targetA.getBoundingClientRect();
+        const aRect = targetARef.current!.getBoundingClientRect();
         const qRect = lastChar.getBoundingClientRect();
         const vRect = viewport.getBoundingClientRect();
 
@@ -90,6 +102,9 @@ export default function ProjectsCtaTransition() {
         xEnd = viewportCenterX - qCenterInSentence;
 
         gsap.set(sentence, { x: xStart, y: 0, scale: 1 });
+        if (bgLayerFar) gsap.set(bgLayerFar, { x: FAR_START_X });
+        if (bgLayerMidTop) gsap.set(bgLayerMidTop, { x: MID_START_X });
+        if (bgLayerMidBottom) gsap.set(bgLayerMidBottom, { x: MID_START_X * 0.85 });
       };
 
       measureLayout();
@@ -101,9 +116,9 @@ export default function ProjectsCtaTransition() {
       });
 
       zoomTimeline
-        // 1. Fade out HUD details smoothly
+        // 1. Fade out HUD details & background parallax layers smoothly
         .to(
-          details,
+          [details, bgLayerFar, bgLayerMidTop, bgLayerMidBottom].filter(Boolean),
           {
             opacity: 0,
             y: -20,
@@ -158,7 +173,13 @@ export default function ProjectsCtaTransition() {
       const ROLL_END = 0.58;
       const ZOOM_END = 0.90;
 
-      const updateScrollState = (progress: number) => {
+      // Velocity-clamped progress state so no matter how fast the user scrolls the mouse wheel,
+      // the animation progresses at a controlled, capped maximum speed.
+      let targetProgress = 0;
+      let smoothedProgress = 0;
+      const MAX_PROGRESS_SPEED_PER_SEC = 0.38; // Hard velocity cap (~2.6s minimum full traversal)
+
+      const applyVisualProgress = (progress: number) => {
         const rollProgress = Math.min(progress / ROLL_END, 1);
 
         if (percentCounter) {
@@ -167,6 +188,13 @@ export default function ProjectsCtaTransition() {
         }
 
         const currentX = xStart + (xEnd - xStart) * rollProgress;
+
+        // Opposite-direction parallax layers at 2 distinct depth speeds
+        const farX = FAR_START_X + (FAR_END_X - FAR_START_X) * rollProgress;
+        const midX = MID_START_X + (MID_END_X - MID_START_X) * rollProgress;
+        if (bgLayerFar) gsap.set(bgLayerFar, { x: farX });
+        if (bgLayerMidTop) gsap.set(bgLayerMidTop, { x: midX });
+        if (bgLayerMidBottom) gsap.set(bgLayerMidBottom, { x: midX * 0.85 });
 
         if (progress <= ROLL_END) {
           zoomTimeline.progress(0);
@@ -186,34 +214,84 @@ export default function ProjectsCtaTransition() {
         }
       };
 
-      const getScrollDistance = () => {
-        const isMobile = window.innerWidth < 768;
-        return (isMobile ? 2.4 : 3.2) * window.innerHeight;
+      // Clamp wheel delta while inside the pinned CTA section so rapid mouse wheel flicks
+      // cannot skip through the scroll distance faster than the allowed threshold
+      const MAX_WHEEL_DELTA_PX = 42;
+      const handleWheelClamp = (e: WheelEvent) => {
+        const stInstance = stRef;
+        if (!stInstance || !stInstance.isActive) return;
+
+        // Allow normal exit at the very top (scrolling up) or very bottom (scrolling down after completion)
+        if (
+          (e.deltaY < 0 && stInstance.progress <= 0.002 && smoothedProgress <= 0.01) ||
+          (e.deltaY > 0 && stInstance.progress >= 0.998 && smoothedProgress >= 0.99)
+        ) {
+          return;
+        }
+
+        e.preventDefault();
+        const clampedDelta =
+          Math.sign(e.deltaY) * Math.min(Math.abs(e.deltaY), MAX_WHEEL_DELTA_PX);
+        window.scrollBy({ top: clampedDelta, left: 0, behavior: "instant" });
       };
 
-      const st = ScrollTrigger.create({
+      // Ticker loop enforces the maximum progress velocity cap even if user drags scrollbar or flicks trackpad
+      const tickProgress = () => {
+        const diff = targetProgress - smoothedProgress;
+        if (Math.abs(diff) < 0.0004) {
+          if (smoothedProgress !== targetProgress) {
+            smoothedProgress = targetProgress;
+            applyVisualProgress(smoothedProgress);
+          }
+          return;
+        }
+
+        const dt = Math.min(gsap.ticker.deltaRatio(60) / 60, 0.05);
+        const maxStep = MAX_PROGRESS_SPEED_PER_SEC * dt;
+        const dampedStep = diff * Math.min(1, dt * 8);
+        const step =
+          Math.abs(dampedStep) > maxStep
+            ? Math.sign(diff) * maxStep
+            : dampedStep;
+
+        smoothedProgress = Math.max(0, Math.min(1, smoothedProgress + step));
+        applyVisualProgress(smoothedProgress);
+      };
+
+      gsap.ticker.add(tickProgress);
+
+      const getScrollDistance = () => {
+        const isMobile = window.innerWidth < 768;
+        return (isMobile ? 2.6 : 3.5) * window.innerHeight;
+      };
+
+      const stRef = ScrollTrigger.create({
         trigger: viewport,
         pin: true,
         start: "top top",
         end: () => `+=${getScrollDistance()}`,
         pinSpacing: true,
-        scrub: 0.5,
+        scrub: true,
         refreshPriority: 1,
         invalidateOnRefresh: true,
         onRefresh: (self) => {
           measureLayout();
-          updateScrollState(self.progress);
+          targetProgress = self.progress;
+          smoothedProgress = self.progress;
+          applyVisualProgress(smoothedProgress);
         },
         onUpdate: (self) => {
-          updateScrollState(self.progress);
+          targetProgress = self.progress;
         },
       });
 
       const handleResize = () => {
         measureLayout();
-        updateScrollState(st.progress);
+        targetProgress = stRef.progress;
+        applyVisualProgress(smoothedProgress);
       };
 
+      viewport.addEventListener("wheel", handleWheelClamp, { passive: false });
       window.addEventListener("resize", handleResize);
 
       const refreshTimeout = setTimeout(() => {
@@ -222,8 +300,10 @@ export default function ProjectsCtaTransition() {
 
       return () => {
         clearTimeout(refreshTimeout);
+        gsap.ticker.remove(tickProgress);
+        viewport.removeEventListener("wheel", handleWheelClamp);
         window.removeEventListener("resize", handleResize);
-        st.kill();
+        stRef.kill();
         zoomTimeline.kill();
       };
     },
@@ -316,6 +396,58 @@ export default function ProjectsCtaTransition() {
                 00%
               </span>
             </div>
+          </div>
+        </div>
+
+        {/* ── PARALLAX LAYER 1 (FAR OBJECTS — Slower Reverse Drift, Low Opacity): Architectural Watermarks ── */}
+        <div className="absolute inset-0 pointer-events-none z-0 flex items-center overflow-hidden select-none">
+          <div
+            ref={bgLayerFarRef}
+            className="flex items-center gap-24 sm:gap-32 whitespace-nowrap font-black tracking-[-0.05em] text-white/[0.04] uppercase will-change-transform"
+            style={{ fontSize: "clamp(8rem, 19vw, 22rem)", lineHeight: 0.85 }}
+          >
+            <span>ARCHITECT</span>
+            <span className="text-white/[0.225]">•</span>
+            <span>ENGINEER</span>
+            <span className="text-white/[0.225]">•</span>
+            <span>COLLABORATE</span>
+            <span className="text-white/[0.225]">•</span>
+            <span>LAUNCH</span>
+            <span className="text-white/[0.225]">•</span>
+            <span>BEYOND</span>
+          </div>
+        </div>
+
+        {/* ── PARALLAX LAYER 2 (MID-GROUND OBJECTS — Faster Reverse Drift, Medium Opacity): Sub-Text Telemetry Ribbons ── */}
+        <div className="absolute inset-0 pointer-events-none z-0 flex flex-col justify-between py-24 sm:py-32 overflow-hidden select-none">
+          {/* Upper sub-text ribbon */}
+          <div
+            ref={bgLayerMidTopRef}
+            className="flex items-center gap-12 sm:gap-16 whitespace-nowrap font-mono text-[10px] sm:text-xs md:text-sm uppercase tracking-[0.35em] text-white/[0.14] will-change-transform"
+          >
+            <span>✦ [ FULL-STACK ARCHITECTURE // NEXT.JS &amp; REACT ]</span>
+            <span className="text-[#ff5500]/45">❖</span>
+            <span>⟪ DISTRIBUTED SYSTEMS · BULLMQ &amp; REDIS ⟫</span>
+            <span className="text-[#ff5500]/45">✦</span>
+            <span>[ AI WORKFLOWS &amp; INTERACTIVE 3D WEBGL ]</span>
+            <span className="text-[#ff5500]/45">❖</span>
+            <span>⟪ SCALABLE BACKENDS · POSTGRESQL &amp; NODE.JS ⟫</span>
+            <span className="text-[#ff5500]/45">✦</span>
+            <span>[ PUNE, IN · 18.5204° N, 73.8567° E ]</span>
+          </div>
+
+          {/* Lower sub-text ribbon */}
+          <div
+            ref={bgLayerMidBottomRef}
+            className="flex items-center gap-12 sm:gap-16 whitespace-nowrap font-mono text-[10px] sm:text-xs uppercase tracking-[0.32em] text-white/[0.09] will-change-transform"
+          >
+            <span>⟪ BESPOKE DIGITAL PRODUCTS // 2026 EDITION ⟫</span>
+            <span className="text-[#ff5500]/35">✦</span>
+            <span>[ ZERO-LATENCY INTERFACES · PRECISION CRAFT ]</span>
+            <span className="text-[#ff5500]/35">❖</span>
+            <span>⟪ END-TO-END ENGINEERING · CONCEPT TO PRODUCTION ⟫</span>
+            <span className="text-[#ff5500]/35">✦</span>
+            <span>[ OPEN FOR SELECTED PROJECTS &amp; ROLES ]</span>
           </div>
         </div>
 
